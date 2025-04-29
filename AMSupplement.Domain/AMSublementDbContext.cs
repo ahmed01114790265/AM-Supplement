@@ -1,11 +1,5 @@
 ﻿using AMSupplement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 namespace AMSupplement.Domain
@@ -22,12 +16,31 @@ namespace AMSupplement.Domain
         //    base.OnConfiguring(optionsBuilder);
         //    optionsBuilder.UseSqlServer(Configuration.GetConnectionString("cs"));
         //}
+        public DbSet<Supplemnt> Supplemnts { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Item> Items { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           #region supplement
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Supplemnt>()
                 .ToTable("Suplements")
                 .Property(x => x.Name).IsRequired();
+            #endregion
+            #region product
+
+            modelBuilder.Entity<Product>()
+                .ToTable("Products")
+                .HasMany(x => x.Items)
+                .WithOne(x => x.Product)
+                .HasForeignKey(x => x.ProductId);
+            
+
+            modelBuilder.Entity<Product>()
+                .Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+            # endregion
         }
     }
 }
