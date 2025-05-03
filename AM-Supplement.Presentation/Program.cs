@@ -8,6 +8,7 @@ namespace AM_Supplement.Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+        
             //register services
             builder.Services.AddApplication(builder.Configuration);
             var app = builder.Build();

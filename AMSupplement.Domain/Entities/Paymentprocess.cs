@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace AMSupplement.Domain.Entities
 {
-    public class Supplemnt
+   public  class Paymentprocess
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string ProcessName { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }
