@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AM_Supplement.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,9 @@ namespace AMSupplement.Domain.Entities
     {  
         public Guid Id { get; set; }
         public DateTime Paydate { get; set; } = DateTime.Now;
-        public int  Amountorders { get; set; }
-        public string Paymentstaus {  get; set; }
-        public Guid PaymentprocessId { get; set; }
-        public Paymentprocess Paymentprocess { get; set; }
-        public Guid OrdeId { get; set; }    
+        public PaymentStatus Paymentstaus {  get; set; }
+        public string PaymentMethod { get; set; }
+        public Guid OrderId { get; set; }    
         public Order Order { get; set; }
     }
 }
