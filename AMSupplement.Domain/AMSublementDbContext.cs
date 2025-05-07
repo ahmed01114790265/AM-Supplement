@@ -33,7 +33,7 @@ namespace AMSupplement.Domain
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder .ApplyConfiguration(new OrderConfiguration());
-            modelBuilder.ApplyConfiguration(new OredrItemConfiguration());  
+            modelBuilder.ApplyConfiguration(new OrderItemConfiguration());  
             modelBuilder.ApplyConfiguration(new ProductConfiguration());  
             modelBuilder .ApplyConfiguration(new PaymentConfiguration());
         }

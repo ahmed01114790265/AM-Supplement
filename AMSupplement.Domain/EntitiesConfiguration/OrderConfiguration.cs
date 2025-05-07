@@ -9,7 +9,7 @@ namespace AMSupplement.Domain.EntitiesConfiguration
         {
 
            builder
-                .ToTable("Oredrs")
+                .ToTable("Orders")
                 .HasKey(x => x.Id);
            builder
                 .HasOne(x => x.User).WithMany(x => x.Orders)

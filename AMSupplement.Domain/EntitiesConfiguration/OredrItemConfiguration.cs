@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace AMSupplement.Domain.EntitiesConfiguration
 {
-    public class OredrItemConfiguration : IEntityTypeConfiguration<OrderItem>
+    public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
     {
         void IEntityTypeConfiguration<OrderItem>.Configure(EntityTypeBuilder<OrderItem> builder)
         {
            builder
-                .ToTable("OrederItems")
+                .ToTable(" OrderItems")
                 .HasKey(x => x.Id);
            builder
                 .HasOne(x => x.Order)
