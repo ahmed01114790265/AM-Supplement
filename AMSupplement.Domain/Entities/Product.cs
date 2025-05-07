@@ -14,7 +14,7 @@ namespace AMSupplement.Domain.Entities
         public string Description { get; set; }
         public double Price { get; set; }
         public string Taste { get; set; }
-        public string Image {  get; set; }
+        public string ImageUrl {  get; set; }
         public double Weight { get; set; }
         public int Discount { get; set; }
         public ProductType Type { get; set; }

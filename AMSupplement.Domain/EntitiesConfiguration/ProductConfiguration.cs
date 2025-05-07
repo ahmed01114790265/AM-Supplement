@@ -15,25 +15,25 @@ namespace AMSupplement.Domain.EntitiesConfiguration
         void IEntityTypeConfiguration<Product>.Configure(EntityTypeBuilder<Product> builder)
         {
             builder
-                 .ToTable("product")
+                 .ToTable("products")
                  .HasKey(x => x.Id);
            builder
                 .Property(x => x.Name)
-                .HasMaxLength(15)
+                .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.Description)
-                .HasMaxLength(50)
+                .HasMaxLength(200)
                 .IsRequired();
             builder
                 .Property(x => x.Price)
                 .IsRequired();
             builder
                 .Property(x => x.Taste)
-                .HasMaxLength(15)
+                .HasMaxLength(50)
                 .IsRequired();
             builder
-                .Property(x => x.Image)
+                .Property(x => x.ImageUrl)
                 .HasColumnType("nvarchar(300)")
                 .IsRequired();
         }

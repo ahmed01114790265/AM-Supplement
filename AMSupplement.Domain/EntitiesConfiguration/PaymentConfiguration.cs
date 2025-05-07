@@ -16,7 +16,7 @@ namespace AMSupplement.Domain.EntitiesConfiguration
         void IEntityTypeConfiguration<Payment>.Configure(EntityTypeBuilder<Payment> builder)
         {
            builder
-            .ToTable("Payment")
+            .ToTable("Payments")
               .HasKey(x => x.Id);
             builder
                 .HasOne(x => x.Order)
