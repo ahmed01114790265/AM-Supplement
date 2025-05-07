@@ -4,6 +4,7 @@ using AMSupplement.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMSupplement.Domain.Migrations
 {
     [DbContext(typeof(AMSublementDbContext))]
-    partial class AMSublementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506101201_configureentites")]
+    partial class configureentites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace AMSupplement.Domain.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Oredrs", (string)null);
                 });
 
             modelBuilder.Entity("AMSupplement.Domain.Entities.OrderItem", b =>
@@ -70,7 +73,7 @@ namespace AMSupplement.Domain.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable(" OrderItems", (string)null);
+                    b.ToTable("OrederItems", (string)null);
                 });
 
             modelBuilder.Entity("AMSupplement.Domain.Entities.Payment", b =>
@@ -100,7 +103,7 @@ namespace AMSupplement.Domain.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payment", (string)null);
                 });
 
             modelBuilder.Entity("AMSupplement.Domain.Entities.Product", b =>
@@ -111,28 +114,28 @@ namespace AMSupplement.Domain.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Discount")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.Property<string>("Taste")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -142,7 +145,7 @@ namespace AMSupplement.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("products", (string)null);
+                    b.ToTable("product", (string)null);
                 });
 
             modelBuilder.Entity("AMSupplement.Domain.Entities.User", b =>
