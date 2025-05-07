@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using AM_Sopplement.DataAccess.Repositories.Implementation;
 using AM_Sopplement.DataAccess.Repositories.Interfaces;
-using AM_Sopplement.DataAccess.Repositories.Implementation;
 using AMSupplement.Domain;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AM_Sopplement.DataAccess
 {

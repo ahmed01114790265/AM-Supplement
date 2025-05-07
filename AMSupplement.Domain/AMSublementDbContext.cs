@@ -1,9 +1,7 @@
-﻿using AM_Supplement.Shared.Enums;
-using AMSupplement.Domain.Entities;
+﻿using AMSupplement.Domain.Entities;
 using AMSupplement.Domain.EntitiesConfiguration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.ComponentModel.DataAnnotations;
 
 namespace AMSupplement.Domain
 {
