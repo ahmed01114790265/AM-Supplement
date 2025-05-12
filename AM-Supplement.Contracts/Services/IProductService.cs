@@ -1,6 +1,13 @@
-﻿namespace AM_Supplement.Contracts.Services
+﻿using AM_Supplement.Contracts.DTO;
+using AM_Supplement.Contracts.ResultModel;
+
+namespace AM_Supplement.Contracts.Services
 {
     public interface IProductService
     {
+        public ResultModel<Guid> AddProduct(ProductDTO productDTO);
+        public ResultModel<ProductDTO> Readonly_Product(Guid productid);
+        public ResultModel<Guid> Update_Product(ProductDTO productDTO);
+        public void Delete_Product(ProductDTO productDTO);
     }
 }
