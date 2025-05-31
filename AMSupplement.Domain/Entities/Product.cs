@@ -1,5 +1,4 @@
 ﻿using AM_Supplement.Shared.Enums;
-
 namespace AMSupplement.Domain.Entities
 {
     public class Product
@@ -14,6 +13,7 @@ namespace AMSupplement.Domain.Entities
         public int Discount { get; set; }
         public ProductType Type { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
+
 
 
     }

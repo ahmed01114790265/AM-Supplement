@@ -1,12 +1,7 @@
 ﻿using AM_Sopplement.DataAccess.UnitOfWork.Interfaces;
 using AMSupplement.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AM_Sopplement.DataAccess.UnitOfWork.Immpelementaion
+namespace AM_Sopplement.DataAccess.UnitOfWork.Implementation
 {
    public class UnitOfWork : IUnitOfWork
     {

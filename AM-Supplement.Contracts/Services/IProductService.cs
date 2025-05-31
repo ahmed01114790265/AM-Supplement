@@ -6,8 +6,8 @@ namespace AM_Supplement.Contracts.Services
     public interface IProductService
     {
         public ResultModel<Guid> AddProduct(ProductDTO productDTO);
-        public ResultModel<ProductDTO> Readonly_Product(Guid productid);
-        public ResultModel<Guid> Update_Product(ProductDTO productDTO);
-        public void Delete_Product(ProductDTO productDTO);
+        public Task<ResultModel<ProductDTO>> Readonly_Product(Guid productid);
+        public Task<ResultModel<Guid>> Update_Product(ProductDTO productDTO);
+        public  Task Delete_Product(ProductDTO productDTO);
     }
 }

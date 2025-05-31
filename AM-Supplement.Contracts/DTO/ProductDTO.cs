@@ -1,5 +1,4 @@
 ﻿using AM_Supplement.Shared.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace AM_Supplement.Contracts.DTO
 {

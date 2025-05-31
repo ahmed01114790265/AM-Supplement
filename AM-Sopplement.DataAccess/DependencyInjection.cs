@@ -13,7 +13,7 @@ namespace AM_Sopplement.DataAccess
         {
             service.AddSuplementDbContext(configuration);
             service.AddScoped<IProductRepository, ProductRepository>();
-            service.AddScoped<IUnitOfWork, UnitOfWork.Immpelementaion.UnitOfWork>();
+            service.AddScoped<IUnitOfWork, UnitOfWork.Implementation.UnitOfWork>();
             return service;
         }
     }

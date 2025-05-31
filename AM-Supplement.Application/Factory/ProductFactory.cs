@@ -1,21 +1,13 @@
-﻿using AM_Sopplement.DataAccess.Repositories.Interfaces;
-using AM_Supplement.Contracts.DTO;
+﻿using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Factory;
 using AMSupplement.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 
 namespace AM_Supplement.Application.Factory
 {
  public class ProductFactory : IProductFactory
     {
-        IProductRepository productRepository;
-
-        public ProductFactory(IProductRepository productRepository)
-        {
-            productRepository = productRepository;
-        }
-        public Product Create_Product(ProductDTO productDTO)
+        public Product CreateProduct(ProductDTO productDTO)
         {
             return new Product()
             {
@@ -30,7 +22,7 @@ namespace AM_Supplement.Application.Factory
                 Weight = productDTO.Weight
             };
         }
-        public ProductDTO Get_Product(Product product)
+        public ProductDTO GetProductDTO(Product product)
         {
             return new ProductDTO()
             {
@@ -46,7 +38,7 @@ namespace AM_Supplement.Application.Factory
 
             };
         }
-        public void Update_Product(Product product, ProductDTO productDTO)
+        public void UpdateProduct(Product product, ProductDTO productDTO)
         {
             product.Name = productDTO.Name;
             product.Description = productDTO.Description;
