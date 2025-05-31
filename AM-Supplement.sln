@@ -32,6 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AM-Supplement.Presentation"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
@@ -42,27 +43,21 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BDCB005C-68D1-41BD-9A70-6B4709ACAE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDCB005C-68D1-41BD-9A70-6B4709ACAE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDCB005C-68D1-41BD-9A70-6B4709ACAE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDCB005C-68D1-41BD-9A70-6B4709ACAE4E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04F28761-FC42-435F-8189-44DF3C2D21E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04F28761-FC42-435F-8189-44DF3C2D21E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04F28761-FC42-435F-8189-44DF3C2D21E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04F28761-FC42-435F-8189-44DF3C2D21E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E8982CD-25AE-4843-A6F1-17627E7C8700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E8982CD-25AE-4843-A6F1-17627E7C8700}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E8982CD-25AE-4843-A6F1-17627E7C8700}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E8982CD-25AE-4843-A6F1-17627E7C8700}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD138638-88D2-4881-9E51-F857EBDB932D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD138638-88D2-4881-9E51-F857EBDB932D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD138638-88D2-4881-9E51-F857EBDB932D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD138638-88D2-4881-9E51-F857EBDB932D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{50F70499-9C19-47AB-AFA3-8BC7DA11EA5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50F70499-9C19-47AB-AFA3-8BC7DA11EA5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50F70499-9C19-47AB-AFA3-8BC7DA11EA5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50F70499-9C19-47AB-AFA3-8BC7DA11EA5D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B74D786-825A-4AA5-B08A-420F3D0227DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B74D786-825A-4AA5-B08A-420F3D0227DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B74D786-825A-4AA5-B08A-420F3D0227DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B74D786-825A-4AA5-B08A-420F3D0227DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

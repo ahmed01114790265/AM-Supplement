@@ -1,0 +1,18 @@
+﻿namespace AM_Supplement.Contracts.ResultModel
+{
+    public class ResultModel
+    {
+        public bool IsVallid {  get; set; }
+        public string ErorrMassege {  get; set; }
+
+    }
+    public class ResultModel<T>:ResultModel
+    {
+       public T Model {  get; set; }
+    }
+    public class ResultList<T>:ResultModel
+    {
+        public List<T> ModelList { get; set; }
+       
+    }
+}
