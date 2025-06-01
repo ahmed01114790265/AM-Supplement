@@ -18,10 +18,12 @@ namespace AM_Sopplement.DataAccess.UnitOfWork.Implementation
                 AMSublementDbContext.SaveChanges();
                 return true;
             }
-            catch (Exception ex)
+            catch 
             {
-                return false;
+                throw new ArgumentException("data do not save in database");
             }
         }
+
+       
     }
 }

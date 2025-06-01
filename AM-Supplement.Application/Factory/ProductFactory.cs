@@ -22,7 +22,7 @@ namespace AM_Supplement.Application.Factory
                 Weight = productDTO.Weight
             };
         }
-        public ProductDTO GetProductDTO(Product product)
+        public ProductDTO CreateProductDTO(Product product)
         {
             return new ProductDTO()
             {
@@ -50,17 +50,9 @@ namespace AM_Supplement.Application.Factory
             product.Weight = productDTO.Weight;
 
         }
-        public bool Validate_Before_Delete(Product product,ProductDTO productDTO)
+        public bool Validate_Before_Delete(Guid productId,Guid productDTOId)
         {
-            return product.Id == productDTO.Id &&
-             product.Name == productDTO.Name &&
-             product.Price == productDTO.Price &&
-             product.Discount == productDTO.Discount &&
-             product.ImageUrl == productDTO.ImageUrl &&
-             product.Type == productDTO.Type &&
-             product.Weight == productDTO.Weight &&
-             product.Description == productDTO.Description &&
-             product.Taste == productDTO.Taste;
+            return productId == productDTOId;
         }
       
     }

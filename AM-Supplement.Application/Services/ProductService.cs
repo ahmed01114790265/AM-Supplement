@@ -39,10 +39,10 @@ namespace AM_Supplement.Application.Services
             };
 
         }
-        public async Task<ResultModel<ProductDTO>> Readonly_Product(Guid productid)
+        public async Task<ResultModel<ProductDTO>> GetProductById(Guid productid)
         {
            var product = await ProductRepository.GetProduct(productid);
-            var result = ProductFactory.GetProductDTO(product);
+            var result = ProductFactory.CreateProductDTO(product);
             if (product == null)
                 return new ResultModel<ProductDTO>()
                 {
@@ -56,7 +56,7 @@ namespace AM_Supplement.Application.Services
                 Model = result
             };
         }
-        public async Task<ResultModel<Guid>> Update_Product(ProductDTO productDTO)
+        public async Task<ResultModel<Guid>> UpdateProduct(ProductDTO productDTO)
         {
             if (productDTO.Id == null)
                 return new ResultModel<Guid>()
@@ -80,14 +80,14 @@ namespace AM_Supplement.Application.Services
                 Model = product.Id
             };
         }
-        public async Task Delete_Product(ProductDTO productDTO)
+        public async Task DeleteProduct(Guid? productId)
         {
-            if (productDTO.Id == null)
+            if (productId == null)
                 throw new ArgumentException("id is empty please enter product id");
-          var product = await ProductRepository.GetProduct(productDTO.Id.Value);
+          var product = await ProductRepository.GetProduct(productId.Value);
             if (product == null)
                 throw new ArgumentException("product not found please enter product");
-            ProductFactory.Validate_Before_Delete(product,productDTO);
+            ProductFactory.Validate_Before_Delete(product,productId.Value);
             ProductRepository.DeleteProduct(product);
             UnitOfWork.SaveChangs();    
         }

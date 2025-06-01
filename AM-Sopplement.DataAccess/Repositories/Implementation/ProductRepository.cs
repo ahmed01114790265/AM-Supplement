@@ -9,11 +9,10 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
     public class ProductRepository : IProductRepository
     {
         AMSublementDbContext AMSublementDbContext;
-       IUnitOfWork UnitOfWork;
-        public ProductRepository(AMSublementDbContext aMSublementDbContext, IUnitOfWork unitOfWork)
+     
+        public ProductRepository(AMSublementDbContext aMSublementDbContext)
         {
             AMSublementDbContext = aMSublementDbContext;
-            UnitOfWork = unitOfWork;
         }
         public void CreateProduct(Product product)
         {
