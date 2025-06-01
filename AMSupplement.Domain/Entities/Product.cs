@@ -14,7 +14,9 @@ namespace AMSupplement.Domain.Entities
         public ProductType Type { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 
-
-
+        public static implicit operator Guid(Product v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

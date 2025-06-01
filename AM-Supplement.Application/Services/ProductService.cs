@@ -4,6 +4,7 @@ using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Factory;
 using AM_Supplement.Contracts.ResultModel;
 using AM_Supplement.Contracts.Services;
+using System.Threading.Tasks;
 
 namespace AM_Supplement.Application.Services
 {
@@ -18,12 +19,13 @@ namespace AM_Supplement.Application.Services
             ProductFactory = productFactory;
             UnitOfWork = unitOfWork;
         }
-        public  ResultModel<Guid> AddProduct(ProductDTO productDTO)
+        public  async Task<ResultModel<Guid>> AddProduct(ProductDTO productDTO)
         {
          var product =  ProductFactory.CreateProduct(productDTO);
-         var productId = ProductRepository.CreateProduct(product);
+          ProductRepository.CreateProduct(product);
           UnitOfWork.SaveChangs();
-            if(productId == Guid.Empty)
+         var  productId = await ProductRepository.GetProduct(product.Id);
+            if(productId == null)
                 return new ResultModel<Guid>()
                 {
                     IsVallid = false,

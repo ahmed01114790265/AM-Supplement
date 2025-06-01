@@ -15,10 +15,10 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
             AMSublementDbContext = aMSublementDbContext;
             UnitOfWork = unitOfWork;
         }
-        public Guid CreateProduct(Product product)
+        public void CreateProduct(Product product)
         {
             AMSublementDbContext.Products.Add(product);  
-                return product.Id; 
+              
         }
 
         public  async Task<Product> GetProduct(Guid productid)
