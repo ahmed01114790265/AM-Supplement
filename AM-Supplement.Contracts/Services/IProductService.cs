@@ -9,6 +9,6 @@ namespace AM_Supplement.Contracts.Services
         public Task <ResultModel<Guid>> AddProduct(ProductDTO productDTO);
         public Task<ResultModel<ProductDTO>> GetProductById(Guid productid);
         public Task<ResultModel<Guid>> UpdateProduct(ProductDTO productDTO);
-        public Task DeleteProduct(Guid? productId);
+        Task<ResultModel<bool>> DeleteProduct(Guid productId);
     }
 }

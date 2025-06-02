@@ -6,6 +6,6 @@ namespace AM_Sopplement.DataAccess.Repositories.Interfaces
     {
         public void CreateProduct(Product product);
         public Task<Product> GetProduct(Guid productid);
-        public void DeleteProduct(Product product);
+        public Task DeleteProduct(Product product);
     }
 }

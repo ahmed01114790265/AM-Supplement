@@ -21,21 +21,14 @@ namespace AM_Supplement.Application.Services
         }
         public  async Task<ResultModel<Guid>> AddProduct(ProductDTO productDTO)
         {
-         var product =  ProductFactory.CreateProduct(productDTO);
-          ProductRepository.CreateProduct(product);
-           await UnitOfWork.SaveChangsAsync();
-         var  productId = await ProductRepository.GetProduct(product.Id);
-            if(productId == null)
-                return new ResultModel<Guid>()
-                {
-                    IsVallid = false,
-                    ErorrMassege = "error whil saving product please try again",
-                    Model = Guid.Empty
-                };
+            var product = ProductFactory.CreateProduct(productDTO);
+            ProductRepository.CreateProduct(product);
+            await UnitOfWork.SaveChangsAsync();
+
             return new ResultModel<Guid>()
             {
                 IsVallid = true,
-                Model = productId.Id
+                Model = product.Id
             };
 
         }
@@ -71,29 +64,37 @@ namespace AM_Supplement.Application.Services
                 return new ResultModel<Guid>()
                 {
                     IsVallid = false,
-                    ErorrMassege = "this product is not found please try again"
+                    ErorrMassege = $"product with Id {productDTO.Id} is not exists"
                 };
+
                 ProductFactory.UpdateProduct(product, productDTO);
                 await UnitOfWork.SaveChangsAsync();
                 return new ResultModel<Guid>()
                 {
-                IsVallid = true,
-                Model = product.Id
+                    IsVallid = true,
+                    Model = product.Id
                 };
         }
-        public async Task DeleteProduct(Guid? productId)
+        public async Task<ResultModel<bool>> DeleteProduct(Guid productId)
         {
-            if (!productId.HasValue)
-                throw new ArgumentException("id is empty please enter product id");
-                var product = await ProductRepository.GetProduct(productId.Value);
+            var product = await ProductRepository.GetProduct(productId);
+
             if (product == null)
-                    throw new ArgumentException("product not found please enter product");
-                var IsValid = ProductFactory.ValidateBeforeDelete(product.Id, productId.Value);
-            if (!IsValid)
-                throw new ArgumentException("cant deleted");
-                ProductRepository.DeleteProduct(product);
+                return new ResultModel<bool>
+                {
+                    IsVallid = false,
+                    ErorrMassege = $"product with Id {productId} not found"
+                };
+            
+            ProductRepository.DeleteProduct(product);
+            
             await  UnitOfWork.SaveChangsAsync();
-              
+
+            return new ResultModel<bool>
+            {
+                IsVallid = true,
+                Model = true
+            };
         }
     }
 }

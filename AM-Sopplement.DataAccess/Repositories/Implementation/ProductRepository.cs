@@ -22,11 +22,10 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
 
         public  async Task<Product> GetProduct(Guid productid)
         {
-            var result = await AMSublementDbContext.Products.FirstOrDefaultAsync(x => x.Id == productid);
-            return result == null ? new Product() : result;
+            return await AMSublementDbContext.Products.FirstOrDefaultAsync(x => x.Id == productid);
 
         }
-         public void DeleteProduct(Product product)
+         public async Task DeleteProduct(Product product)
         {
             AMSublementDbContext.Products.Remove(product);
         }
