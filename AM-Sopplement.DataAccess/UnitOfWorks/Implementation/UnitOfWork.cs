@@ -24,6 +24,17 @@ namespace AM_Sopplement.DataAccess.UnitOfWork.Implementation
             }
         }
 
-       
+        public async Task <bool> SaveChangsAsync()
+        {
+            try
+            {
+              await  AMSublementDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                throw new ArgumentException("data do not save in database");
+            }
+        }
     }
 }

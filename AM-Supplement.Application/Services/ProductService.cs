@@ -23,7 +23,7 @@ namespace AM_Supplement.Application.Services
         {
          var product =  ProductFactory.CreateProduct(productDTO);
           ProductRepository.CreateProduct(product);
-          UnitOfWork.SaveChangs();
+           await UnitOfWork.SaveChangsAsync();
          var  productId = await ProductRepository.GetProduct(product.Id);
             if(productId == null)
                 return new ResultModel<Guid>()
@@ -35,21 +35,22 @@ namespace AM_Supplement.Application.Services
             return new ResultModel<Guid>()
             {
                 IsVallid = true,
-                Model = productId
+                Model = productId.Id
             };
 
         }
         public async Task<ResultModel<ProductDTO>> GetProductById(Guid productid)
         {
-           var product = await ProductRepository.GetProduct(productid);
-            var result = ProductFactory.CreateProductDTO(product);
-            if (product == null)
-                return new ResultModel<ProductDTO>()
+            var product = await ProductRepository.GetProduct(productid);
+            if(product == null)
+            {
+                return new ResultModel<ProductDTO>
                 {
                     IsVallid = false,
-                    ErorrMassege = "this product is not vallid or empty",
-                    Model = new ProductDTO()
+                    ErorrMassege = "product is not found"
                 };
+            }
+            var result = ProductFactory.CreateProductDTO(product);
             return new ResultModel<ProductDTO>()
             {
                 IsVallid = true,
@@ -58,38 +59,41 @@ namespace AM_Supplement.Application.Services
         }
         public async Task<ResultModel<Guid>> UpdateProduct(ProductDTO productDTO)
         {
-            if (productDTO.Id == null)
+            if (!productDTO.Id.HasValue)
                 return new ResultModel<Guid>()
                 {
                     IsVallid = false,
                     ErorrMassege = "productid is empty please enter date"
                 };
 
-         var product = await  ProductRepository.GetProduct(productDTO.Id.Value);
+               var product = await  ProductRepository.GetProduct(productDTO.Id.Value);
             if (product == null)
                 return new ResultModel<Guid>()
                 {
                     IsVallid = false,
                     ErorrMassege = "this product is not found please try again"
                 };
-           ProductFactory.UpdateProduct(product, productDTO);
-          UnitOfWork.SaveChangs();
-            return new ResultModel<Guid>()
-            {
+                ProductFactory.UpdateProduct(product, productDTO);
+                await UnitOfWork.SaveChangsAsync();
+                return new ResultModel<Guid>()
+                {
                 IsVallid = true,
                 Model = product.Id
-            };
+                };
         }
         public async Task DeleteProduct(Guid? productId)
         {
-            if (productId == null)
+            if (!productId.HasValue)
                 throw new ArgumentException("id is empty please enter product id");
-          var product = await ProductRepository.GetProduct(productId.Value);
+                var product = await ProductRepository.GetProduct(productId.Value);
             if (product == null)
-                throw new ArgumentException("product not found please enter product");
-            ProductFactory.Validate_Before_Delete(product,productId.Value);
-            ProductRepository.DeleteProduct(product);
-            UnitOfWork.SaveChangs();    
+                    throw new ArgumentException("product not found please enter product");
+                var IsValid = ProductFactory.ValidateBeforeDelete(product.Id, productId.Value);
+            if (!IsValid)
+                throw new ArgumentException("cant deleted");
+                ProductRepository.DeleteProduct(product);
+            await  UnitOfWork.SaveChangsAsync();
+              
         }
     }
 }

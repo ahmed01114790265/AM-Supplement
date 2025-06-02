@@ -3,5 +3,6 @@
    public interface IUnitOfWork
     {
         public bool SaveChangs();
+        public Task<bool> SaveChangsAsync();
     }
 }

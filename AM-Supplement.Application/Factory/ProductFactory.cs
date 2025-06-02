@@ -50,9 +50,11 @@ namespace AM_Supplement.Application.Factory
             product.Weight = productDTO.Weight;
 
         }
-        public bool Validate_Before_Delete(Guid productId,Guid productDTOId)
+        public bool ValidateBeforeDelete(Guid productId,Guid productDTOId)
         {
-            return productId == productDTOId;
+            if (productId == productDTOId)
+                return true;
+            return false;
         }
       
     }
