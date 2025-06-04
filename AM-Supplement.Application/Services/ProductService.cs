@@ -10,9 +10,9 @@ namespace AM_Supplement.Application.Services
 {
     public class ProductService : IProductService
     {
-        IProductRepository ProductRepository { get; set; }
-        IProductFactory ProductFactory;
-        IUnitOfWork UnitOfWork;
+        readonly IProductRepository ProductRepository;
+        readonly IProductFactory ProductFactory;
+        readonly  IUnitOfWork UnitOfWork;
         public ProductService(IProductRepository productRepository, IProductFactory productFactory, IUnitOfWork unitOfWork)
         {
             ProductRepository = productRepository;
@@ -86,7 +86,7 @@ namespace AM_Supplement.Application.Services
                     ErorrMassege = $"product with Id {productId} not found"
                 };
             
-            ProductRepository.DeleteProduct(product);
+            await ProductRepository.DeleteProduct(product);
             
             await  UnitOfWork.SaveChangsAsync();
 
@@ -95,6 +95,27 @@ namespace AM_Supplement.Application.Services
                 IsVallid = true,
                 Model = true
             };
+        }
+        public async Task<ResultList<ProductDTO>> GetListofProduct()
+        {
+            var ListProduct = await ProductRepository.GetListOfProduct();
+            if(ListProduct==null || ListProduct.Count==0)
+            {
+                return
+                    new ResultList<ProductDTO>
+                    {
+                        IsVallid = false,
+                        ErorrMassege = "list is emptey",
+
+                    };
+            }
+            var ListProductDTO = ProductFactory.CreateListofProductDTO( ListProduct);
+            return new ResultList<ProductDTO>
+            {
+                IsVallid = true,
+                ModelList = ListProductDTO
+            };
+                
         }
     }
 }
