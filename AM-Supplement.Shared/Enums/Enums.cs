@@ -11,4 +11,10 @@
         Amino = 1,
         casein = 2
     }
+    public enum TypeSorting
+    {
+        String =1,
+        Intrger = 2,
+        Double = 3,
+    }
 }

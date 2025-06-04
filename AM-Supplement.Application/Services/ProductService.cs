@@ -4,6 +4,7 @@ using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Factory;
 using AM_Supplement.Contracts.ResultModel;
 using AM_Supplement.Contracts.Services;
+using AM_Supplement.Shared.Enums;
 using System.Threading.Tasks;
 
 namespace AM_Supplement.Application.Services
@@ -96,13 +97,36 @@ namespace AM_Supplement.Application.Services
                 Model = true
             };
         }
-        public async Task<ResultList<ProductDTO>> GetListofProduct()
+        public async Task<ResultList<ProductDTO>> GetListofProduct(int? PageNumber, int? PageSize, TypeSorting sorting)
         {
-            var ListProduct = await ProductRepository.GetListOfProduct();
+            int PN = PageNumber.HasValue ? PageNumber.Value : 1;
+            int PS = PageSize.HasValue ? PageSize.Value : 6;
+
+            var ListProduct = await ProductRepository.GetListOfProduct(PN,PS);
+      
+           switch(sorting)
+            {
+                case TypeSorting.String:
+                    ListProduct = ListProduct.OrderByDescending(x => x.Name)
+                   .ThenByDescending(c => c.Description)
+                   .ThenByDescending(z=>z.Taste)
+                   .ToList();
+                    break;
+                case TypeSorting.Intrger:
+                    ListProduct = ListProduct.OrderByDescending(x => x.Discount)
+                   .ToList();
+                    break;
+                 case TypeSorting.Double:
+                    ListProduct = ListProduct.OrderByDescending(x => x.Price)
+                        .ThenByDescending(c=>c.Weight)
+                        .ToList();
+                    break;
+            }
+          
+            
             if(ListProduct==null || ListProduct.Count==0)
             {
-                return
-                    new ResultList<ProductDTO>
+                return new ResultList<ProductDTO>
                     {
                         IsVallid = false,
                         ErorrMassege = "list is emptey",
@@ -113,9 +137,11 @@ namespace AM_Supplement.Application.Services
             return new ResultList<ProductDTO>
             {
                 IsVallid = true,
-                ModelList = ListProductDTO
+                ModelList = ListProductDTO,
+                TotalPages = ListProductDTO.Count/PS,
             };
                 
         }
+       
     }
 }

@@ -13,6 +13,7 @@
     public class ResultList<T>:ResultModel
     {
         public List<T> ModelList { get; set; }
+        public int TotalPages { get; set; }
        
     }
 }

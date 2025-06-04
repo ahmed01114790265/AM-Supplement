@@ -7,6 +7,6 @@ namespace AM_Sopplement.DataAccess.Repositories.Interfaces
         public void CreateProduct(Product product);
         public Task<Product> GetProduct(Guid productid);
         public Task DeleteProduct(Product product);
-        public Task<List<Product>> GetListOfProduct();
+        public Task<List<Product>> GetListOfProduct(int PageNumber, int PageSize);
     }
 }

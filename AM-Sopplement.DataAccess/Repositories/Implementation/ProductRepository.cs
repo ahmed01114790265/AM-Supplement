@@ -1,5 +1,6 @@
 ﻿using AM_Sopplement.DataAccess.Repositories.Interfaces;
 using AM_Sopplement.DataAccess.UnitOfWork.Interfaces;
+using AM_Supplement.Shared.Enums;
 using AMSupplement.Domain;
 using AMSupplement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -30,9 +31,13 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
         {
             AMSublementDbContext.Products.Remove(product);
         }
-        public async Task<List<Product>> GetListOfProduct()
+        public async Task<List<Product>> GetListOfProduct(int PageNumber,int PageSize)
         {
-           return await AMSublementDbContext.Products.ToListAsync();
+            List<Product> productlist = new List<Product>();
+            int SkippedPages = (PageNumber - 1) * PageSize;
+          var products =  await AMSublementDbContext.Products.Skip(SkippedPages).Take(PageSize).ToListAsync();
+        
+            return products;
         }
     }
 }
