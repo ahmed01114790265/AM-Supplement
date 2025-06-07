@@ -97,7 +97,7 @@ namespace AM_Supplement.Application.Services
                 Model = true
             };
         }
-        public async Task<ResultList<ProductDTO>> GetListofProduct(int? PageNumber, int? PageSize, TypeSorting sorting)
+        public async Task<ResultList<ProductDTO>> GetListofProduct(int? PageNumber, int? PageSize,TypeSortingorFilltring sorting)
         {
             int PN = PageNumber.HasValue ? PageNumber.Value : 1;
             int PS = PageSize.HasValue ? PageSize.Value : 6;
@@ -106,24 +106,56 @@ namespace AM_Supplement.Application.Services
       
            switch(sorting)
             {
-                case TypeSorting.String:
-                    ListProduct = ListProduct.OrderByDescending(x => x.Name)
-                   .ThenByDescending(c => c.Description)
-                   .ThenByDescending(z=>z.Taste)
-                   .ToList();
+                case TypeSortingorFilltring.Featured:
+                    ListProduct = ListProduct.Order().ToList();
                     break;
-                case TypeSorting.Intrger:
-                    ListProduct = ListProduct.OrderByDescending(x => x.Discount)
-                   .ToList();
-                    break;
-                 case TypeSorting.Double:
+                case TypeSortingorFilltring.Bestselling:
                     ListProduct = ListProduct.OrderByDescending(x => x.Price)
-                        .ThenByDescending(c=>c.Weight)
+                   .ToList();
+                    break;
+                 case TypeSortingorFilltring.AlphabeticalllyA_to_Z:
+                    ListProduct = ListProduct.OrderBy(x =>x.Name)
                         .ToList();
                     break;
+                case TypeSortingorFilltring.AlphabeticalllyZ_to_A:
+                    ListProduct = ListProduct.OrderByDescending(x => x.Name)
+                        .ToList();
+                    break;
+                case TypeSortingorFilltring.PriceLow_to_high:
+                    ListProduct = ListProduct.OrderBy(x => x.Price)
+                        .ToList();
+                    break;
+                case TypeSortingorFilltring.priceHigh_to_Low:
+                    ListProduct = ListProduct.OrderByDescending(x => x.Price)
+                        .ToList();
+                    break;
+                case TypeSortingorFilltring.ProductTypeAmino:
+                    ListProduct = ListProduct.Where(x=>x.Type == ProductType.Amino)
+                        .Order() .ToList();
+                    break ;
+                case TypeSortingorFilltring.ProductTypeGainer:
+                    ListProduct = ListProduct.Where(x=> x.Type == ProductType.Gainer)
+                        .Order().ToList();
+                    break ;
+                case TypeSortingorFilltring.ProductTypeWheyProtein:
+                     ListProduct = ListProduct.Where(x=> x.Type == ProductType.WheyProtein)
+                        .Order() .ToList();
+                    break ;
+                case TypeSortingorFilltring.ProductTypeCreatine:
+                    ListProduct = ListProduct.Where(x => x.Type == ProductType.Creatine)
+                        .Order().ToList();
+                    break;
+                case TypeSortingorFilltring.ProductTypeCasien: 
+                    ListProduct = ListProduct.Where(x=>x.Type == ProductType.casein)
+                        .Order().ToList() ;
+                    break ;
+                case TypeSortingorFilltring.ProductTypePre_workout:
+                    ListProduct = ListProduct.Where(x => x.Type == ProductType.Pre_workout)
+                        .Order().ToList();
+                    break;
+
             }
-          
-            
+                     
             if(ListProduct==null || ListProduct.Count==0)
             {
                 return new ResultList<ProductDTO>
