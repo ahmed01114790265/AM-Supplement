@@ -107,7 +107,7 @@ namespace AM_Supplement.Application.Services
            switch(sorting)
             {
                 case TypeSortingorFilltring.Featured:
-                    ListProduct = ListProduct.Order().ToList();
+                    ListProduct = ListProduct.OrderBy(x=> x.Id).ToList();
                     break;
                 case TypeSortingorFilltring.Bestselling:
                     ListProduct = ListProduct.OrderByDescending(x => x.Price)
