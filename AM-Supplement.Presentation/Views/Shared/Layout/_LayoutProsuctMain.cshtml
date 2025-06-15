@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/wwwroot/css/style.css" />
+   
+</head>
+<body>
+    <header>
+        @await Html.PartialAsync("_Header")
+    </header>
+   
+    <main>
+        @RenderBody()
+    </main>
+    <footer>
+        @await Html.PartialAsync("_Footer")
+    </footer>
+    @RenderSection("scripts",required:false)
+    @section scripts{
+        <script src="~/wwwroot/js/script.js"></script>
+    }
+</body>
+</html>

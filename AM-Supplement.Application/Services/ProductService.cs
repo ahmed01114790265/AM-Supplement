@@ -135,23 +135,23 @@ namespace AM_Supplement.Application.Services
                     break ;
                 case TypeSortingorFilltring.ProductTypeGainer:
                     ListProduct = ListProduct.Where(x=> x.Type == ProductType.Gainer)
-                        .Order().ToList();
+                        .OrderBy(x=> x.Type == ProductType.Gainer).ToList();
                     break ;
                 case TypeSortingorFilltring.ProductTypeWheyProtein:
                      ListProduct = ListProduct.Where(x=> x.Type == ProductType.WheyProtein)
-                        .Order() .ToList();
+                        .OrderBy(x=> x.Type == ProductType.WheyProtein) .ToList();
                     break ;
                 case TypeSortingorFilltring.ProductTypeCreatine:
                     ListProduct = ListProduct.Where(x => x.Type == ProductType.Creatine)
-                        .Order().ToList();
+                        .OrderBy(x=> x.Type == ProductType.Creatine).ToList();
                     break;
                 case TypeSortingorFilltring.ProductTypeCasien: 
                     ListProduct = ListProduct.Where(x=>x.Type == ProductType.casein)
-                        .Order().ToList() ;
+                        .OrderBy(x => x.Type == ProductType.casein).ToList() ;
                     break ;
                 case TypeSortingorFilltring.ProductTypePre_workout:
                     ListProduct = ListProduct.Where(x => x.Type == ProductType.Pre_workout)
-                        .Order().ToList();
+                        .OrderBy(x => x.Type == ProductType.Pre_workout).ToList();
                     break;
 
             }
