@@ -1,4 +1,5 @@
-﻿using AMSupplement.Domain.Entities;
+﻿using AM_Supplement.Shared.Enums;
+using AMSupplement.Domain.Entities;
 
 namespace AM_Sopplement.DataAccess.Repositories.Interfaces
 {
@@ -7,6 +8,6 @@ namespace AM_Sopplement.DataAccess.Repositories.Interfaces
         public void CreateProduct(Product product);
         public Task<Product> GetProduct(Guid productid);
         public Task DeleteProduct(Product product);
-        public Task<List<Product>> GetListOfProduct(int PageNumber, int PageSize);
+        public Task<List<Product>> GetListOfProduct(int PageNumber, int PageSize, ProductType fillter, TypeSorting sorting);
     }
 }

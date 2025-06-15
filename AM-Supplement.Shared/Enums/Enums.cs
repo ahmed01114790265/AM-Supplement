@@ -16,7 +16,7 @@
         WheyProtein = 6,
 
     }
-    public enum TypeSortingorFilltring
+    public enum TypeSorting
     {
         Featured,
         Bestselling,
@@ -24,13 +24,6 @@
         AlphabeticalllyZ_to_A,
         PriceLow_to_high,
         priceHigh_to_Low,
-        ProductTypeAmino,
-        ProductTypeCasien,
-        ProductTypeCreatine,
-        ProductTypePre_workout,
-        ProductTypeGainer,
-        ProductTypeWheyProtein,
-
-
+     
     }
 }
