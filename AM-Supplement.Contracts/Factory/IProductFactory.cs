@@ -8,5 +8,6 @@ namespace AM_Supplement.Contracts.Factory
         ProductDTO CreateProductDTO(Product product);
         public void UpdateProduct(Product product, ProductDTO productDTO);
         public bool ValidateBeforeDelete(Guid productId,Guid productDTOId);
+        public List<ProductDTO> CreateListofProductDTO(List<Product> products);
     }
 }

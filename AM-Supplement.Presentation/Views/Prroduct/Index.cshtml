@@ -1,0 +1,20 @@
+﻿@model List< AM_Supplement.Contracts.DTO.ProductDTO>
+
+
+@{
+    Layout = "~/Views/Shared/Layout/_LayoutProsuctMain.cshtml";
+}
+<h1>اهلا بك في الصفحه الرئيسيسه </h1>
+
+@if(Model==null)
+{
+    <p> @ViewBag.ErrorMessage</p>
+}
+<div class="ListofProduct">
+    @foreach(var Product in Model)
+    {
+        <div class="Product">
+            @await Html.PartialAsync("_CardProduct", Product)
+        </div>
+    }
+</div>

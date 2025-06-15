@@ -56,6 +56,15 @@ namespace AM_Supplement.Application.Factory
                 return true;
             return false;
         }
+        public List<ProductDTO> CreateListofProductDTO(List<Product> products)
+        {
+            List<ProductDTO> productDTOs = new List<ProductDTO>();
+            foreach (var product in products)
+            {
+                productDTOs.Add(CreateProductDTO(product));
+            }
+            return productDTOs;
+        }
       
     }
 }
