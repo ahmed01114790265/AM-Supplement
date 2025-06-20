@@ -100,24 +100,30 @@ namespace AM_Supplement.Application.Services
                 Model = true
             };
         }
-        public async Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex, int? pageSize, ProductType prodcutTypeFilte, TypeSorting sorting)
+        public async Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex, int? pageSize, ProductType prodcutTypeFilter, TypeSorting? sorting)
         {
-            int PN = pageIndex.HasValue ?  pageIndex.Value : 1;
-            int PS = pageSize.HasValue ? pageSize.Value : 6;
+            pageIndex = pageIndex.HasValue ?  pageIndex.Value : 1;
+            pageSize = pageSize.HasValue ? pageSize.Value : 6;
 
-            var products = await ProductRepository.GetProducts(PN,PS, prodcutTypeFilte, sorting);
+            var productsList = await ProductRepository.GetProducts(pageIndex.Value, pageSize.Value, prodcutTypeFilter, sorting);
 
-            //var ListProductDTO = new List<ProductDTO>();
-            var ListProductDTO = products.Select(x => ProductFactory.CreateProductDTO(x)).ToList();
-           
+            if (productsList == null || productsList.Products == null)
+            {
+                return new ResultList<ProductDTO>
+                {
+                    IsVallid = false,
+                    ErorrMassege = " list is null "
+                };
+            }
+            var modelList = productsList.Products.Select(x => ProductFactory.CreateProductDTO(x)).ToList();
+
             return new ResultList<ProductDTO>
             {
                 IsVallid = true,
-                ModelList = ListProductDTO,
-                TotalPages = ListProductDTO.Count/PS,
+                ModelList = modelList,
+                TotalPages = (int)Math.Ceiling((double)productsList.TotalCount / pageSize.Value),
             };
-                
         }
-       
+
     }
 }
