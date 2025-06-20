@@ -5,6 +5,7 @@ using AMSupplement.Domain;
 using AMSupplement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 
 namespace AM_Sopplement.DataAccess.Repositories.Implementation
@@ -32,18 +33,19 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
         {
             AMSublementDbContext.Products.Remove(product);
         }
-        public async Task<List<Product>> GetListOfProduct(int PageNumber,int PageSize , ProductType fillter , TypeSorting sorting )
+        public async Task<List<Product>> GetProducts(int PageNumber,int PageSize , ProductType prodcutTypeFilte, TypeSorting sorting )
         {
             List<Product> productlist = new List<Product>();
             int SkippedPages = (PageNumber - 1) * PageSize;
-          IQueryable<Product> products =   AMSublementDbContext.Products
-                .Where(x => x.Type == fillter);
+            IQueryable<Product> products = AMSublementDbContext.Products
+                  .Where(x => x.Type == prodcutTypeFilte);
             switch(sorting)
             {
                 case TypeSorting.Featured:
                    products =  products.OrderBy(x => x.Id);
                     break;
-                case TypeSorting.Bestselling: products.OrderByDescending(x => x.Price);
+                case TypeSorting.Bestselling:
+                   products =  products.OrderByDescending(x => x.Price);
                     break;  
                 case TypeSorting.AlphabeticalllyA_to_Z:
                     products = products.OrderBy(x => x.Name);
@@ -58,7 +60,7 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
                     products = products.OrderByDescending(x => x.Price);
                     break;
                 default: 
-                    products=products.OrderBy(x => x.Id);
+                    products=products.OrderByDescending(x=>x.CreationDate);
                     break;
             }
 

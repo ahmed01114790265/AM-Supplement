@@ -5,6 +5,9 @@ using AM_Supplement.Contracts.Factory;
 using AM_Supplement.Contracts.ResultModel;
 using AM_Supplement.Contracts.Services;
 using AM_Supplement.Shared.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.IdentityModel.Tokens;
+using System.Runtime.ConstrainedExecution;
 using System.Threading.Tasks;
 
 namespace AM_Supplement.Application.Services
@@ -97,23 +100,16 @@ namespace AM_Supplement.Application.Services
                 Model = true
             };
         }
-        public async Task<ResultList<ProductDTO>> GetListofProduct(int? PageNumber, int? PageSize, ProductType fillter, TypeSorting sorting)
+        public async Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex, int? pageSize, ProductType prodcutTypeFilte, TypeSorting sorting)
         {
-            int PN = PageNumber.HasValue ? PageNumber.Value : 1;
-            int PS = PageSize.HasValue ? PageSize.Value : 6;
+            int PN = pageIndex.HasValue ?  pageIndex.Value : 1;
+            int PS = pageSize.HasValue ? pageSize.Value : 6;
 
-            var ListProduct = await ProductRepository.GetListOfProduct(PN,PS,fillter,sorting);
-       
-            if(ListProduct==null || ListProduct.Count==0)
-            {
-                return new ResultList<ProductDTO>
-                    {
-                        IsVallid = false,
-                        ErorrMassege = "list is emptey",
+            var products = await ProductRepository.GetProducts(PN,PS, prodcutTypeFilte, sorting);
 
-                    };
-            }
-            var ListProductDTO = ProductFactory.CreateListofProductDTO( ListProduct);
+            //var ListProductDTO = new List<ProductDTO>();
+            var ListProductDTO = products.Select(x => ProductFactory.CreateProductDTO(x)).ToList();
+           
             return new ResultList<ProductDTO>
             {
                 IsVallid = true,
