@@ -3,8 +3,10 @@ using AM_Sopplement.DataAccess.UnitOfWork.Interfaces;
 using AM_Supplement.Shared.Enums;
 using AMSupplement.Domain;
 using AMSupplement.Domain.Entities;
+using AMSupplement.Domain.Entities.CustomEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 
 namespace AM_Sopplement.DataAccess.Repositories.Implementation
@@ -32,18 +34,17 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
         {
             AMSublementDbContext.Products.Remove(product);
         }
-        public async Task<List<Product>> GetListOfProduct(int PageNumber,int PageSize , ProductType fillter , TypeSorting sorting )
+        public async Task<ProductListData> GetProducts(int PageNumber,int PageSize , ProductType? prodcutTypeFilter, TypeSorting? sorting)
         {
-            List<Product> productlist = new List<Product>();
             int SkippedPages = (PageNumber - 1) * PageSize;
-          IQueryable<Product> products =   AMSublementDbContext.Products
-                .Where(x => x.Type == fillter);
+            IQueryable<Product> products = AMSublementDbContext.Products
+                  .Where(x => !prodcutTypeFilter.HasValue || x.Type == prodcutTypeFilter.Value);
+
             switch(sorting)
             {
-                case TypeSorting.Featured:
-                   products =  products.OrderBy(x => x.Id);
-                    break;
-                case TypeSorting.Bestselling: products.OrderByDescending(x => x.Price);
+                // best sellers need to be ordered by  more selling products
+                case TypeSorting.Bestselling:
+                   products =  products.OrderByDescending(x => x.Price);
                     break;  
                 case TypeSorting.AlphabeticalllyA_to_Z:
                     products = products.OrderBy(x => x.Name);
@@ -58,12 +59,17 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
                     products = products.OrderByDescending(x => x.Price);
                     break;
                 default: 
-                    products=products.OrderBy(x => x.Id);
+                    products=products.OrderByDescending(x=>x.CreationDate);
                     break;
             }
+            int count = await products.CountAsync();
 
-            return await products.Skip(SkippedPages).Take(PageSize).ToListAsync();
-          
+            var productsList = await products.Skip(SkippedPages).Take(PageSize).ToListAsync();
+            return new ProductListData
+            {
+                Products = productsList,
+                TotalCount = count
+            };
         }
     }
 }
