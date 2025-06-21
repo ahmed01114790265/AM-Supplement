@@ -4,15 +4,19 @@ using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Factory;
 using AM_Supplement.Contracts.ResultModel;
 using AM_Supplement.Contracts.Services;
+using AM_Supplement.Shared.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.IdentityModel.Tokens;
+using System.Runtime.ConstrainedExecution;
 using System.Threading.Tasks;
 
 namespace AM_Supplement.Application.Services
 {
     public class ProductService : IProductService
     {
-        IProductRepository ProductRepository { get; set; }
-        IProductFactory ProductFactory;
-        IUnitOfWork UnitOfWork;
+        readonly IProductRepository ProductRepository;
+        readonly IProductFactory ProductFactory;
+        readonly  IUnitOfWork UnitOfWork;
         public ProductService(IProductRepository productRepository, IProductFactory productFactory, IUnitOfWork unitOfWork)
         {
             ProductRepository = productRepository;
@@ -86,7 +90,7 @@ namespace AM_Supplement.Application.Services
                     ErorrMassege = $"product with Id {productId} not found"
                 };
             
-            ProductRepository.DeleteProduct(product);
+            await ProductRepository.DeleteProduct(product);
             
             await  UnitOfWork.SaveChangsAsync();
 
@@ -96,5 +100,30 @@ namespace AM_Supplement.Application.Services
                 Model = true
             };
         }
+        public async Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex, int? pageSize, ProductType prodcutTypeFilter, TypeSorting? sorting)
+        {
+            pageIndex = pageIndex.HasValue ?  pageIndex.Value : 1;
+            pageSize = pageSize.HasValue ? pageSize.Value : 6;
+
+            var productsList = await ProductRepository.GetProducts(pageIndex.Value, pageSize.Value, prodcutTypeFilter, sorting);
+
+            if (productsList == null || productsList.Products == null)
+            {
+                return new ResultList<ProductDTO>
+                {
+                    IsVallid = false,
+                    ErorrMassege = " list is null "
+                };
+            }
+            var modelList = productsList.Products.Select(x => ProductFactory.CreateProductDTO(x)).ToList();
+
+            return new ResultList<ProductDTO>
+            {
+                IsVallid = true,
+                ModelList = modelList,
+                TotalPages = (int)Math.Ceiling((double)productsList.TotalCount / pageSize.Value),
+            };
+        }
+
     }
 }

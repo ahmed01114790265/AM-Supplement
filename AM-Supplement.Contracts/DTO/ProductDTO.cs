@@ -14,5 +14,6 @@ namespace AM_Supplement.Contracts.DTO
         public double Weight { get; set; }
         public int Discount { get; set; }
         public ProductType Type { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }
