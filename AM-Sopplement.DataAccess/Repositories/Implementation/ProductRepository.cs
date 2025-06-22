@@ -44,7 +44,7 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
             {
                 // best sellers need to be ordered by  more selling products
                 case TypeSorting.Bestselling:
-                   products =  products.OrderByDescending(x => x.Price);
+                   products =  products.OrderByDescending(x => x.OrderItems.Sum(x=>x.Quantity));
                     break;  
                 case TypeSorting.AlphabeticalllyA_to_Z:
                     products = products.OrderBy(x => x.Name);
