@@ -11,6 +11,5 @@ namespace AM_Supplement.Contracts.Services
         public Task<ResultModel<ProductDTO>> GetProductById(Guid productid);
         public Task<ResultModel<Guid>> UpdateProduct(ProductDTO productDTO);
         Task<ResultModel<bool>> DeleteProduct(Guid productId);
-        public Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex, int? pageSize, ProductType prodcutTypeFilte, TypeSorting? sorting);
-    }
+        public Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex = 1, int? pageSize = 6, ProductType? prodcutTypeFilter = ProductType.Creatine, TypeSorting? sorting = TypeSorting.Bestselling);
 }

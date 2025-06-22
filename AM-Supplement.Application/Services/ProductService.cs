@@ -100,10 +100,10 @@ namespace AM_Supplement.Application.Services
                 Model = true
             };
         }
-        public async Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex, int? pageSize, ProductType prodcutTypeFilter, TypeSorting? sorting)
+        public async Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex=1, int? pageSize=6, ProductType? prodcutTypeFilter=ProductType.Creatine, TypeSorting? sorting=TypeSorting.Bestselling)
         {
-            pageIndex = pageIndex.HasValue ?  pageIndex.Value : 1;
-            pageSize = pageSize.HasValue ? pageSize.Value : 6;
+            //pageIndex = pageIndex.HasValue ?  pageIndex.Value : 1;
+            //pageSize = pageSize.HasValue ? pageSize.Value : 6;
 
             var productsList = await ProductRepository.GetProducts(pageIndex.Value, pageSize.Value, prodcutTypeFilter, sorting);
 

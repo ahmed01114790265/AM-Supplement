@@ -17,24 +17,25 @@ namespace AM_Supplement.Presentation.Controllers.ProductController
         [HttpPost]
         public async Task< IActionResult> Index()
         {
-           var result = await productService.GetListofProduct(1,6,TypeSortingorFilltring.Featured); 
-            if(result.IsVallid==false)
+            var result = await productService.GetProductsList();
+            if(result.IsVallid==false || result.ModelList==null)
             {
                 ViewBag.ErrorMessage = result.ErorrMassege;
-                return View();
+                return View(new List<ProductDTO>());
             }
 
             return View(result.ModelList);
         }
         [HttpPost]
-        public async Task<IActionResult> GetListofProduct(int PageNumber, int PageSize ,TypeSortingorFilltring Sorting)
+        public async Task<IActionResult> GetListofProduct(int PageNumber, int PageSize , ProductType prodcutTypeFilter,TypeSorting Sorting)
         {
-            var result = await productService.GetListofProduct(PageNumber,PageSize ,Sorting);
+            var result = await productService.GetProductsList(PageNumber,PageSize,prodcutTypeFilter ,Sorting);
             if (result.IsVallid)
             {
-                return View(result.ModelList);
+                return View("Index",result.ModelList);
             }
-           return  RedirectToAction("Index");
+            TempData["ErrorMessage"] = result.ErorrMassege;
+            return  RedirectToAction("Index");
             
         }
         [HttpDelete]
@@ -85,7 +86,6 @@ namespace AM_Supplement.Presentation.Controllers.ProductController
             ViewBag.ErorrMassage = result.ErorrMassege;
             return View(productDTO);
          
-
         }
     }
    
