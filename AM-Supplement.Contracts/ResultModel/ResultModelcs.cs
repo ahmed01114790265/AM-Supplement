@@ -2,15 +2,15 @@
 {
     public class ResultModel
     {
-        public bool IsVallid {  get; set; }
-        public string ErorrMassege {  get; set; }
+        public bool IsValid {  get; set; }
+        public string ErrorMessage {  get; set; }
 
     }
-    public class ResultModel<T>:ResultModel
+    public class ResultModel<T> : ResultModel
     {
        public T Model {  get; set; }
     }
-    public class ResultList<T>:ResultModel
+    public class ResultList<T> : ResultModel
     {
         public List<T> ModelList { get; set; }
         public int TotalPages { get; set; }

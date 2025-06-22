@@ -31,7 +31,7 @@ namespace AM_Supplement.Application.Services
 
             return new ResultModel<Guid>()
             {
-                IsVallid = true,
+                IsValid = true,
                 Model = product.Id
             };
 
@@ -43,14 +43,14 @@ namespace AM_Supplement.Application.Services
             {
                 return new ResultModel<ProductDTO>
                 {
-                    IsVallid = false,
-                    ErorrMassege = "product is not found"
+                    IsValid = false,
+                    ErrorMessage = "product is not found"
                 };
             }
             var result = ProductFactory.CreateProductDTO(product);
             return new ResultModel<ProductDTO>()
             {
-                IsVallid = true,
+                IsValid = true,
                 Model = result
             };
         }
@@ -59,23 +59,23 @@ namespace AM_Supplement.Application.Services
             if (!productDTO.Id.HasValue)
                 return new ResultModel<Guid>()
                 {
-                    IsVallid = false,
-                    ErorrMassege = "productid is empty please enter date"
+                    IsValid = false,
+                    ErrorMessage = "productid is empty please enter date"
                 };
 
                var product = await  ProductRepository.GetProduct(productDTO.Id.Value);
             if (product == null)
                 return new ResultModel<Guid>()
                 {
-                    IsVallid = false,
-                    ErorrMassege = $"product with Id {productDTO.Id} is not exists"
+                    IsValid = false,
+                    ErrorMessage = $"product with Id {productDTO.Id} is not exists"
                 };
 
                 ProductFactory.UpdateProduct(product, productDTO);
                 await UnitOfWork.SaveChangsAsync();
                 return new ResultModel<Guid>()
                 {
-                    IsVallid = true,
+                    IsValid = true,
                     Model = product.Id
                 };
         }
@@ -86,8 +86,8 @@ namespace AM_Supplement.Application.Services
             if (product == null)
                 return new ResultModel<bool>
                 {
-                    IsVallid = false,
-                    ErorrMassege = $"product with Id {productId} not found"
+                    IsValid = false,
+                    ErrorMessage = $"product with Id {productId} not found"
                 };
             
             await ProductRepository.DeleteProduct(product);
@@ -96,7 +96,7 @@ namespace AM_Supplement.Application.Services
 
             return new ResultModel<bool>
             {
-                IsVallid = true,
+                IsValid = true,
                 Model = true
             };
         }
@@ -111,15 +111,15 @@ namespace AM_Supplement.Application.Services
             {
                 return new ResultList<ProductDTO>
                 {
-                    IsVallid = false,
-                    ErorrMassege = " list is null "
+                    IsValid = false,
+                    ErrorMessage = " list is null "
                 };
             }
             var modelList = productsList.Products.Select(x => ProductFactory.CreateProductDTO(x)).ToList();
 
             return new ResultList<ProductDTO>
             {
-                IsVallid = true,
+                IsValid = true,
                 ModelList = modelList,
                 TotalPages = (int)Math.Ceiling((double)productsList.TotalCount / pageSize.Value),
             };
