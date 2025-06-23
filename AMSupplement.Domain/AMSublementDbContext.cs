@@ -1,14 +1,15 @@
 ﻿using AMSupplement.Domain.Entities;
 using AMSupplement.Domain.EntitiesConfiguration;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace AMSupplement.Domain
 {
-    public class AMSublementDbContext : DbContext
+    public class AMSublementDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,Guid>
     {
         IConfiguration Configuration;
-        public AMSublementDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
+        public AMSublementDbContext(DbContextOptions<AMSublementDbContext> options, IConfiguration configuration) : base(options)
         {
             Configuration = configuration;  
         }
