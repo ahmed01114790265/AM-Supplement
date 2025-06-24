@@ -1,6 +1,7 @@
 ﻿using AMSupplement.Domain.AuditEntityInterfaces;
 using AMSupplement.Domain.Entities;
 using AMSupplement.Domain.EntitiesConfiguration;
+using AMSupplement.Domain.EntitiesConfiguration._ٍAuditableEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -35,19 +36,21 @@ namespace AMSupplement.Domain
             modelBuilder.ApplyConfiguration(new OrderItemConfiguration());  
             modelBuilder.ApplyConfiguration(new ProductConfiguration());  
             modelBuilder .ApplyConfiguration(new PaymentConfiguration());
+
+            modelBuilder.ApplyAuditProperties();
         }
 
-        public override int SaveChanges(bool acceptAllChangesOnSuccess = true)
+        public override int SaveChanges()
         {
             ApplyAuditing();
-            return base.SaveChanges(acceptAllChangesOnSuccess);
+            return base.SaveChanges(acceptAllChangesOnSuccess : true);
         }
 
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess = true,
+        public override async Task<int> SaveChangesAsync(
             CancellationToken cancellationToken = default)
         {
             ApplyAuditing();
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            return await base.SaveChangesAsync(true, cancellationToken);
         }
         private void ApplyAuditing()
         {
