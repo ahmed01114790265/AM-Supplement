@@ -1,4 +1,5 @@
-﻿using AMSupplement.Domain.Entities;
+﻿using AMSupplement.Domain.AuditEntityInterfaces;
+using AMSupplement.Domain.Entities;
 using AMSupplement.Domain.EntitiesConfiguration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +35,41 @@ namespace AMSupplement.Domain
             modelBuilder.ApplyConfiguration(new OrderItemConfiguration());  
             modelBuilder.ApplyConfiguration(new ProductConfiguration());  
             modelBuilder .ApplyConfiguration(new PaymentConfiguration());
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess = true)
+        {
+            ApplyAuditing();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess = true,
+            CancellationToken cancellationToken = default)
+        {
+            ApplyAuditing();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+        private void ApplyAuditing()
+        {
+            var currentDate = DateTime.UtcNow;
+           // var currentUser = Guid.NewGuid(); // will be handled in another task 
+            foreach(var entry in ChangeTracker.Entries<IAuditableEntity>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedDate = currentDate;
+                   // entry.Entity.CreatedBy = currentUser;
+                }
+                if(entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedDate = currentDate;
+                    //entry.Entity.UpdatedBy = currentUser;
+
+                    // optional: prevent tampering with CreatedDate/By
+                    entry.Property(e => e.CreatedDate).IsModified = false;
+                    entry.Property(e => e.CreatedBy).IsModified = false;
+                }
+            }
         }
     }
 }

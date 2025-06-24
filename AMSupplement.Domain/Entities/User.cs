@@ -1,6 +1,8 @@
-﻿namespace AMSupplement.Domain.Entities
+﻿using AMSupplement.Domain.AuditEntityInterfaces;
+
+namespace AMSupplement.Domain.Entities
 {
-    public class User
+    public class User : AuditableEntity
     {  
         public Guid Id { get; set; }
         public string Name { get; set; }
