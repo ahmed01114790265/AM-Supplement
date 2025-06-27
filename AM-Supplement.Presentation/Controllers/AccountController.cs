@@ -26,7 +26,7 @@ namespace AM_Supplement.Presentation.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel userModel)
+        public async Task<IActionResult> Register(RegisterDTO userModel)
         {
             ApplicationUser user = new ApplicationUser();
             user.UserName = userModel.Email;
@@ -49,7 +49,7 @@ namespace AM_Supplement.Presentation.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> LogIn(LogInViewModel userModel)
+        public async Task<IActionResult> LogIn(LogInDTO userModel)
         {
 
             var result = await _signInManager.PasswordSignInAsync( userModel.Email, userModel.Password, isPersistent: true, lockoutOnFailure: false);
@@ -75,7 +75,7 @@ namespace AM_Supplement.Presentation.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
         {
            
             var user = await _userManager.FindByEmailAsync(model.Email);

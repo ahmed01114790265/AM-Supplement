@@ -2,7 +2,7 @@
 
 namespace AM_Supplement.Presentation.ViewsModel.AccountViewModel
 {
-    public class ChangePasswordViewModel
+    public class ChangePasswordDTO
     {
         [Required]
         [EmailAddress]
