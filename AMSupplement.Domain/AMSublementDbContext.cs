@@ -2,6 +2,7 @@
 using AMSupplement.Domain.Entities;
 using AMSupplement.Domain.EntitiesConfiguration;
 using AMSupplement.Domain.EntitiesConfiguration._ٍAuditableEntities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
