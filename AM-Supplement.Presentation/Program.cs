@@ -11,7 +11,7 @@ namespace AM_Supplement.Presentation
 
             //register services
             builder.Services.AddApplication(builder.Configuration);
-        
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
@@ -21,7 +21,17 @@ namespace AM_Supplement.Presentation
             {
                 var service = scope.ServiceProvider.GetRequiredService(typeof(IProductService));
             }
-            app.MapGet("/", () => "Hello World!");
+            app.UseRouting();
+            app.UseStaticFiles();
+            app.UseEndpoints( endpoints => 
+            {
+                endpoints.MapControllerRoute(
+                  name: "default",
+                  pattern: "{controller=Product}/{action=Index}/{id?}"
+                );
+
+            });
+            app.MapControllers();
             app.Run();
         }
     }

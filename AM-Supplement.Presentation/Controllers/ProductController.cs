@@ -14,17 +14,17 @@ namespace AM_Supplement.Presentation.Controllers
         {
             this.productService = productService;
         }
-        [HttpPost]
+        [HttpGet]
         public async Task< IActionResult> Index()
         {
             var result = await productService.GetProductsList();
             if(result.IsValid==false || result.ModelList==null)
             {
                 ViewBag.ErrorMessage = result.ErrorMessage;
-                return View(new List<ProductDTO>());
+                return View("ProductsList", new List<ProductDTO>());
             }
 
-            return View(result.ModelList);
+            return View("ProductsList",result.ModelList);
         }
         [HttpGet]
         public async Task<IActionResult> GetProductsList(int PageNumber, int PageSize , ProductType prodcutTypeFilter,TypeSorting Sorting)
