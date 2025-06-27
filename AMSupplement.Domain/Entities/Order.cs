@@ -1,6 +1,8 @@
-﻿namespace AMSupplement.Domain.Entities
+﻿using AMSupplement.Domain.AuditEntityInterfaces;
+
+namespace AMSupplement.Domain.Entities
 {
-    public  class Order
+    public  class Order : AuditableEntity
     { 
         public Guid Id { get; set; }
         public DateTime OrderDate { get; set; }

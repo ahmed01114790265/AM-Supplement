@@ -1,7 +1,8 @@
 ﻿using AM_Supplement.Shared.Enums;
+using AMSupplement.Domain.AuditEntityInterfaces;
 namespace AMSupplement.Domain.Entities
 {
-    public class Product
+    public class Product : AuditableEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
