@@ -7,7 +7,7 @@
         public double TotalAmount { get; set; }
         public bool Status { get; set; }
         public Guid UserId { get; set; }
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }  
     }

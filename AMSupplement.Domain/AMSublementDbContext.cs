@@ -19,7 +19,6 @@ namespace AMSupplement.Domain
         //    optionsBuilder.UseSqlServer(Configuration.GetConnectionString("cs"));
         //}
         #region dbsets
-        public DbSet<User> Users { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -30,7 +29,6 @@ namespace AMSupplement.Domain
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder .ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new OrderItemConfiguration());  
             modelBuilder.ApplyConfiguration(new ProductConfiguration());  

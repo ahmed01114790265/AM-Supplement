@@ -26,4 +26,10 @@
         priceHigh_to_Low,
      
     }
+    public enum Role
+    {
+        Admin = 1,
+        Supervisor = 2,
+        User = 3
+    }
 }
