@@ -1,5 +1,7 @@
 using AM_Supplement.Application;
 using AM_Supplement.Contracts.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace AM_Supplement.Presentation
 {
@@ -11,7 +13,19 @@ namespace AM_Supplement.Presentation
 
             //register services
             builder.Services.AddApplication(builder.Configuration);
-        
+            builder.Services.ConfigureApplicationCookie(x =>
+            {
+                x.LogoutPath = "/Account/LogIn";
+                x.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                });
+
+            builder.Services.AddAuthorization(x =>
+            {
+                x.AddPolicy("User",p => p.RequireAuthenticatedUser().RequireRole("User"));
+                x.AddPolicy("Admin", p=> p.RequireAuthenticatedUser().RequireRole("Admin"));
+                x.AddPolicy("SuperVisor", p=> p.RequireAuthenticatedUser().RequireRole("SuperVisor"));
+                x.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();  
+            });
 
             var app = builder.Build();
 
@@ -21,6 +35,8 @@ namespace AM_Supplement.Presentation
             {
                 var service = scope.ServiceProvider.GetRequiredService(typeof(IProductService));
             }
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.MapGet("/", () => "Hello World!");
             app.Run();
         }
