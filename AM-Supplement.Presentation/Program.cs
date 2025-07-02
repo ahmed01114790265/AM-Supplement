@@ -15,7 +15,7 @@ namespace AM_Supplement.Presentation
             builder.Services.AddApplication(builder.Configuration);
             builder.Services.ConfigureApplicationCookie(x =>
             {
-                x.LogoutPath = "/Account/LogIn";
+                x.LogoutPath = "/account/login";
                 x.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 });
 
@@ -35,9 +35,12 @@ namespace AM_Supplement.Presentation
             {
                 var service = scope.ServiceProvider.GetRequiredService(typeof(IProductService));
             }
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapGet("/", () => "Hello World!");
+            app.MapControllers();
             app.Run();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using AM_Supplement.Presentation.ViewsModel.AccountViewModel;
 using AMSupplement.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace AM_Supplement.Presentation.Controllers
 {
+    
     public class AccountController : Controller
     {
         UserManager<ApplicationUser> _userManager;
@@ -74,6 +76,7 @@ namespace AM_Supplement.Presentation.Controllers
         {
             return View();
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
         {
