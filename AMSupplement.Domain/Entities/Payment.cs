@@ -1,8 +1,9 @@
 ﻿using AM_Supplement.Shared.Enums;
+using AMSupplement.Domain.AuditEntityInterfaces;
 
 namespace AMSupplement.Domain.Entities
 {
-   public class Payment
+   public class Payment : AuditableEntity
     {  
         public Guid Id { get; set; }
         public DateTime Paydate { get; set; } = DateTime.Now;
