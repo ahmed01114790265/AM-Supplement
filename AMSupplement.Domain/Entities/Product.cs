@@ -12,7 +12,6 @@ namespace AMSupplement.Domain.Entities
         public string ImageUrl {  get; set; }
         public double Weight { get; set; }
         public int Discount { get; set; }
-        public DateTime CreationDate {  get; set; }
         public ProductType Type { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 

@@ -20,7 +20,6 @@ namespace AM_Supplement.Application.Factory
                 ImageUrl = productDTO.ImageUrl,
                 Type = productDTO.Type,
                 Weight = productDTO.Weight,
-                CreationDate = DateTime.UtcNow
             };
         }
         public ProductDTO CreateProductDTO(Product product)
@@ -36,7 +35,7 @@ namespace AM_Supplement.Application.Factory
                 ImageUrl = product.ImageUrl,
                 Type = product.Type,
                 Weight = product.Weight,
-                CreationDate = product.CreationDate
+                CreationDate = product.CreatedDate,
             };
         }
         public void UpdateProduct(Product product, ProductDTO productDTO)

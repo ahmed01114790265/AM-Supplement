@@ -59,7 +59,7 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
                     products = products.OrderByDescending(x => x.Price);
                     break;
                 default: 
-                    products=products.OrderByDescending(x=>x.CreationDate);
+                    products=products.OrderByDescending(x=>x.CreatedDate);
                     break;
             }
             int count = await products.CountAsync();
