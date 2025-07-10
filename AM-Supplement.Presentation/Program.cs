@@ -15,7 +15,7 @@ namespace AM_Supplement.Presentation
             builder.Services.AddApplication(builder.Configuration);
             builder.Services.ConfigureApplicationCookie(x =>
             {
-                x.LogoutPath = "/account/login";
+                x.LogoutPath = "/account/logout";
                 x.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 });
 
@@ -23,7 +23,7 @@ namespace AM_Supplement.Presentation
             {
                 x.AddPolicy("User",p => p.RequireAuthenticatedUser().RequireRole("User"));
                 x.AddPolicy("Admin", p=> p.RequireAuthenticatedUser().RequireRole("Admin"));
-                x.AddPolicy("SuperVisor", p=> p.RequireAuthenticatedUser().RequireRole("SuperVisor"));
+                x.AddPolicy("Supervisor", p=> p.RequireAuthenticatedUser().RequireRole("Supervisor"));
                 x.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();  
             });
 
