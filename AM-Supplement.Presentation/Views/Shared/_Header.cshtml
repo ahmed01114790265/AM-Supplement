@@ -1,0 +1,44 @@
+﻿<header>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom shadow-sm mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand text-primary fw-bold" asp-area="" asp-controller="Home" asp-action="Index">MyApp</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-success" asp-area="" asp-controller="users" asp-action="login-view">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-success" asp-area="" asp-controller="users" asp-action="register">Register</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item d-flex align-items-center me-2">
+                            <span class="fw-bold text-primary">@User.Identity.Name</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" asp-area="" asp-controller="users" asp-action="logout">Logout</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
