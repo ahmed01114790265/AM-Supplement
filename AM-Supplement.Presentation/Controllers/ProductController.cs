@@ -1,20 +1,23 @@
 ﻿using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Services;
 using AM_Supplement.Shared.Enums;
+using AM_Supplement.Shared.Localization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AM_Supplement.Presentation.Controllers
 {
     public class ProductController : Controller
     {
         IProductService productService;
-
-        public ProductController(IProductService productService)
+        IStringLocalizer<SharedResource> Localizer;
+        public ProductController(IProductService productService, IStringLocalizer<SharedResource> localizer)
         {
             this.productService = productService;
+            Localizer = localizer;
         }
-        [HttpPost]
+        [HttpGet]
         public async Task< IActionResult> Index()
         {
             var result = await productService.GetProductsList();

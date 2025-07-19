@@ -5,7 +5,9 @@ using AM_Supplement.Contracts.Factory;
 using AM_Supplement.Contracts.ResultModel;
 using AM_Supplement.Contracts.Services;
 using AM_Supplement.Shared.Enums;
+using AM_Supplement.Shared.Localization;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using System.Runtime.ConstrainedExecution;
 using System.Threading.Tasks;
@@ -17,11 +19,13 @@ namespace AM_Supplement.Application.Services
         readonly IProductRepository ProductRepository;
         readonly IProductFactory ProductFactory;
         readonly  IUnitOfWork UnitOfWork;
-        public ProductService(IProductRepository productRepository, IProductFactory productFactory, IUnitOfWork unitOfWork)
+        IStringLocalizer<SharedResource> Localizer;
+        public ProductService(IProductRepository productRepository, IProductFactory productFactory, IUnitOfWork unitOfWork, IStringLocalizer<SharedResource> localizer)
         {
             ProductRepository = productRepository;
             ProductFactory = productFactory;
             UnitOfWork = unitOfWork;
+            Localizer = localizer;
         }
         public  async Task<ResultModel<Guid>> AddProduct(ProductDTO productDTO)
         {
@@ -44,7 +48,7 @@ namespace AM_Supplement.Application.Services
                 return new ResultModel<ProductDTO>
                 {
                     IsValid = false,
-                    ErrorMessage = "product is not found"
+                    ErrorMessage = Localizer["ProdcutNotFount"]
                 };
             }
             var result = ProductFactory.CreateProductDTO(product);
@@ -107,12 +111,12 @@ namespace AM_Supplement.Application.Services
 
             var productsList = await ProductRepository.GetProducts(pageIndex.Value, pageSize.Value, prodcutTypeFilter, sorting);
 
-            if (productsList == null || productsList.Products == null)
+            if (productsList == null || productsList.Products == null || productsList.TotalCount <= 0)
             {
                 return new ResultList<ProductDTO>
                 {
                     IsValid = false,
-                    ErrorMessage = " list is null "
+                    ErrorMessage = Localizer["EmptyList"]
                 };
             }
             var modelList = productsList.Products.Select(x => ProductFactory.CreateProductDTO(x)).ToList();
