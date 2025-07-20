@@ -27,7 +27,7 @@ namespace AM_Supplement.Presentation.Controllers
                 return View("ProductsList", new List<ProductDTO>());
             }
 
-            return View("ProductsList",result.ModelList);
+            return View("ProductsList", result.ModelList);
         }
         [HttpGet]
         public async Task<IActionResult> GetProductsList(int PageNumber, int PageSize , ProductType prodcutTypeFilter,TypeSorting Sorting)

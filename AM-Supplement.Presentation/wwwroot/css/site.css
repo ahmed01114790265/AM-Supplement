@@ -20,3 +20,17 @@ html {
 body {
   margin-bottom: 60px;
 }
+div.card {
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    color: #000000;
+    border: none #ff0000;
+    padding: 5px;
+}
+
+div.listproduct {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-left: 100px;
+}

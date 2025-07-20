@@ -1,16 +1,15 @@
 ﻿@model ProductDTO
 
 
-  <div class="card">
-      <a asp-action="GetProduct" asp-route-id="@Model.Id">
-    <img class="card-img-top" src=@Model.ImageUrl alt=@Model.Name />
-    </a>
-     <div class="card-body">
-         <h3 class="card-title">ProductName: @Model.Name</h3>
-         <h4 class="card-text">Price: @Model.Price </h4>
-        <h5 class="card-text">Discount: @Model.Discount %</h5>
-        </div>
-    
+  
+<div class="card">
+      
+    <img class="card-img-top" src="@Model.ImageUrl" />
+    <div class="card-body">
+        <h4 class="card-title">Name: @Model.Name</h4>
+        <h5 class="card-text">Price: @Model.Price  </h5>
+        <h6 class="card-text">Discount: @Model.Discount %</h6>
+    </div>
 </div>
 
 
