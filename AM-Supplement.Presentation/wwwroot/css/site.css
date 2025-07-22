@@ -22,15 +22,16 @@ body {
 }
 div.card {
     flex: 0 0 auto;
-    background-color: #ffffff;
+    background-color: #00ffff;
     color: #000000;
-    border: none #ff0000;
-    padding: 5px;
+    border: thin #808080;
+    padding: 0px;
+    text-align:center
 }
 
 div.listproduct {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
-    margin-left: 100px;
+    gap: 10px;
+    margin-left: 130px;
 }
