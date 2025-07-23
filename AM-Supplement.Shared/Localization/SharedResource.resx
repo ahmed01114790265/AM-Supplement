@@ -129,4 +129,32 @@
   <data name="EmptyList" xml:space="preserve">
     <value>list is empty</value>
   </data>
+  <data name="ProductNameRequired" xml:space="preserve">
+    <value>Product name is required.</value>
+  </data>
+  <data name="ProductNameMaxLength" xml:space="preserve">
+    <value>Product name must be 100 characters or less.
+</value>
+  </data>
+  <data name="DescriptionMaxLength" xml:space="preserve">
+    <value>Description cannot exceed 500 characters.</value>
+  </data>
+  <data name="PriceRequired" xml:space="preserve">
+    <value>Price is required.</value>
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value>Price must be greater than 0 and less than 100,000.</value>
+  </data>
+  <data name="TasteMaxLength" xml:space="preserve">
+    <value>Taste description cannot exceed 50 characters.</value>
+  </data>
+  <data name="ImageUrlInvalid" xml:space="preserve">
+    <value>The image URL is not valid.</value>
+  </data>
+  <data name="WeightRange" xml:space="preserve">
+    <value>Weight must be between 0.01 and 1000.</value>
+  </data>
+  <data name="DiscountRange " xml:space="preserve">
+    <value>Discount must be between 0 and 100.</value>
+  </data>
 </root>
