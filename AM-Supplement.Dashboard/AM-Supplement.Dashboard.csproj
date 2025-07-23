@@ -7,4 +7,14 @@
     <RootNamespace>AM_Supplement.Dashboard</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AM-Supplement.Application\AM-Supplement.Application.csproj" />
+    <ProjectReference Include="..\AM-Supplement.Contracts\AM-Supplement.Contracts.csproj" />
+    <ProjectReference Include="..\AM-Supplement.Shared\AM-Supplement.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+  </ItemGroup>
+
 </Project>

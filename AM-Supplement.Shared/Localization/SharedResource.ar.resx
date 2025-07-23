@@ -129,4 +129,40 @@
   <data name="EmptyList" xml:space="preserve">
     <value>القائمه فارغه</value>
   </data>
+  <data name="ProductNameRequired" xml:space="preserve">
+    <value>اسم المنتج مطلوب.
+</value>
+  </data>
+  <data name="ProductNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يزيد اسم المنتج عن 100 حرف.
+</value>
+  </data>
+  <data name="DescriptionMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز الوصف 500 حرف.
+</value>
+  </data>
+  <data name="PriceRequired" xml:space="preserve">
+    <value>السعر مطلوب.
+</value>
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value>يجب أن يكون السعر أكبر من 0 وأقل من 100,000.
+</value>
+  </data>
+  <data name="TasteMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز وصف النكهة 50 حرفًا.
+</value>
+  </data>
+  <data name="ImageUrlInvalid" xml:space="preserve">
+    <value>رابط الصورة غير صالح.
+</value>
+  </data>
+  <data name="WeightRange" xml:space="preserve">
+    <value>يجب أن يكون الوزن بين 0.01 و 1000.
+</value>
+  </data>
+  <data name="DiscountRange " xml:space="preserve">
+    <value>يجب أن تكون نسبة الخصم بين 0 و 1000.
+</value>
+  </data>
 </root>

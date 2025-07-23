@@ -1,8 +1,10 @@
 using AM_Supplement.Application;
 using AM_Supplement.Contracts.Services;
+using AM_Supplement.Shared.Localization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System.Net;
@@ -31,7 +33,7 @@ namespace AM_Supplement.Presentation
                // x.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
             });
 
-            builder.Services.AddControllersWithViews();
+            // Add services to the container.
 
             ///localization
             //register localization services 
@@ -47,6 +49,16 @@ namespace AM_Supplement.Presentation
                 return factory.Create(type);
             });
 
+            builder.Services.AddControllersWithViews()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization(options =>
+                {
+                    // Ensure Data Annotations use SharedResource from external layer
+                    var type = typeof(SharedResource);
+                    options.DataAnnotationLocalizerProvider = (modelType, factory) =>
+                    factory.Create(type);
+                });
+
             var supportedCultures = new[] { "en", "ar", "fr" };
 
             //Configure the application to detect and apply the culture for each request.
@@ -58,7 +70,6 @@ namespace AM_Supplement.Presentation
 
                 options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
             });
-
 
             var app = builder.Build();
 

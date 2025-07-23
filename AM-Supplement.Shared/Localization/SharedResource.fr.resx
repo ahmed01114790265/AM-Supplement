@@ -129,4 +129,31 @@
   <data name="EmptyList" xml:space="preserve">
     <value />
   </data>
+  <data name="ProductNameRequired" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ProductNameMaxLength" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DescriptionMaxLength" xml:space="preserve">
+    <value />
+  </data>
+  <data name="PriceRequired" xml:space="preserve">
+    <value />
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TasteMaxLength" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ImageUrlInvalid" xml:space="preserve">
+    <value />
+  </data>
+  <data name="WeightRange" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DiscountRange " xml:space="preserve">
+    <value />
+  </data>
 </root>

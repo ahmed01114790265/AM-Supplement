@@ -78,19 +78,7 @@ namespace AM_Supplement.Presentation.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductDTO productDTO)
-        {
-            var result = await productService.AddProduct(productDTO);
-            if( result.IsValid)
-            {
-                TempData["Massage"] = "New product added";
-                return RedirectToAction("Index");
-            }
-            ViewBag.ErorrMassage = result.ErrorMessage;
-            return View(productDTO);
-         
-        }
+
     }
    
 }
