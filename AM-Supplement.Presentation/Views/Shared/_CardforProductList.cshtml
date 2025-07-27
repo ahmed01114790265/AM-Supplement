@@ -2,13 +2,13 @@
 
 
   
-<div class="card">
+<div class="card shadow-sm h-100">
       
-    <img class="card-img-top" src="@Model.ImageUrl" />
+    <img class="card-img-top" src="@Model.ImageUrl" alt="@Model.Name" style="height:200px; object-fit:cover;"/>
     <div class="card-body">
-        <h4 class="card-title"><strong> @Model.Name</strong></h4>
-        <h5 class="card-text"> @Model.Price. $ </h5>
-        <h7 class="card-text"> @Model.Discount %</h7>
+        <h5 class="card-title"> @Model.Name</h5>
+        <p class="card-text mb-1"> <strong>@Model.Price. $</strong> </p>
+        <p class="card-text mb-1"><strong> @Model.Discount %</strong></p>
     </div>
 </div>
 

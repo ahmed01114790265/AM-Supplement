@@ -9,14 +9,16 @@
 
 @if ( Model.Any())
 {
-<div class="listproduct">
+    <div class="Listproducts row row-cols-1 row-cols-md-3 g-4" >
 @foreach (var item in Model)
-{
-  
+       {
+           <div class="col">
 @await Html.PartialAsync("_CardforProductList", item);
-    
-}
-</div>
+
+            </div>
+        }
+    </div>
+
 }
 else
 {
