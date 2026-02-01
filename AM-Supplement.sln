@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AM-Supplement.Dashboard", "AM-Supplement.Dashboard\AM-Supplement.Dashboard.csproj", "{FEE800C1-08AC-400D-82EA-62F2C872ACEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{9B74D786-825A-4AA5-B08A-420F3D0227DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B74D786-825A-4AA5-B08A-420F3D0227DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B74D786-825A-4AA5-B08A-420F3D0227DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEE800C1-08AC-400D-82EA-62F2C872ACEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEE800C1-08AC-400D-82EA-62F2C872ACEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEE800C1-08AC-400D-82EA-62F2C872ACEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEE800C1-08AC-400D-82EA-62F2C872ACEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
