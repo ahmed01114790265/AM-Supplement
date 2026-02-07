@@ -1,0 +1,30 @@
+﻿@model OrderDetailsDTO
+
+<h2>Order Details</h2>
+
+<p><strong>Status:</strong> @Model.Status</p>
+<p><strong>Date:</strong> @Model.OrderDate</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Price.ToString("C")</td>
+                <td>@item.Quantity</td>
+                <td>@(item.Price* item.Quantity).ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4 class="text-end">Total: @Model.TotalAmount.ToString("C")</h4>

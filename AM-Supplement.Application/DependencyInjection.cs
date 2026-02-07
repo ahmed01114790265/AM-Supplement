@@ -15,6 +15,9 @@ namespace AM_Supplement.Application
             services.AddRepositories(configuration);
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductFactory, ProductFactory>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderFactory, OrderFactory>();
+            services.AddScoped<IPaymentService, PaymentService>();
             return services;
         }
 

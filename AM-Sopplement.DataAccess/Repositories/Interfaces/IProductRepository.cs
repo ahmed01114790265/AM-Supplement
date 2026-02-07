@@ -8,7 +8,11 @@ namespace AM_Sopplement.DataAccess.Repositories.Interfaces
     {
         public void CreateProduct(Product product);
         public Task<Product> GetProduct(Guid productid);
-        public Task DeleteProduct(Product product);
-        public Task<ProductListData> GetProducts(int PageNumber, int PageSize, ProductType? prodcutTypeFilter, TypeSorting? sorting);
+        public void DeleteProduct(Product product);
+        public Task<(List<Product> Products, int TotalCount)> GetProducts(
+      int pageNumber,
+      int pageSize,
+      ProductType? productTypeFilter,
+      TypeSorting? sorting);
     }
 }

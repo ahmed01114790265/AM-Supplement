@@ -9,12 +9,15 @@ namespace AMSupplement.Domain.AuditEntityInterfaces
     public abstract class AuditableEntity : IAuditableEntity
     {
         public DateTime CreatedDate { get; set; }
-        public Guid CreatedBy { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public Guid UpdatedBy { get; set; }
+        public Guid? CreatedBy { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+        public Guid? UpdatedBy { get; set; }
+
         protected AuditableEntity()
         {
             CreatedDate = DateTime.UtcNow;
         }
     }
+
 }

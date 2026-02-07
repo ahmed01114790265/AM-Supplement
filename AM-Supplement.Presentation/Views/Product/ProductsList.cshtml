@@ -1,89 +1,137 @@
-﻿@model IEnumerable<ProductDTO>
+﻿@using AM_Supplement.Presentation.Models
+@using AM_Supplement.Shared.Enums
+@model ProductsListViewModel
 
 @{
     ViewData["Title"] = "Products List";
+
+    var selectedType = Context.Request.Query["productTypeFilter"].ToString();
+    var selectedSort = Context.Request.Query["sorting"].ToString();
 }
 
-<h1>Products List</h1>
+<h2 class="mb-4">Products</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Taste)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Weight)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Taste)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Weight)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+@* @if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["ErrorMessage"]</div>
+} *@
+
+<!-- ===== Filter & Sorting ===== -->
+<form asp-action="GetProductsList" method="get" class="row mb-4 align-items-end">
+
+    <input type="hidden" name="pageNumber" value="1" />
+    <input type="hidden" name="pageSize" value="6" />
+
+    <!-- Product Type Filter -->
+    <div class="col-md-4">
+        <label class="form-label fw-bold">Filter by Product Type</label>
+        <select name="productTypeFilter" class="form-select">
+            <option value="">All Types</option>
+            @foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
+            {
+                <option value="@type" selected="@(selectedType == type.ToString())">
+                    @type
+                </option>
+            }
+        </select>
+    </div>
+
+    <!-- Sorting -->
+    <div class="col-md-4">
+        <label class="form-label fw-bold">Sort By</label>
+        <select name="sorting" class="form-select">
+            <option value="">Default</option>
+            @foreach (TypeSorting sort in Enum.GetValues(typeof(TypeSorting)))
+            {
+                <option value="@sort" selected="@(selectedSort == sort.ToString())">
+                    @sort
+                </option>
+            }
+        </select>
+    </div>
+
+    <!-- Submit -->
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary w-100">
+            Apply Filter
+        </button>
+    </div>
+
+</form>
+
+<!-- ===== Products ===== -->
+<div class="row">
+    @if (Model.Products.Any())
+    {
+        foreach (var product in Model.Products)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+
+                    <img src="@product.ImageUrl"
+                         class="card-img-top"
+                         style="height:220px; object-fit:cover;"
+                         alt="@product.Name" />
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@product.Name</h5>
+
+                        <p class="mb-1">
+                            <strong>Type:</strong> @product.Type
+                        </p>
+
+                        <p class="mb-1">
+                            <strong>Weight:</strong> @product.Weight
+                        </p>
+
+                        <p class="text-success fw-bold">
+                            Discount: @product.DiscountPercentage %
+                        </p>
+                         
+                    </div>
+
+                    <!-- 🔗 View Details -->
+                    <div class="card-footer bg-white text-center">
+                        <a asp-action="GetProduct"
+                           asp-route-id="@product.Id"
+                           class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center">
+            <p>No products available.</p>
+        </div>
+    }
+</div>
+
+<!-- ===== Pagination ===== -->
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="GetProductsList"
+                       asp-route-pageNumber="@i"
+                       asp-route-pageSize="6"
+                       asp-route-productTypeFilter="@selectedType"
+                       asp-route-sorting="@selectedSort">
+                        @i
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </nav>
 }
-    </tbody>
-</table>

@@ -8,9 +8,10 @@ namespace AMSupplement.Domain.AuditEntityInterfaces
 {
     public interface IAuditableEntity
     {
-        public DateTime CreatedDate { get; set; }
-        public Guid CreatedBy { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public Guid UpdatedBy { get; set; }
+        DateTime CreatedDate { get; set; }
+        Guid? CreatedBy { get; set; }
+        DateTime? UpdatedDate { get; set; }
+        Guid? UpdatedBy { get; set; }
     }
+
 }

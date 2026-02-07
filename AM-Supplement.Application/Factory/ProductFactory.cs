@@ -1,6 +1,8 @@
 ﻿using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Factory;
 using AMSupplement.Domain.Entities;
+using AMSupplement.Domain.Entities.CustomEntities;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 
 namespace AM_Supplement.Application.Factory
@@ -16,7 +18,7 @@ namespace AM_Supplement.Application.Factory
                 Description = productDTO.Description,
                 Taste = productDTO.Taste,
                 Price = productDTO.Price,
-                Discount = productDTO.Discount,
+                DiscountPercentage = productDTO.DiscountPercentage,
                 ImageUrl = productDTO.ImageUrl,
                 Type = productDTO.Type,
                 Weight = productDTO.Weight,
@@ -31,11 +33,12 @@ namespace AM_Supplement.Application.Factory
                 Description = product.Description,
                 Taste = product.Taste,
                 Price = product.Price,
-                Discount = product.Discount,
+                DiscountPercentage = product.DiscountPercentage,
                 ImageUrl = product.ImageUrl,
                 Type = product.Type,
                 Weight = product.Weight,
                 CreationDate = product.CreatedDate,
+                Stock = product.Stock
             };
         }
         public void UpdateProduct(Product product, ProductDTO productDTO)
@@ -44,7 +47,7 @@ namespace AM_Supplement.Application.Factory
             product.Description = productDTO.Description;
             product.Taste = productDTO.Taste;
             product.Price = productDTO.Price;
-            product.Discount = productDTO.Discount;
+            product.DiscountPercentage = productDTO.DiscountPercentage;
             product.ImageUrl = productDTO.ImageUrl;
             product.Type = productDTO.Type;
             product.Weight = productDTO.Weight;
@@ -56,7 +59,6 @@ namespace AM_Supplement.Application.Factory
                 return true;
             return false;
         }
-     
-      
+
     }
 }

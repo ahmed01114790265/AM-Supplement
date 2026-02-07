@@ -1,96 +1,133 @@
 ﻿using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Services;
+using AM_Supplement.Presentation.Models;
 using AM_Supplement.Shared.Enums;
 using AM_Supplement.Shared.Localization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.Drawing.Printing;
 
 namespace AM_Supplement.Presentation.Controllers
 {
     public class ProductController : Controller
     {
-        IProductService productService;
-        IStringLocalizer<SharedResource> Localizer;
+        private readonly IProductService _productService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
+
         public ProductController(IProductService productService, IStringLocalizer<SharedResource> localizer)
         {
-            this.productService = productService;
-            Localizer = localizer;
+            _productService = productService;
+            _localizer = localizer;
         }
+
         [HttpGet]
-        public async Task< IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            var result = await productService.GetProductsList();
-            if(result.IsValid==false || result.ModelList==null)
+            var result = await _productService.GetProductsList(1, 6);
+
+            if (!result.IsValid || result.ModelList == null)
             {
-                ViewBag.ErrorMessage = result.ErrorMessage;
-                return View("ProductsList", new List<ProductDTO>());
+                TempData["ErrorMessage"] = result.ErrorMessage;
+                return RedirectToAction("ProductsList");
             }
 
-            return View("ProductsList",result.ModelList);
+            var model = new ProductsListViewModel
+            {
+                Products = result.ModelList,
+                TotalPages = result.TotalPages,
+               
+            };
+
+            return View("ProductsList", model);
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetProductsList(int PageNumber, int PageSize , ProductType prodcutTypeFilter,TypeSorting Sorting)
+        public async Task<IActionResult> GetProductsList(
+     int pageNumber = 1,
+     int pageSize = 6,
+     ProductType? productTypeFilter = null,
+     TypeSorting? sorting = null)
         {
-            var result = await productService.GetProductsList(PageNumber,PageSize,prodcutTypeFilter ,Sorting);
-            if (result.IsValid)
+            var result = await _productService.GetProductsList(pageNumber, pageSize, productTypeFilter, sorting);
+
+            if (!result.IsValid || result.ModelList == null)
             {
-                return View("Index",result.ModelList);
-            }
-            TempData["ErrorMessage"] = result.ErrorMessage;
-            return  RedirectToAction("Index");
-            
-        }
-        [HttpDelete]
-        public async Task<IActionResult> DeleteProduct(Guid id)
-        {
-           var result = await productService.DeleteProduct(id);
-            if (result.IsValid)
-            {
-                TempData["Message"] = "product had deleted";
+                TempData["ErrorMessage"] = result.ErrorMessage;
                 return RedirectToAction("Index");
             }
-            TempData["ErrorMessage"] = result.ErrorMessage;
+
+            var model = new ProductsListViewModel
+            {
+                Products = result.ModelList,
+                TotalPages = result.TotalPages,
+                CurrentPage = pageNumber
+            };
+
+            return View("ProductsList", model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProduct(Guid id)
+        {
+            var result = await _productService.DeleteProduct(id);
+            TempData[result.IsValid ? "Message" : "ErrorMessage"] = result.IsValid ? "Product has been deleted" : result.ErrorMessage;
             return RedirectToAction("Index");
         }
+
         [HttpPost]
-        public async Task<IActionResult> UpdateProduct(ProductDTO productDTO )
+        public async Task<IActionResult> UpdateProduct(ProductDTO productDTO)
         {
-            var result = await productService.UpdateProduct(productDTO);
-            if (result.IsValid == false)
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ErrorMessage = _localizer["InvalidData"];
+                return View(productDTO);
+            }
+
+            var result = await _productService.UpdateProduct(productDTO);
+            if (!result.IsValid)
             {
                 ViewBag.ErrorMessage = result.ErrorMessage;
                 return View(productDTO);
             }
-            TempData["Message"] = "update is done";
-            return RedirectToAction("Index");
 
+            TempData["Message"] = "Update is done";
+            return RedirectToAction("Index");
         }
+
         [HttpGet]
         public async Task<IActionResult> GetProduct(Guid id)
         {
-            var result = await productService.GetProductById(id);
-            if(result.IsValid)
+            var result = await _productService.GetProductById(id);
+            if (!result.IsValid)
             {
-                return View(result.Model);
+                TempData["ErrorMessage"] = result.ErrorMessage;
+                return RedirectToAction("Index");
             }
-            TempData["ErorrMassege"] = result.ErrorMessage;
-            return RedirectToAction("Index");
+            return View(result.Model);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDTO productDTO)
         {
-            var result = await productService.AddProduct(productDTO);
-            if( result.IsValid)
+            if (!ModelState.IsValid)
             {
-                TempData["Massage"] = "New product added";
-                return RedirectToAction("Index");
+                ViewBag.ErrorMessage = _localizer["InvalidData"];
+                return View(productDTO);
             }
-            ViewBag.ErorrMassage = result.ErrorMessage;
-            return View(productDTO);
-         
+
+            var result = await _productService.AddProduct(productDTO);
+            if (!result.IsValid)
+            {
+                ViewBag.ErrorMessage = result.ErrorMessage;
+                return View(productDTO);
+            }
+
+            TempData["Message"] = "New product added";
+            return RedirectToAction("Index");
         }
     }
-   
+
+
 }

@@ -9,7 +9,6 @@ namespace AMSupplement.Domain.Entities
 {
     public class ApplicationUser  : IdentityUser<Guid>
     {
-        public string Adress {  get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

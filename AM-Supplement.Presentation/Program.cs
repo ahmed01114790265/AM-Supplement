@@ -81,7 +81,7 @@ namespace AM_Supplement.Presentation
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Product}/{action=GetProductsList}"
+                    pattern: "{controller=Account}/{action=ChangePassword}"
                    );
             });
             app.MapControllers();

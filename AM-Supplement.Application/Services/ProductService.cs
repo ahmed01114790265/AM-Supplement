@@ -48,7 +48,7 @@ namespace AM_Supplement.Application.Services
                 return new ResultModel<ProductDTO>
                 {
                     IsValid = false,
-                    ErrorMessage = Localizer["ProdcutNotFount"]
+                    ErrorMessage = Localizer["ProductNotFount"]
                 };
             }
             var result = ProductFactory.CreateProductDTO(product);
@@ -94,7 +94,7 @@ namespace AM_Supplement.Application.Services
                     ErrorMessage = $"product with Id {productId} not found"
                 };
             
-            await ProductRepository.DeleteProduct(product);
+               ProductRepository.DeleteProduct(product);
             
             await  UnitOfWork.SaveChangsAsync();
 
@@ -104,14 +104,23 @@ namespace AM_Supplement.Application.Services
                 Model = true
             };
         }
-        public async Task<ResultList<ProductDTO>> GetProductsList(int? pageIndex = null, int? pageSize = null, ProductType? prodcutTypeFilter = null, TypeSorting? sorting = null)
+        public async Task<ResultList<ProductDTO>> GetProductsList(
+    int? pageIndex = null,
+    int? pageSize = null,
+    ProductType? productTypeFilter = null,
+    TypeSorting? sorting = null)
         {
-            pageIndex = pageIndex.HasValue ? pageIndex.Value : 1;
-            pageSize = pageSize.HasValue ? pageSize.Value : 6;
+            pageIndex ??= 1;
+            pageSize ??= 6;
 
-            var productsList = await ProductRepository.GetProducts(pageIndex.Value, pageSize.Value, prodcutTypeFilter, sorting);
+            var (productsList, totalCount) = await ProductRepository.GetProducts(
+                pageIndex.Value,
+                pageSize.Value,
+                productTypeFilter,
+                sorting
+            );
 
-            if (productsList == null || productsList.Products == null || productsList.TotalCount <= 0)
+            if (!productsList.Any())
             {
                 return new ResultList<ProductDTO>
                 {
@@ -119,13 +128,16 @@ namespace AM_Supplement.Application.Services
                     ErrorMessage = Localizer["EmptyList"]
                 };
             }
-            var modelList = productsList.Products.Select(x => ProductFactory.CreateProductDTO(x)).ToList();
+
+            var modelList = productsList
+                .Select(ProductFactory.CreateProductDTO)
+                .ToList();
 
             return new ResultList<ProductDTO>
             {
                 IsValid = true,
                 ModelList = modelList,
-                TotalPages = (int)Math.Ceiling((double)productsList.TotalCount / pageSize.Value),
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize.Value)
             };
         }
 

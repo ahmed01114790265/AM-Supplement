@@ -17,26 +17,28 @@ namespace AMSupplement.Domain.EntitiesConfiguration._ٍAuditableEntities
             {
                 if (typeof(IAuditableEntity).IsAssignableFrom(entityType.ClrType))
                 {
-                    modelBuilder.Entity(entityType.ClrType).Property(nameof(IAuditableEntity.CreatedDate))
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(IAuditableEntity.CreatedDate))
                         .IsRequired()
-                        .HasColumnName("CreatedDate")
                         .HasColumnType("datetime2");
 
                     modelBuilder.Entity(entityType.ClrType)
                         .Property(nameof(IAuditableEntity.CreatedBy))
-                        .IsRequired()
-                        .HasColumnName("CreatedBy")
+                        .IsRequired(false)
                         .HasColumnType("uniqueidentifier");
 
-                    modelBuilder.Entity(entityType.ClrType).Property(nameof(IAuditableEntity.UpdatedDate))
-                        .HasColumnName("UpdatedDate")
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(IAuditableEntity.UpdatedDate))
+                        .IsRequired(false)
                         .HasColumnType("datetime2");
 
-                    modelBuilder.Entity(entityType.ClrType).Property(nameof(IAuditableEntity.UpdatedBy))
-                        .HasColumnName("UpdatedBy")
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(IAuditableEntity.UpdatedBy))
+                        .IsRequired(false)
                         .HasColumnType("uniqueidentifier");
                 }
             }
         }
     }
+
 }

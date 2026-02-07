@@ -13,63 +13,78 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
 {
     public class ProductRepository : IProductRepository
     {
-       readonly AMSublementDbContext AMSublementDbContext;
-     
-        public ProductRepository(AMSublementDbContext aMSublementDbContext)
+        private readonly AMSublementDbContext _context;
+
+        public ProductRepository(AMSublementDbContext context)
         {
-            AMSublementDbContext = aMSublementDbContext;
+            _context = context;
         }
+
         public void CreateProduct(Product product)
         {
-            AMSublementDbContext.Products.Add(product);  
-              
+            _context.Products.Add(product);
         }
 
-        public  async Task<Product> GetProduct(Guid productid)
+        public async Task<Product> GetProduct(Guid productId)
         {
-            return await AMSublementDbContext.Products.FirstOrDefaultAsync(x => x.Id == productid);
-
+            return await _context.Products.FirstOrDefaultAsync(x => x.Id == productId);
         }
-         public async Task DeleteProduct(Product product)
-        {
-            AMSublementDbContext.Products.Remove(product);
-        }
-        public async Task<ProductListData> GetProducts(int PageNumber,int PageSize , ProductType? prodcutTypeFilter, TypeSorting? sorting)
-        {
-            int SkippedPages = (PageNumber - 1) * PageSize;
-            IQueryable<Product> products = AMSublementDbContext.Products
-                  .Where(x => !prodcutTypeFilter.HasValue || x.Type == prodcutTypeFilter.Value);
 
-            switch(sorting)
+        public void DeleteProduct(Product product)
+        {
+            _context.Products.Remove(product);
+        }
+
+        public async Task<(List<Product> Products, int TotalCount)> GetProducts(
+      int pageNumber,
+      int pageSize,
+      ProductType? productTypeFilter,
+      TypeSorting? sorting)
+        {
+            pageNumber = pageNumber <= 0 ? 1 : pageNumber;
+            pageSize = pageSize <= 0 ? 6 : pageSize;
+
+            int skipCount = (pageNumber - 1) * pageSize;
+
+            IQueryable<Product> query = _context.Products
+                .Where(x => x.IsActive)
+                .Where(x => !productTypeFilter.HasValue || x.Type == productTypeFilter.Value);
+
+            query = sorting switch
             {
-                // best sellers need to be ordered by  more selling products
-                case TypeSorting.Bestselling:
-                   products =  products.OrderByDescending(x => x.OrderItems.Sum(x=>x.Quantity));
-                    break;  
-                case TypeSorting.AlphabeticalllyA_to_Z:
-                    products = products.OrderBy(x => x.Name);
-                    break;
-                case TypeSorting.AlphabeticalllyZ_to_A:
-                    products = products.OrderByDescending(x => x.Name);
-                    break;
-                case TypeSorting.priceHigh_to_Low:
-                    products = products.OrderBy(x => x.Price);
-                    break;
-                case TypeSorting.PriceLow_to_high:
-                    products = products.OrderByDescending(x => x.Price);
-                    break;
-                default: 
-                    products=products.OrderByDescending(x=>x.CreatedDate);
-                    break;
-            }
-            int count = await products.CountAsync();
+                TypeSorting.Bestselling =>
+                    query.OrderByDescending(x =>
+                        x.OrderItems.Any()
+                            ? x.OrderItems.Sum(o => o.Quantity)
+                            : 0),
 
-            var productsList = await products.Skip(SkippedPages).Take(PageSize).ToListAsync();
-            return new ProductListData
-            {
-                Products = productsList,
-                TotalCount = count
+                TypeSorting.AlphabeticalllyA_to_Z =>
+                    query.OrderBy(x => x.Name),
+
+                TypeSorting.AlphabeticalllyZ_to_A =>
+                    query.OrderByDescending(x => x.Name),
+
+                TypeSorting.priceHigh_to_Low =>
+                    query.OrderByDescending(x => x.Price),
+
+                TypeSorting.PriceLow_to_high =>
+                    query.OrderBy(x => x.Price),
+
+                _ =>
+                    query.OrderByDescending(x => x.CreatedDate)
+                         .ThenBy(x => x.Id)
             };
+
+            int totalCount = await query.CountAsync();
+
+            var products = await query
+                .Skip(skipCount)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (products, totalCount);
         }
+
+
     }
 }

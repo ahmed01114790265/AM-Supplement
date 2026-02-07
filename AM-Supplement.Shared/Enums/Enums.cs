@@ -32,4 +32,12 @@
         Supervisor = 2,
         User = 3
     }
+    public enum OrderStatus
+    {
+        Pending,
+        Paid,
+        Shipped,
+        Cancelled
+    }
+
 }

@@ -5,21 +5,38 @@ namespace AMSupplement.Domain.EntitiesConfiguration
 {
     public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
-        void IEntityTypeConfiguration<Order>.Configure(EntityTypeBuilder<Order> builder)
+        public void Configure(EntityTypeBuilder<Order> builder)
         {
+            builder.ToTable("Orders");
 
-           builder
-                .ToTable("Orders")
-                .HasKey(x => x.Id);
-           builder
-                .HasOne(x => x.User).WithMany(x => x.Orders)
-                .HasForeignKey(x => x.UserId);
-           builder
-                .Property(x => x.OrderDate).HasDefaultValueSql("GETDATE()")
-                .IsRequired();
-            builder
-                .Property(x => x.TotalAmount).IsRequired();
+            builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.OrderDate)
+                   .HasDefaultValueSql("GETUTCDATE()")
+                   .IsRequired();
+
+            builder.Property(x => x.TotalAmount)
+                   .HasColumnType("decimal(18,2)")
+                   .IsRequired();
+
+            builder.HasCheckConstraint(
+                "CK_Order_TotalAmount",
+                "[TotalAmount] >= 0"
+            );
+
+            builder.Property(x => x.Status)
+                   .IsRequired()
+                   ;
+
+            builder.HasOne(x => x.User)
+                   .WithMany(x => x.Orders)
+                   .HasForeignKey(x => x.UserId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            // Indexes
+            builder.HasIndex(x => x.UserId);
+            builder.HasIndex(x => x.OrderDate);
         }
     }
+
 }

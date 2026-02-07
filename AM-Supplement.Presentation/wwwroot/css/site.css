@@ -20,3 +20,18 @@ html {
 body {
   margin-bottom: 60px;
 }
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+.navbar-brand {
+    letter-spacing: 0.5px;
+}
+
+.card {
+    transition: transform 0.2s ease;
+}
+
+    .card:hover {
+        transform: translateY(-4px);
+    }
