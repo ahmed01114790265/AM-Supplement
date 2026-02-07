@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ProductDTO>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Home</h1>
+
+<div class="hero bg-primary text-white p-5 text-center rounded">
+    <h1>Welcome Home Page</h1>
+    <p>Best of products </p>
+    <a class="btn btn-light btn-lg" href="/Products">Buy Now </a>
+</div>
+
+<hr/>
+<div class="container mt-4">
+    <h2 class="mb-4">Featured Products</h2>
+    <div class="row">
+    
+        @foreach (var product in Model)
+        {
+            <div class="col-md-3 mb-4">
+                @await Html.PartialAsync("_ProductCard", product)
+            </div>
+        }
+    </div>
+</div>
