@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AM_Supplement.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,9 @@ namespace AM_Supplement.Contracts.DTO.AdminDasboard
         public Guid Id { get; set; }
         public string UserEmail { get; set; }
         public decimal Total { get; set; }
-        public string Status { get; set; } // Pending, Completed, Cancelled
+        public OrderStatus Status { get; set; } // Pending, Completed, Cancelled
         public DateTime CreatedAt { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 
 }

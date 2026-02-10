@@ -14,6 +14,9 @@ namespace AM_Sopplement.DataAccess.Repositories.Interfaces
         Task Update(Order order);
         Task<List<Order>> GetUserOrders(Guid userId);
         Task<Order?> GetOrderDetails(Guid orderId, Guid userId);
+        Task<List<Order>> GetAllOrders();
+        Task<Order?> GetOrderById(Guid orderId);
+
 
     }
 

@@ -12,14 +12,20 @@ namespace AM_Supplement.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
+            // تم حذف webRootPath من الباراميترز لأننا سنعتمد على التخزين الخارجي المشترك
+
             services.AddRepositories(configuration);
+
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductFactory, ProductFactory>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderFactory, OrderFactory>();
             services.AddScoped<IPaymentService, PaymentService>();
+
+            // التسجيل الآن أصبح بسيطاً ومباشراً لأن ImageService سيحقن IConfiguration تلقائياً
+            services.AddScoped<IImageService, ImageService>();
+
             return services;
         }
-
     }
 }

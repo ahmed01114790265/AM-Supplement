@@ -1,4 +1,5 @@
 ﻿using AM_Supplement.Shared.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace AM_Supplement.Contracts.DTO
 {
@@ -12,6 +13,7 @@ namespace AM_Supplement.Contracts.DTO
         public decimal Price { get; set; }
         public string Taste { get; set; } = null;
         public string ImageUrl { get; set; }= "default-product.png";
+        public IFormFile? ImageFile { get; set; }
         public decimal Weight { get; set; }
         public int Stock { get; set; }
         public int DiscountPercentage { get; set; }

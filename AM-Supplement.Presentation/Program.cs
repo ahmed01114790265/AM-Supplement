@@ -1,8 +1,9 @@
-using AM_Supplement.Application;
+﻿using AM_Supplement.Application;
 using AM_Supplement.Contracts.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System.Net;
@@ -14,8 +15,10 @@ namespace AM_Supplement.Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+           
 
             //register services
+            // في ملف Program.cs
             builder.Services.AddApplication(builder.Configuration);
             builder.Services.ConfigureApplicationCookie(x =>
             {
@@ -61,15 +64,36 @@ namespace AM_Supplement.Presentation
 
 
             var app = builder.Build();
+            var storagePath = app.Configuration["StorageSettings:StaticFolder"];
 
-            // test service
+            // التحقق من المسار قبل إعداد StaticFiles
+            if (!string.IsNullOrEmpty(storagePath))
+            {
+                // التأكد من وجود المجلد فعلياً على الهارد ديسك
+                if (!Directory.Exists(storagePath))
+                {
+                    Directory.CreateDirectory(storagePath);
+                }
+                // test service
 
-            using (var scope = app.Services.CreateScope())
+                using (var scope = app.Services.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService(typeof(IProductService));
             }
 
             app.UseStaticFiles();
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(storagePath),
+                    RequestPath = "/assets"
+                });
+            }
+            else
+            {
+                // في حالة لم يجد المسار في appsettings، استخدم مجلد افتراضي داخل المشروع لتجنب الانهيار
+                var fallbackPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "assets");
+                if (!Directory.Exists(fallbackPath)) Directory.CreateDirectory(fallbackPath);
+            }
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();

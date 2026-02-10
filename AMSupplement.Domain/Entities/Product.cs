@@ -22,6 +22,7 @@ namespace AMSupplement.Domain.Entities
         public bool IsActive { get; set; } = true;
 
         public ProductType Type { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
