@@ -19,9 +19,10 @@ namespace AM_Supplement.Application.Factory
                 Taste = productDTO.Taste,
                 Price = productDTO.Price,
                 DiscountPercentage = productDTO.DiscountPercentage,
-                ImageUrl = productDTO.ImageUrl,
+                ImageUrl = string.IsNullOrEmpty(productDTO.ImageUrl) ? "default-product.png" : productDTO.ImageUrl,
                 Type = productDTO.Type,
                 Weight = productDTO.Weight,
+                Stock = productDTO.Stock
             };
         }
         public ProductDTO CreateProductDTO(Product product)
@@ -48,10 +49,15 @@ namespace AM_Supplement.Application.Factory
             product.Taste = productDTO.Taste;
             product.Price = productDTO.Price;
             product.DiscountPercentage = productDTO.DiscountPercentage;
-            product.ImageUrl = productDTO.ImageUrl;
             product.Type = productDTO.Type;
             product.Weight = productDTO.Weight;
+            product.Stock = productDTO.Stock;
 
+            // تحديث الصورة فقط إذا تم رفع صورة جديدة
+            if (!string.IsNullOrEmpty(productDTO.ImageUrl))
+            {
+                product.ImageUrl = productDTO.ImageUrl;
+            }
         }
         public bool ValidateBeforeDelete(Guid productId,Guid productDTOId)
         {

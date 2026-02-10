@@ -1,0 +1,40 @@
+﻿@using AM_Supplement.Contracts.DTO
+@model List<ProductDTO>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Products";
+}
+
+<div class="d-flex justify-content-between mb-3">
+    <h2>📦 Products</h2>
+    <a asp-action="CreateProduct" class="btn btn-success">➕ Add Product</a>
+</div>
+
+<table class="table table-bordered table-hover bg-white shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th width="180">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>$@p.Price</td>
+                <td>@p.Stock</td>
+                <td>
+                    <a asp-action="EditProduct" asp-route-id="@p.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <form asp-action="DeleteProduct" asp-route-id="@p.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

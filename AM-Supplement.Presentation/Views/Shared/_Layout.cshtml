@@ -5,46 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AM Supplement</title>
 
-    <link rel="stylesheet"
-          href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-          asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <link rel="stylesheet"
-          href="~/css/site.css"
-          asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1; /* Pushes footer to bottom on short pages */
+        }
+
+        .sidebar-sticky {
+            position: sticky;
+            top: 20px;
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body class="bg-light text-dark">
 
-    <!-- ===== Navbar ===== -->
-    <partial name="_Navbar" />
+    <header class="shadow-sm sticky-top">
+        <partial name="_Navbar" />
+    </header>
 
-    <!-- ===== Main Layout ===== -->
     <div class="container-fluid">
         <div class="row">
 
-            <!-- Sidebar (Optional) -->
             @if (IsSectionDefined("Sidebar"))
             {
-                <aside class="col-lg-2 d-none d-lg-block bg-white border-end min-vh-100">
-                    @RenderSection("Sidebar", required: false)
+                <aside class="col-lg-3 col-xl-2 d-none d-lg-block bg-white border-end px-3 py-4">
+                    <div class="sidebar-sticky">
+                        @RenderSection("Sidebar", required: false)
+                    </div>
                 </aside>
             }
 
-            <!-- Content -->
-            <main class="col px-4 py-4">
+            <main class="@(IsSectionDefined("Sidebar") ? "col-lg-9 col-xl-10" : "col-12") px-md-4 py-4">
+
+                @* Global Message Alerts (TempData) *@
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4">
+                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
                 @RenderBody()
             </main>
 
         </div>
     </div>
 
-    <!-- ===== Footer ===== -->
-    <partial name="_Footer" />
+    <footer class="border-top bg-white py-4 mt-auto">
+        <partial name="_Footer" />
+    </footer>
 
-    <!-- ===== Scripts ===== -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-    <partial name="_ValidationScriptsPartial" />
 </body>
-</html>
+</html></html>

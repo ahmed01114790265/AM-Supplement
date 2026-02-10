@@ -1,4 +1,5 @@
 ﻿using AM_Supplement.Contracts.DTO;
+using AM_Supplement.Contracts.DTO.AdminDasboard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace AM_Supplement.Contracts.Services
         Task CompleteOrder(Guid userId);
         Task<List<OrderHistoryDTO>> GetOrderHistory(Guid userId);
         Task<OrderDetailsDTO?> GetOrderDetails(Guid orderId, Guid userId);
+        Task<List<OrderDTO>> GetAllOrdersForAdmin();
+        Task<OrderDetailsDTO?> GetOrderDetailsForAdmin(Guid orderId);
 
     }
 

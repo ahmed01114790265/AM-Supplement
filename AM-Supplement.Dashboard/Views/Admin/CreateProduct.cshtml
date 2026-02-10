@@ -1,0 +1,151 @@
+﻿@using AM_Supplement.Shared.Enums
+@model CreateProductViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Create Product";
+}
+
+<div class="container py-5">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="text-primary fw-bold mb-0">➕ Add New Supplement</h2>
+            <p class="text-muted">Enter the details to add a new product to the inventory.</p>
+        </div>
+        <a asp-action="Products" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    @* تأكد من وجود enctype="multipart/form-data" لرفع الصور *@
+    <form asp-action="CreateProduct" method="post" enctype="multipart/form-data" class="row g-4">
+        @Html.AntiForgeryToken()
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3 small"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label asp-for="Name" class="form-label fw-bold text-dark"></label>
+                        <input asp-for="Name" class="form-control form-control-lg bg-light border-0" placeholder="e.g. Ultra Whey Isolate" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Price" class="form-label fw-bold text-dark"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">$</span>
+                            <input asp-for="Price" class="form-control bg-light border-0" type="number" step="0.01" placeholder="0.00" />
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Stock" class="form-label fw-bold text-dark"></label>
+                        <input asp-for="Stock" class="form-control bg-light border-0" type="number" placeholder="In-stock quantity" />
+                        <span asp-validation-for="Stock" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label fw-bold text-dark"></label>
+                        <textarea asp-for="Description" rows="5" class="form-control bg-light border-0" placeholder="Highlight the key benefits, ingredients, and usage instructions..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Taste" class="form-label fw-bold text-dark"></label>
+                        <input asp-for="Taste" class="form-control bg-light border-0" placeholder="e.g. Vanilla Bean" />
+                        <span asp-validation-for="Taste" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Weight" class="form-label fw-bold text-dark">Weight (grams)</label>
+                        <div class="input-group">
+                            <input asp-for="Weight" class="form-control bg-light border-0" type="number" />
+                            <span class="input-group-text bg-white border-start-0">g</span>
+                        </div>
+                        <span asp-validation-for="Weight" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="DiscountPercentage" class="form-label fw-bold text-dark">Discount</label>
+                        <div class="input-group">
+                            <input asp-for="DiscountPercentage" class="form-control bg-light border-0" type="number" />
+                            <span class="input-group-text bg-white border-start-0">%</span>
+                        </div>
+                        <span asp-validation-for="DiscountPercentage" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Type" class="form-label fw-bold text-dark">Category</label>
+                        <select asp-for="Type" class="form-select bg-light border-0" asp-items="Html.GetEnumSelectList<ProductType>()">
+                            <option value="">-- Select Category --</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 text-center mb-4">
+                <label class="form-label fw-bold text-dark mb-3">Product Image</label>
+
+                <div class="preview-container mb-3 bg-light rounded p-3 d-flex align-items-center justify-content-center" style="height: 300px;">
+                    @* التعديل هنا: استخدام المسار /assets/ الموجه للمجلد المشترك *@
+                    <img id="preview" src="/assets/products/default-product.png"
+                         class="img-fluid rounded shadow-sm"
+                         style="max-height: 100%; object-fit: contain;"
+                         onerror="this.src='/images/no-image.png'" /> @* fallback في حال فشل التحميل *@
+                </div>
+
+                <div class="mb-3 text-start">
+                    <input asp-for="Image" type="file" class="form-control"
+                           accept=".jpg,.jpeg,.png,.webp"
+                           onchange="previewImage(this)" />
+                    <span asp-validation-for="Image" class="text-danger small"></span>
+                </div>
+                <div class="form-text text-start"><i class="bi bi-info-circle"></i> Best size: 800x800px. Supports JPG, PNG, WebP.</div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4">
+                <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm mb-2 fw-bold">
+                    <i class="bi bi-cloud-upload"></i> Publish Product
+                </button>
+                <a asp-action="Products" class="btn btn-light w-100">Discard Draft</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('preview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}
+
+<style>
+    .form-control:focus, .form-select:focus {
+        background-color: #fff !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        border: 1px solid #0d6efd !important;
+    }
+
+    .preview-container {
+        border: 2px dashed #dee2e6;
+        transition: border-color 0.3s ease;
+    }
+
+        .preview-container:hover {
+            border-color: #0d6efd;
+        }
+</style>

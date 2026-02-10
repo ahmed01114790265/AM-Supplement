@@ -1,6 +1,7 @@
 ﻿using AM_Sopplement.DataAccess.Repositories.Interfaces;
 using AM_Sopplement.DataAccess.UnitOfWork.Interfaces;
 using AM_Supplement.Contracts.DTO;
+using AM_Supplement.Contracts.DTO.AdminDasboard;
 using AM_Supplement.Contracts.Factory;
 using AM_Supplement.Contracts.Services;
 using AM_Supplement.Shared.Enums;
@@ -146,6 +147,42 @@ namespace AM_Supplement.Application.Services
                 }).ToList()
             };
         }
+
+        public async Task<List<OrderDTO>> GetAllOrdersForAdmin()
+        {
+            var orders = await _orderRepo.GetAllOrders();
+
+            return orders.Select(o => new OrderDTO
+            {
+                Id = o.Id,
+                UserEmail = o.User?.Email ?? "No Email Found",
+                Total = o.TotalAmount,
+                Status = o.Status,
+                CreatedAt = o.OrderDate
+            }).ToList();
+        }
+
+        public async Task<OrderDetailsDTO?> GetOrderDetailsForAdmin(Guid orderId)
+        {
+            var order = await _orderRepo.GetOrderById(orderId);
+            if (order == null) return null;
+
+            return new OrderDetailsDTO
+            {
+                OrderId = order.Id,
+                OrderDate = order.OrderDate,
+                Status = order.Status,
+                TotalAmount = order.TotalAmount,
+                Items = order.OrderItems.Select(i => new OrderItemDetailsDTO
+                {
+                    ProductName = i.Product.Name,
+                    ImageUrl = i.Product.ImageUrl,
+                    Price = i.Product.Price,
+                    Quantity = i.Quantity
+                }).ToList()
+            };
+        }
+
 
 
     }

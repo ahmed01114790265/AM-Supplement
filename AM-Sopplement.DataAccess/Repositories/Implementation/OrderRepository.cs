@@ -1,4 +1,5 @@
 ﻿using AM_Sopplement.DataAccess.Repositories.Interfaces;
+using AM_Supplement.Infrastructure.Persistence;
 using AM_Supplement.Shared.Enums;
 using AMSupplement.Domain;
 using AMSupplement.Domain.Entities;
@@ -55,6 +56,24 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
                     o.Id == orderId &&
                     o.UserId == userId);
         }
+
+        public async Task<List<Order>> GetAllOrders()
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Product)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+        }
+
+        public async Task<Order?> GetOrderById(Guid orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
 
 
     }

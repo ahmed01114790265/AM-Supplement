@@ -1,0 +1,37 @@
+﻿@using AM_Supplement.Contracts.DTO
+@model List<AM_Supplement.Contracts.DTO.AdminDasboard.OrderDTO>
+@{
+    Layout = "_Layout";
+}
+
+<h2>🧾 Orders</h2>
+
+<table class="table table-striped bg-white shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.Id</td>
+                <td>@o.CreatedAt.ToShortDateString()</td>
+                <td>$@o.TotalAmount</td>
+                <td>
+                    <span class="badge @(o.Status == AM_Supplement.Shared.Enums.OrderStatus.Paid ? "bg-success" : "bg-warning")">@o.Status</span>
+                </td>
+                <td>
+                    <a asp-action="OrderDetails" asp-route-id="@o.Id" class="btn btn-sm btn-outline-primary">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

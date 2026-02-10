@@ -68,34 +68,6 @@ namespace AM_Supplement.Presentation.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteProduct(Guid id)
-        {
-            var result = await _productService.DeleteProduct(id);
-            TempData[result.IsValid ? "Message" : "ErrorMessage"] = result.IsValid ? "Product has been deleted" : result.ErrorMessage;
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateProduct(ProductDTO productDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.ErrorMessage = _localizer["InvalidData"];
-                return View(productDTO);
-            }
-
-            var result = await _productService.UpdateProduct(productDTO);
-            if (!result.IsValid)
-            {
-                ViewBag.ErrorMessage = result.ErrorMessage;
-                return View(productDTO);
-            }
-
-            TempData["Message"] = "Update is done";
-            return RedirectToAction("Index");
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetProduct(Guid id)
         {
@@ -108,25 +80,6 @@ namespace AM_Supplement.Presentation.Controllers
             return View(result.Model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductDTO productDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.ErrorMessage = _localizer["InvalidData"];
-                return View(productDTO);
-            }
-
-            var result = await _productService.AddProduct(productDTO);
-            if (!result.IsValid)
-            {
-                ViewBag.ErrorMessage = result.ErrorMessage;
-                return View(productDTO);
-            }
-
-            TempData["Message"] = "New product added";
-            return RedirectToAction("Index");
-        }
     }
 
 

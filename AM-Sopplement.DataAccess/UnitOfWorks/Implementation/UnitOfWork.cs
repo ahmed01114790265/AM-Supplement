@@ -1,4 +1,5 @@
 ﻿using AM_Sopplement.DataAccess.UnitOfWork.Interfaces;
+using AM_Supplement.Infrastructure.Persistence;
 using AMSupplement.Domain;
 
 namespace AM_Sopplement.DataAccess.UnitOfWork.Implementation
