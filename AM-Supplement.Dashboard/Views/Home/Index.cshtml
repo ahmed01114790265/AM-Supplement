@@ -1,8 +1,133 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
+    ViewData["Title"] = "Admin Dashboard";
+
+    // تأكد من تحويل القيم إلى أرقام لضمان عدم حدوث أخطاء في العرض
+    var totalProducts = ViewBag.TotalProducts ?? 0;
+    var totalOrders = ViewBag.TotalOrders ?? 0;
+    var totalRevenue = ViewBag.TotalRevenue ?? 0;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="mb-5">
+    <h2 style="font-family: 'Arial Black', sans-serif; font-size: 2.2rem; color: #ffcc00; text-transform: uppercase;">
+        <i class="bi bi-graph-up-arrow me-2"></i> SYSTEM STATS
+    </h2>
 </div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="stat-card-solid">
+            <p class="stat-label">TOTAL PRODUCTS</p>
+            <h3 class="stat-number text-white">@totalProducts.ToString("N0")</h3>
+            <div class="stat-icon-bg"><i class="bi bi-box-seam"></i></div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card-solid">
+            <p class="stat-label">TOTAL ORDERS</p>
+            <h3 class="stat-number text-white">@totalOrders.ToString("N0")</h3>
+            <div class="stat-icon-bg"><i class="bi bi-cart-check"></i></div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card-solid highlight-green">
+            <p class="stat-label text-success">TOTAL REVENUE</p>
+            <h3 class="stat-number text-success">$@totalRevenue.ToString("N2")</h3>
+            <div class="stat-icon-bg"><i class="bi bi-currency-dollar"></i></div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    body {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .stat-card-solid {
+        background-color: #111;
+        border: 2px solid #333;
+        padding: 30px;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .highlight-green {
+        border-color: #00ff88;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+        color: #888;
+        position: relative;
+        z-index: 2;
+    }
+
+    .stat-number {
+        font-family: 'Arial Black', sans-serif;
+        font-size: 3.2rem; /* تكبير الرقم ليكون واضحاً جداً */
+        font-weight: 900;
+        margin: 0;
+        position: relative;
+        z-index: 2;
+        letter-spacing: -1px;
+    }
+
+    /* أيقونة باهتة في الخلفية لتعطي شكلاً احترافياً دون إخفاء الرقم */
+    .stat-icon-bg {
+        position: absolute;
+        right: 10px;
+        bottom: -10px;
+        font-size: 6rem;
+        color: rgba(255, 255, 255, 0.03);
+        z-index: 1;
+    }
+
+    .text-success {
+        color: #00ff88 !important;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // كود الرسم البياني مع الأرقام الصحيحة
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Actual Revenue',
+                    data: [5000, 15000, 8000, @totalRevenue],
+                    borderColor: '#00ff88',
+                    borderWidth: 4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#00ff88',
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#fff' } } },
+                scales: {
+                    x: { ticks: { color: '#fff' }, grid: { color: '#222' } },
+                    y: { ticks: { color: '#fff' }, grid: { color: '#222' } }
+                }
+            }
+        });
+    </script>
+}

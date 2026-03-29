@@ -1,35 +1,217 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Admin Dashboard";
+
+    var totalProducts = Convert.ToInt32(ViewBag.TotalProducts ?? 0);
+    var totalOrders = Convert.ToInt32(ViewBag.TotalOrders ?? 0);
+    var totalRevenue = Convert.ToDecimal(ViewBag.TotalRevenue ?? 0);
 }
 
-<h2 class="mb-4">📊 Dashboard</h2>
+<div class="dashboard-wrapper overflow-hidden p-2 p-md-4">
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h6>Total Products</h6>
-                <h3>@ViewBag.TotalProducts</h3>
+    <div class="d-flex align-items-center mb-4">
+        <h2 class="dashboard-title">
+            <i class="bi bi-graph-up-arrow me-1 me-md-2"></i> SYSTEM <span class="d-none d-sm-inline">STATS</span>
+        </h2>
+    </div>
+
+    <div class="stats-grid-flexible mb-4">
+        <div class="stat-item">
+            <div class="stat-card-solid">
+                <p class="stat-label">PRODUCTS</p>
+                <h3 class="stat-number">@totalProducts.ToString("N0")</h3>
+                <i class="bi bi-box-seam card-icon-bg"></i>
+            </div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-card-solid">
+                <p class="stat-label">ORDERS</p>
+                <h3 class="stat-number">@totalOrders.ToString("N0")</h3>
+                <i class="bi bi-cart-check card-icon-bg"></i>
+            </div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-card-solid highlight-green">
+                <p class="stat-label text-success">REVENUE</p>
+                <h3 class="stat-number text-success">$@totalRevenue.ToString("N2")</h3>
+                <i class="bi bi-currency-dollar card-icon-bg"></i>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h6>Total Orders</h6>
-                <h3>@ViewBag.TotalOrders</h3>
+    <div class="chart-section-flexible">
+        <div class="chart-container-wrapper">
+            <div class="chart-header">
+                <span class="pulse-icon"></span> REVENUE FLOW
             </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h6>Total Revenue</h6>
-                <h3>$@ViewBag.TotalRevenue</h3>
+            <div class="chart-canvas-holder">
+                <canvas id="salesChart"></canvas>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* أساسيات التصميم المرن */
+    :root {
+        --card-bg: #111;
+        --border-color: #333;
+        --neon-green: #00ff88;
+    }
+
+    body {
+        background-color: #000;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* تحجيم العنوان ليناسب حتى أصغر عرض */
+    .dashboard-title {
+        font-family: 'Arial Black', sans-serif;
+        font-size: clamp(1.1rem, 4vw, 2rem);
+        color: #ffcc00;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    /* شبكة مرنة جداً (تتحول من صف لعمود بانسيابية) */
+    .stats-grid-flexible {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .stat-item {
+        flex: 1 1 280px; /* يسمح للبطاقة بالنمو والتقلص لكن لا تقل عن 280px إذا أمكن */
+        min-width: 0; /* منع خروج المحتوى عن الحدود */
+    }
+
+    .stat-card-solid {
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 15px;
+        padding: clamp(12px, 2vw, 25px);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .highlight-green {
+        border-color: var(--neon-green);
+    }
+
+    .stat-label {
+        font-size: clamp(0.6rem, 1.5vw, 0.8rem);
+        font-weight: 800;
+        color: #888;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+        z-index: 2;
+    }
+
+    .stat-number {
+        font-family: 'Arial Black', sans-serif;
+        font-size: clamp(1.5rem, 5vw, 2.8rem); /* الرقم سيصغر تلقائياً في الموبايل */
+        font-weight: 900;
+        margin: 0;
+        z-index: 2;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+
+    .card-icon-bg {
+        position: absolute;
+        right: 5px;
+        bottom: -5px;
+        font-size: clamp(3rem, 8vw, 5rem);
+        color: rgba(255,255,255,0.03);
+        z-index: 1;
+    }
+
+    /* حاوية الرسم البياني المرنة */
+    .chart-container-wrapper {
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 15px;
+        width: 100%;
+    }
+
+    .chart-header {
+        padding: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: #666;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+    }
+
+    .chart-canvas-holder {
+        position: relative;
+        height: clamp(200px, 40vh, 400px); /* يغير الطول بناءً على طول الشاشة */
+        width: 100%;
+        padding: 10px;
+    }
+
+    /* نقطة التنبيه المضيئة */
+    .pulse-icon {
+        width: 8px;
+        height: 8px;
+        background: var(--neon-green);
+        border-radius: 50%;
+        margin-right: 10px;
+        box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    /* استهداف الشاشات الصغيرة جداً (أقل من 400px) */
+    @@media (max-width: 400px) {
+        .stat-item {
+            flex: 1 1 100%;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('salesChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [5000, 15000, 8000, @totalRevenue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)],
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0, 255, 136, 0.05)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#444' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#444' } }
+                    }
+                }
+            });
+        }
+    </script>
+}

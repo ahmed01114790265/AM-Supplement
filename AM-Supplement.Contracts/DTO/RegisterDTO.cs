@@ -5,7 +5,7 @@ namespace AM_Supplement.Presentation.ViewsModel.AccountViewModel
     public class RegisterDTO
     {
         [Required]
-        [EmailAddress]
+        [Phone]
         public string Email { get; set; }
 
         [Required]

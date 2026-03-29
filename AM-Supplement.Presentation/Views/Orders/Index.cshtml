@@ -1,33 +1,112 @@
 ﻿@model List<OrderHistoryDTO>
+@{
+    ViewData["Title"] = "Order History";
+}
 
-<h2>My Orders</h2>
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-warning rounded-3 p-2 me-3">
+            <i class="bi bi-clock-history text-dark fs-3"></i>
+        </div>
+        <h2 class="text-white fw-bold mb-0" style="font-family: 'Teko'; font-size: 2.8rem; letter-spacing: 1px;">
+            ORDER HISTORY
+        </h2>
+    </div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var order in Model)
-        {
-            <tr>
-                <td>@order.OrderDate.ToShortDateString()</td>
-                <td>@order.TotalAmount.ToString("C")</td>
-                <td>
-                    <span class="badge bg-info">@order.Status</span>
-                </td>
-                <td>
-                    <a asp-action="Details"
-                       asp-route-id="@order.OrderId"
-                       class="btn btn-sm btn-outline-primary">
-                        View
-                    </a>
-                </td>
-            </tr>
+    @if (Model == null || !Model.Any())
+    {
+        <div class="card bg-dark border-secondary text-center py-5 shadow-lg">
+            <div class="card-body">
+                <i class="bi bi-bag-x text-secondary fs-1 mb-3"></i>
+                <h4 class="text-white">You haven't placed any orders yet.</h4>
+                <a asp-controller="Product" asp-action="Index" class="btn btn-warning mt-3 fw-bold">SHOP NOW</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card bg-dark-matte border-0 shadow-lg" style="background-color: rgba(20, 22, 24, 0.85); border: 1px solid #2d3135 !important; backdrop-filter: blur(10px); border-radius: 15px;">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead class="bg-black text-secondary">
+                        <tr>
+                            <th class="ps-4 py-3 border-0">ORDER DATE</th>
+                            <th class="py-3 border-0">TOTAL AMOUNT</th>
+                            <th class="py-3 border-0">STATUS</th>
+                            <th class="py-3 border-0 text-end pe-4">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr style="border-bottom: 1px solid #2d3135;">
+                                <td class="ps-4 py-4">
+                                    <div class="d-flex flex-column">
+                                        <span class="text-white fw-bold">@order.OrderDate.ToString("dd MMM yyyy")</span>
+                                        <span class="text-secondary x-small" style="font-size: 0.75rem;">ID: #@order.OrderId</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-warning fw-bold">@order.TotalAmount.ToString("C")</span>
+                                </td>
+                                <td>
+                                    @{
+                                        var statusClass = order.Status.ToString() switch
+                                        {
+                                            "completed" => "bg-success-subtle text-success border-success",
+                                            "pending" => "bg-warning-subtle text-warning border-warning",
+                                            "cancelled" => "bg-danger-subtle text-danger border-danger",
+                                            _ => "bg-info-subtle text-info border-info"
+                                        };
+                                    }
+                                    <span class="badge rounded-pill border px-3 py-2 @statusClass" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a asp-action="Details"
+                                       asp-route-id="@order.OrderId"
+                                       class="btn btn-sm btn-outline-warning rounded-pill px-4 fw-bold">
+                                        <i class="bi bi-eye me-1"></i> VIEW
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    /* تأثيرات إضافية لجعل الجدول يبدو احترافياً */
+    .table-hover tbody tr {
+        transition: all 0.2s ease;
+    }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.03) !important;
+            transform: scale(1.005);
         }
-    </tbody>
-</table>
+
+    .bg-success-subtle {
+        background-color: rgba(40, 167, 69, 0.1) !important;
+    }
+
+    .bg-warning-subtle {
+        background-color: rgba(255, 193, 7, 0.1) !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+    }
+
+    .bg-info-subtle {
+        background-color: rgba(13, 202, 240, 0.1) !important;
+    }
+
+    .x-small {
+        font-size: 0.8rem;
+    }
+</style></table>

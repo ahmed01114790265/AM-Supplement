@@ -1,40 +1,143 @@
 ﻿@using AM_Supplement.Contracts.DTO
 @model List<ProductDTO>
-
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = "Inventory Assets";
 }
 
-<div class="d-flex justify-content-between mb-3">
-    <h2>📦 Products</h2>
-    <a asp-action="CreateProduct" class="btn btn-success">➕ Add Product</a>
+<div class="dashboard-container py-4" style="background-color: #000; min-height: 100vh; color: #ffffff;">
+    <div class="container-fluid px-lg-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 style="font-family: 'Arial Black', sans-serif; font-size: 2.5rem; color: #ffcc00; text-transform: uppercase;">
+                    Inventory Assets
+                </h2>
+                <p style="color: #bbbbbb; font-size: 1rem; font-weight: bold;">
+                    Total Items Count: <span style="color: #00ff88;">@Model.Count</span>
+                </p>
+            </div>
+            <a asp-action="CreateProduct" class="btn-deploy">
+                + DEPLOY NEW PRODUCT
+            </a>
+        </div>
+
+        <div class="table-container-solid">
+            <table class="table table-dark table-bordered align-middle mb-0">
+                <thead style="background-color: #222222;">
+                    <tr>
+                        <th style="color: #ffcc00; padding: 15px; font-weight: 900;">PRODUCT NAME</th>
+                        <th class="text-center" style="color: #ffcc00; font-weight: 900;">UNIT PRICE</th>
+                        <th class="text-center" style="color: #ffcc00; font-weight: 900;">STOCK QUANTITY</th>
+                        <th class="text-end pe-4" style="color: #ffcc00; font-weight: 900;">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model)
+                    {
+                        <tr style="border-bottom: 2px solid #333;">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="img-box">
+                                        <img src="/assets/products/@p.ImageUrl" onerror="this.src='/images/no-image.png'" alt="product">
+                                    </div>
+                                    <div style="font-size: 1.2rem; font-weight: 800; color: #ffffff; margin-left: 15px;">
+                                        @p.Name
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div style="color: #00ff88; font-size: 1.8rem; font-weight: 900; font-family: 'Arial', sans-serif;">
+                                    $@p.Price.ToString("F2")
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                @if (p.Stock < 5)
+                                {
+                                    <div style="background-color: #ff0000; color: #ffffff; padding: 5px 15px; border-radius: 5px; font-weight: 900; display: inline-block;">
+                                        LOW STOCK: @p.Stock
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="background-color: #333333; color: #ffffff; padding: 5px 15px; border-radius: 5px; font-size: 1.5rem; font-weight: 900; display: inline-block;">
+                                        @p.Stock
+                                    </div>
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="EditProduct" asp-route-id="@p.Id" class="btn-action-edit">EDIT</a>
+
+                                    <form asp-action="DeleteProduct" asp-route-id="@p.Id" method="post" onsubmit="return confirm('Archive this?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-action-delete">DELETE</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<table class="table table-bordered table-hover bg-white shadow-sm">
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th width="180">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model)
-        {
-            <tr>
-                <td>@p.Name</td>
-                <td>$@p.Price</td>
-                <td>@p.Stock</td>
-                <td>
-                    <a asp-action="EditProduct" asp-route-id="@p.Id" class="btn btn-sm btn-primary">Edit</a>
-                    <form asp-action="DeleteProduct" asp-route-id="@p.Id" method="post" class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
+<style>
+    /* أزرار العمليات */
+    .btn-deploy {
+        background-color: #ffcc00;
+        color: #000;
+        padding: 15px 30px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 900;
+        font-size: 1rem;
+    }
+
+        .btn-deploy:hover {
+            background-color: #ffffff;
+            color: #000;
         }
-    </tbody>
-</table>
+
+    .btn-action-edit {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .btn-action-delete {
+        background-color: #dc3545;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 4px;
+        border: none;
+        font-weight: bold;
+    }
+
+    /* صندوق الصور */
+    .img-box {
+        width: 60px;
+        height: 60px;
+        background-color: #fff;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+    /* حاوية الجدول */
+    .table-container-solid {
+        background-color: #111;
+        border: 3px solid #333;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+</style>

@@ -1,4 +1,5 @@
-﻿using AMSupplement.Domain.Entities;
+﻿using AM_Supplement.Shared.Enums;
+using AMSupplement.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace AM_Sopplement.DataAccess.Repositories.Interfaces
         Task<Order?> GetOrderDetails(Guid orderId, Guid userId);
         Task<List<Order>> GetAllOrders();
         Task<Order?> GetOrderById(Guid orderId);
+        Task UpdateStatusStateAsync(Guid orderId, OrderStatus newStatus);
 
 
     }

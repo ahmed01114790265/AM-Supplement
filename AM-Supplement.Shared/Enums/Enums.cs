@@ -36,7 +36,6 @@
     {
         Pending,
         Paid,
-        Shipped,
         Cancelled
     }
 

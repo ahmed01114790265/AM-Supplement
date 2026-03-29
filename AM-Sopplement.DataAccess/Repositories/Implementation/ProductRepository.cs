@@ -86,6 +86,29 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
             return (products, totalCount);
         }
 
-     
+       
+        public async Task<List<Product>> GetDeletedProductsAsync()
+        {
+      
+            return await _context.Products.IgnoreQueryFilters().Where(p => p.IsDeleted==true).ToListAsync();
+        }
+
+        public void Restore(Product entity)
+        {
+            entity.IsDeleted = false; 
+            entity.UpdatedDate = DateTime.UtcNow;
+            _context.Update(entity);
+        }
+        public async Task<Product> GetProductForRestoreAsync(Guid id)
+        {
+            return await _context.Products
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<int> TotalCountProduct()
+        {
+            return await _context.Products.CountAsync(p => p.IsActive);
+        }
     }
 }

@@ -60,10 +60,11 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
         public async Task<List<Order>> GetAllOrders()
         {
             return await _context.Orders
-                .Include(o => o.OrderItems)
-                .ThenInclude(i => i.Product)
-                .OrderByDescending(o => o.OrderDate)
-                .ToListAsync();
+        .Include(o => o.User) 
+        .Include(o => o.OrderItems)
+        .ThenInclude(i => i.Product)
+        .OrderByDescending(o => o.OrderDate)
+        .ToListAsync();
         }
 
         public async Task<Order?> GetOrderById(Guid orderId)
@@ -72,6 +73,16 @@ namespace AM_Sopplement.DataAccess.Repositories.Implementation
                 .Include(o => o.OrderItems)
                 .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
+        public async Task UpdateStatusStateAsync(Guid orderId, OrderStatus newStatus)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order != null)
+            {
+                order.Status = newStatus;
+                order.UpdatedDate = DateTime.UtcNow; // تحديث وقت التعديل
+            }
         }
 
 

@@ -40,7 +40,7 @@ public class AccountController : Controller
         var user = new ApplicationUser
         {
             UserName = model.Email,
-            Email = model.Email
+            PhoneNumber = model.Email
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);

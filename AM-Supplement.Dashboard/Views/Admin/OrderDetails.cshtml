@@ -2,32 +2,262 @@
 @model OrderDetailsDTO
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Order Specification";
 }
 
+<div class="dashboard-root py-5" style="background-color: #000; min-height: 100vh; color: #fff;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom border-secondary">
+            <a asp-action="Orders" class="btn-solid-back">
+                <i class="bi bi-chevron-left"></i> BACK TO FLEET
+            </a>
+            <div class="d-flex align-items-center">
+                <button class="btn-print-solid me-3" onclick="window.print()">
+                    <i class="bi bi-printer-fill"></i> PRINT
+                </button>
+               
+            </div>
+        </div>
 
-<h2>📄 Order Details</h2>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="sidebar-solid-card mb-4">
+                    <h5 class="label-heading text-warning">Order Intelligence</h5>
 
-<p><strong>Status:</strong> @Model.Status</p>
-<p><strong>Total:</strong> $@Model.TotalAmount</p>
+                    <div class="status-box-solid mb-4">
+                        <span class="d-block small fw-bold mb-2 text-secondary">CURRENT STATUS</span>
+                        <div class="status-pill-big @Model.Status.ToString().ToLower()">
+                            @Model.Status.ToString().ToUpper()
+                        </div>
+                    </div>
 
-<table class="table table-bordered bg-white">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Qty</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var i in Model.Items)
-        {
-            <tr>
-                <td>@i.ProductName</td>
-                <td>$@i.Price</td>
-                <td>@i.Quantity</td>
-            </tr>
+                    <div class="info-row">
+                        <label>PLACEMENT DATE</label>
+                        <span class="value">@Model.OrderDate.ToString("MMMM dd, yyyy")</span>
+                        <span class="time">@Model.OrderDate.ToString("HH:mm:ss")</span>
+                    </div>
+
+                    <hr class="border-secondary my-4">
+
+                    <div class="revenue-display">
+                        <label class="text-warning">TOTAL REVENUE</label>
+                        <div class="price-big">$@Model.TotalAmount.ToString("N2")</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-solid-card">
+                    <h5 class="label-heading">Customer Signature</h5>
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-icon">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-bold fs-5">Verified Client</p>
+                            <span class="text-success fw-bold small"><i class="bi bi-patch-check-fill"></i> AUTHENTICATED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="main-manifest-card">
+                    <div class="card-header-solid">
+                        <h5 class="m-0 fw-bold">MANIFEST DETAILS (@Model.Items.Count UNITS)</h5>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">PRODUCT UNIT</th>
+                                    <th class="text-center">UNIT PRICE</th>
+                                    <th class="text-center">QTY</th>
+                                    <th class="text-end pe-4">SUBTOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var i in Model.Items)
+                                {
+                                    <tr>
+                                        <td class="ps-4 py-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="unit-icon"><i class="bi bi-box-seam"></i></div>
+                                                <span class="fw-black fs-5 ms-3">@i.ProductName</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center fs-5 text-secondary">$@i.Price.ToString("N2")</td>
+                                        <td class="text-center">
+                                            <span class="qty-badge">@i.Quantity</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <span class="subtotal-text">$@((i.Price * i.Quantity).ToString("N2"))</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* 1. Global & Contrast */
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .sidebar-solid-card, .main-manifest-card {
+        background-color: #111;
+        border: 2px solid #222;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .sidebar-solid-card {
+        padding: 30px;
+    }
+
+    /* 2. Status & Badges */
+    .status-pill-big {
+        font-size: 1.2rem;
+        font-weight: 900;
+        padding: 10px;
+        text-align: center;
+        border-radius: 8px;
+        color: #000;
+    }
+
+        .status-pill-big.paid, .status-pill-big.completed {
+            background-color: #00ff88;
         }
-    </tbody>
-</table>
 
-<a asp-action="Orders" class="btn btn-secondary mt-3">Back to Orders</a>
+        .status-pill-big.pending {
+            background-color: #ffcc00;
+        }
+
+        .status-pill-big.cancelled {
+            background-color: #ff4d4d;
+            color: #fff;
+        }
+
+    .transaction-id-badge {
+        background-color: #222;
+        color: #ffcc00;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 900;
+        border: 1px solid #333;
+    }
+
+    /* 3. Revenue Typography */
+    .price-big {
+        font-family: 'Arial Black', sans-serif;
+        font-size: 3.5rem;
+        color: #fff;
+        line-height: 1;
+        margin-top: 10px;
+    }
+
+    .subtotal-text {
+        font-weight: 900;
+        font-size: 1.2rem;
+        color: #ffcc00;
+    }
+
+    /* 4. Table UI */
+    .table thead th {
+        background-color: #1a1a1a;
+        color: #ffcc00;
+        font-weight: 900;
+        text-transform: uppercase;
+        border: none;
+        padding: 15px;
+    }
+
+    .unit-icon {
+        width: 40px;
+        height: 40px;
+        background: #222;
+        color: #ffcc00;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 1.2rem;
+    }
+
+    .qty-badge {
+        background-color: #fff;
+        color: #000;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 900;
+        font-size: 1rem;
+    }
+
+    /* 5. Buttons */
+    .btn-solid-back {
+        background-color: #222;
+        color: #fff;
+        padding: 12px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 900;
+        transition: 0.2s;
+    }
+
+        .btn-solid-back:hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+    .btn-print-solid {
+        background-color: #ffcc00;
+        color: #000;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 900;
+    }
+
+    .label-heading {
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.8rem;
+        margin-bottom: 20px;
+    }
+
+    .info-row label {
+        display: block;
+        color: #888;
+        font-weight: 800;
+        font-size: 0.7rem;
+    }
+
+    .info-row .value {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 800;
+    }
+
+    .info-row .time {
+        color: #ffcc00;
+        font-weight: 900;
+    }
+
+    .avatar-icon {
+        width: 50px;
+        height: 50px;
+        background: #333;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.5rem;
+    }
+</style>

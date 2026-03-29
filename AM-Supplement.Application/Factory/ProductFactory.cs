@@ -39,7 +39,8 @@ namespace AM_Supplement.Application.Factory
                 Type = product.Type,
                 Weight = product.Weight,
                 CreationDate = product.CreatedDate,
-                Stock = product.Stock
+                Stock = product.Stock,
+                IsDeleted = product.IsDeleted   
             };
         }
         public void UpdateProduct(Product product, ProductDTO productDTO)

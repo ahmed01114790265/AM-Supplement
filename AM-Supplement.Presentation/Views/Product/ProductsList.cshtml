@@ -2,157 +2,142 @@
 @using AM_Supplement.Shared.Enums
 @model ProductsListViewModel
 
-@{
-    ViewData["Title"] = "Supplements Catalog";
-    var selectedType = Context.Request.Query["productTypeFilter"].ToString();
-    var selectedSort = Context.Request.Query["sorting"].ToString();
-}
-
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="text-primary fw-bold mb-0">💪 Supplement Catalog</h2>
-            <p class="text-muted small">Fuel your performance with our premium range</p>
-        </div>
-        <span class="badge bg-primary rounded-pill px-3 py-2 shadow-sm">@Model.Products.Count() Products Found</span>
+<div class="catalog-header mb-5">
+    <h1 class="text-white fw-bold display-4 mb-0" style="font-family: 'Teko';">
+        <span class="text-warning">AM</span> SUPPLEMENT
+    </h1>
+    <div class="d-flex align-items-center gap-2 opacity-50 text-uppercase small tracking-widest">
+        <i class="bi bi-geo-alt"></i> Premium Quality Guaranteed
     </div>
+</div>
 
-    @* قسم الفلترة *@
-    <div class="card shadow-sm mb-5 border-0 bg-white">
-        <div class="card-body p-4">
-            <form asp-action="GetProductsList" method="get" class="row g-3 align-items-end">
-                <input type="hidden" name="pageSize" value="6" />
-                <input type="hidden" name="pageNumber" value="1" />
-
-                <div class="col-md-4">
-                    <label class="form-label small fw-bold text-uppercase text-secondary">Category</label>
-                    <select name="productTypeFilter" class="form-select border-light-subtle shadow-sm">
-                        <option value="">All Categories</option>
-                        @foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
-                        {
-                            <option value="@type" selected="@(selectedType == type.ToString())">@type</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label small fw-bold text-uppercase text-secondary">Sort By</label>
-                    <select name="sorting" class="form-select border-light-subtle shadow-sm">
-                        <option value="">Default Sorting</option>
-                        @foreach (TypeSorting sort in Enum.GetValues(typeof(TypeSorting)))
-                        {
-                            <option value="@sort" selected="@(selectedSort == sort.ToString())">@sort</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="col-md-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary w-100 shadow-sm fw-bold">
-                        <i class="bi bi-filter"></i> Apply
-                    </button>
-                    <a asp-action="GetProductsList" class="btn btn-outline-secondary w-100">Reset</a>
-                </div>
-            </form>
+<div class="filter-card p-4 mb-5 border border-white border-opacity-10 rounded-4" style="background: rgba(255,255,255,0.02); backdrop-filter: blur(10px);">
+    <form asp-action="GetProductsList" method="get" class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="small text-secondary fw-bold text-uppercase mb-2 d-block">Category</label>
+            <select name="productTypeFilter" class="form-select bg-dark border-secondary text-white shadow-none">
+                <option value="">All Supplements</option>
+                @foreach (var type in Enum.GetValues(typeof(ProductType)))
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
         </div>
-    </div>
+        <div class="col-md-4">
+            <label class="small text-secondary fw-bold text-uppercase mb-2 d-block">Sort By</label>
+            <select name="sorting" class="form-select bg-dark border-secondary text-white shadow-none">
+                <option value="">Newest Gear</option>
+                <option value="PriceDesc">Price: High to Low</option>
+                <option value="PriceAsc">Price: Low to High</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-warning w-100 fw-bold py-2">APPLY FILTERS</button>
+            <a asp-action="GetProductsList" class="btn btn-outline-secondary px-3"><i class="bi bi-arrow-counterclockwise"></i></a>
+        </div>
+    </form>
+</div>
 
-    @* عرض المنتجات *@
-    <div class="row g-4">
-        @if (Model.Products != null && Model.Products.Any())
-        {
-            foreach (var product in Model.Products)
-            {
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0 hover-lift transition-all">
-                        <div class="position-relative overflow-hidden bg-white" style="border-radius: 15px 15px 0 0;">
-                            @* التعديل الأساسي لمسار الصور *@
-                            <img src="/assets/products/@(string.IsNullOrEmpty(product.ImageUrl) ? "default-product.png" : product.ImageUrl)"
-                                 class="card-img-top"
-                                 style="height:250px; object-fit:contain; padding:20px;"
-                                 alt="@product.Name"
-                                 onerror="this.onerror=null;this.src='/assets/products/default-product.png';" />
-
-                            @if (product.DiscountPercentage > 0)
-                            {
-                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 shadow-sm">
-                                    <i class="bi bi-tag-fill me-1"></i> @product.DiscountPercentage% OFF
-                                </span>
-                            }
-                        </div>
-
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0 fw-bold text-dark text-truncate" style="max-width: 70%;">@product.Name</h5>
-                                <span class="text-success fw-bold fs-5">$@product.Price</span>
-                            </div>
-                            <div class="mb-3">
-                                <span class="badge bg-light text-primary border border-primary-subtle">@product.Type</span>
-                                <span class="badge bg-light text-muted border">@product.Weight g</span>
-                            </div>
-                        </div>
-
-                        <div class="card-footer bg-transparent border-0 pb-4 px-3">
-                            <a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-dark w-100 rounded-pill fw-bold shadow-sm">
-                                View Details
-                            </a>
-                        </div>
+<div class="row g-4">
+    @foreach (var p in Model.Products)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 bg-transparent border-0 product-hover">
+                <div class="position-relative overflow-hidden rounded-4 mb-3 shadow-lg" style="height: 400px;">
+                    <img src="/assets/products/@p.ImageUrl" class="w-100 h-100 object-fit-cover transition-all" alt="@p.Name">
+                    <div class="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark">
+                        <a asp-action="GetProduct" asp-route-id="@p.Id" class="btn btn-warning w-100 rounded-pill fw-bold">VIEW DETAILS</a>
                     </div>
                 </div>
-            }
-        }
-        else
-        {
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-search display-1 text-muted opacity-25"></i>
-                <p class="text-muted fs-5 mt-3">No supplements found matching your criteria.</p>
-                <a asp-action="GetProductsList" class="btn btn-link">Clear all filters</a>
+                <div class="px-2">
+                    <small class="text-warning fw-bold">@p.Type</small>
+                    <h5 class="text-white fw-bold">@p.Name.ToUpper()</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fs-4 fw-bold text-white">$@p.Price</span>
+                        <span class="text-secondary small">/ @p.Weight g</span>
+                    </div>
+                </div>
             </div>
-        }
-    </div>
+        </div>
+    }
+</div> @if (Model.TotalPages > 1)
+{
+    <div class="d-flex justify-content-center mt-5 mb-5">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-lg gap-2">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-dark border-secondary text-warning rounded-3 shadow-sm"
+                           href="@Url.Action("GetProductsList", new { pageNumber = Model.CurrentPage - 1, productTypeFilter = Context.Request.Query["productTypeFilter"], sorting = Context.Request.Query["sorting"] })">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                }
 
-    @* الترقيم (Pagination) *@
-    @if (Model.TotalPages > 1)
-    {
-        <nav class="mt-5">
-            <ul class="pagination justify-content-center">
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
                     <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                        <a class="page-link shadow-sm mx-1 rounded border-0 fw-bold"
-                           asp-action="GetProductsList"
-                           asp-route-pageNumber="@i"
-                           asp-route-pageSize="6"
-                           asp-route-productTypeFilter="@selectedType"
-                           asp-route-sorting="@selectedSort">
+                        <a class="page-link @(i == Model.CurrentPage ? "bg-warning text-dark border-warning" : "bg-dark border-secondary text-white") rounded-3 fw-bold shadow-sm"
+                           href="@Url.Action("GetProductsList", new { pageNumber = i, productTypeFilter = Context.Request.Query["productTypeFilter"], sorting = Context.Request.Query["sorting"] })">
                             @i
+                        </a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-dark border-secondary text-warning rounded-3 shadow-sm"
+                           href="@Url.Action("GetProductsList", new { pageNumber = Model.CurrentPage + 1, productTypeFilter = Context.Request.Query["productTypeFilter"], sorting = Context.Request.Query["sorting"] })">
+                            <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
                 }
             </ul>
         </nav>
-    }
-</div>
+    </div>
+}
 
 <style>
-    .transition-all {
-        transition: all 0.3s ease;
+    /* تأثير التحويم على الكارت */
+    .product-hover {
+        transition: transform 0.3s ease;
     }
 
-    .hover-lift:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+        .product-hover:hover {
+            transform: translateY(-10px);
+        }
+
+        .product-hover img {
+            transition: transform 0.5s ease;
+        }
+
+        .product-hover:hover img {
+            transform: scale(1.1);
+        }
+
+    /* تدرج خلفية الزر */
+    .bg-gradient-dark {
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
     }
 
-    .page-item.active .page-link {
-        background-color: #0d6efd;
-        color: white;
+    /* التنسيق الخاص بالترقيم */
+    .pagination .page-link {
+        border-width: 2px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-width: 50px;
+        text-align: center;
     }
 
-    .card-img-top {
-        transition: transform 0.5s ease;
-    }
+        .pagination .page-link:hover {
+            background-color: #ffcc00 !important;
+            color: #000 !important;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.2) !important;
+        }
 
-    .hover-lift:hover .card-img-top {
-        transform: scale(1.08);
+    .pagination .active .page-link {
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
     }
 </style>

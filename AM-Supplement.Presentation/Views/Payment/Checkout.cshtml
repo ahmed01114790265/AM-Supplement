@@ -1,52 +1,123 @@
 ﻿@model CartDTO
 @{
-    ViewData["Title"] = "Checkout";
+    ViewData["Title"] = "Final Checkout";
+    var whatsappNumber = "201029067976";
+
+    // تجهيز قائمة المنتجات نصياً لاستخدامها في رسالة الواتساب
+    var itemsSummary = "";
+    if (Model?.Items != null)
+    {
+        foreach (var item in Model.Items)
+        {
+            itemsSummary += $"- {item.Name} (x{item.Quantity})%0A";
+        }
+    }
 }
 
-<h2 class="mb-4">💳 Checkout</h2>
+<div class="container py-5">
+    <h2 class="text-warning fw-bold mb-4" style="font-family: 'Teko'; font-size: 3rem;">
+        <i class="bi bi-shield-check me-2"></i>COMPLETE YOUR ORDER
+    </h2>
 
-@if (Model == null || Model.Items == null || !Model.Items.Any())
-{
-    <div class="alert alert-warning">
-        Your cart is empty.
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card bg-dark-matte border-0 shadow-lg" style="background-color: rgba(20, 22, 24, 0.9); border: 1px solid #2d3135 !important; border-radius: 15px;">
+                <div class="table-responsive p-3">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead>
+                            <tr class="text-secondary border-bottom border-secondary">
+                                <th class="py-3 border-0">PRODUCT</th>
+                                <th class="py-3 border-0 text-center">QTY</th>
+                                <th class="py-3 border-0 text-end">SUBTOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr class="border-bottom border-secondary">
+                                    <td class="py-3 fw-bold text-white">@item.Name</td>
+                                    <td class="text-center text-secondary">@item.Quantity</td>
+                                    <td class="text-end text-warning">@((item.Price * item.Quantity).ToString("C"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-black border-warning shadow-lg" style="border: 2px solid #ffcc00 !important; border-radius: 20px; overflow: hidden;">
+                <div class="card-body p-4">
+                    <h4 class="text-white mb-4 border-bottom border-secondary pb-2">Order Summary</h4>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="text-secondary fs-5">Total Due:</span>
+                        <span class="text-warning fw-bold fs-3">@Model.Total.ToString("C")</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-secondary small fw-bold mb-2">CHOOSE PAYMENT METHOD:</label>
+                        <select id="paymentMethod" class="form-select bg-dark border-secondary text-white shadow-none py-3">
+                            <option value="cash">💵 Cash on Delivery</option>
+                            <option value="vodafone">📱 Vodafone Cash</option>
+                        </select>
+                    </div>
+
+                    <div id="vodafoneBox" class="p-3 mb-4 rounded-3 d-none animate__animated animate__fadeIn" style="background: rgba(230, 0, 0, 0.1); border: 1px solid #e60000;">
+                        <p class="text-danger small fw-bold mb-1"><i class="bi bi-info-circle me-1"></i> Transfer to this number:</p>
+                        <h3 class="text-white text-center fw-bold mb-2">01029067976</h3>
+                        <p class="text-secondary x-small mb-0 text-center">Please send the transfer receipt on WhatsApp.</p>
+                    </div>
+
+                    <form asp-action="Pay" method="post" id="checkoutForm">
+                        <button type="submit" id="confirmBtn" class="btn btn-warning btn-lg w-100 py-3 fw-bold">
+                            <i class="bi bi-whatsapp me-2"></i>CONFIRM & PAY
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <a asp-controller="Product" asp-action="Index" class="btn btn-primary">
-        Go Shopping
-    </a>
-}
-else
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Price.ToString("C")</td>
-                    <td>@item.Quantity</td>
-                    <td>@(item.Price* item.Quantity).ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan="3" class="text-end">Total:</th>
-                <th>@Model.Total.ToString("C")</th>
-            </tr>
-        </tfoot>
-    </table>
+</div>
 
-    <form asp-action="Pay" method="post">
-        <button class="btn btn-success btn-lg w-100 mt-3">
-            💳 Pay Now (Mock Payment)
-        </button>
-    </form>
+@section Scripts {
+    <script>
+        const paymentMethod = document.getElementById('paymentMethod');
+        const vodafoneBox = document.getElementById('vodafoneBox');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        paymentMethod.addEventListener('change', function() {
+            if (this.value === 'vodafone') {
+                vodafoneBox.classList.remove('d-none');
+                confirmBtn.classList.replace('btn-warning', 'btn-danger');
+                confirmBtn.innerHTML = '<i class="bi bi-whatsapp me-2"></i>CONFIRM V-CASH';
+            } else {
+                vodafoneBox.classList.add('d-none');
+                confirmBtn.classList.replace('btn-danger', 'btn-warning');
+                confirmBtn.innerHTML = '<i class="bi bi-whatsapp me-2"></i>CONFIRM & PAY';
+            }
+        });
+
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const method = paymentMethod.value;
+            const total = "@Model.Total.ToString("C")";
+            const items = "@itemsSummary";
+
+            let message = "";
+            if(method === 'vodafone') {
+                message = `أهلاً AM Supplement%0Aلقد قمت بتحويل مبلغ ${total} عبر فودافون كاش لطلب المنتجات التالية:%0A${items}متى سيصل الطلب؟`;
+            } else {
+                message = `أهلاً AM Supplement%0Aأريد تأكيد طلب (دفع عند الاستلام) بمبلغ ${total}:%0A${items}شكراً لكم.`;
+            }
+
+            // فتح الواتساب في صفحة جديدة
+            window.open(`https://wa.me/@whatsappNumber?text=${message}`, '_blank');
+
+            // إرسال النموذج فعلياً للخادم لتسجيل الطلب
+            this.submit();
+        });
+    </script>
 }

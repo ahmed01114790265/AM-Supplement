@@ -17,6 +17,7 @@ namespace AM_Supplement.Contracts.DTO
         public decimal Weight { get; set; }
         public int Stock { get; set; }
         public int DiscountPercentage { get; set; }
+        public bool IsDeleted { get; set; }
         public ProductType Type { get; set; }
     }
 }
