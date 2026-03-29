@@ -1,4 +1,5 @@
-﻿using AM_Sopplement.DataAccess.Repositories.Interfaces;
+﻿using AM_Sopplement.DataAccess.Repositories.Implementation;
+using AM_Sopplement.DataAccess.Repositories.Interfaces;
 using AM_Sopplement.DataAccess.UnitOfWork.Interfaces;
 using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.DTO.AdminDasboard;
@@ -41,26 +42,31 @@ namespace AM_Supplement.Application.Services
                 order = new Order
                 {
                     UserId = userId,
-                    Status = OrderStatus.Pending
+                    Status = OrderStatus.Pending,
+                    CreatedDate = DateTime.UtcNow,
+                    TotalAmount = 0 
                 };
                 await _orderRepo.Create(order);
             }
-
             var item = order.OrderItems.FirstOrDefault(i => i.ProductId == productId);
+            var product = await _productRepo.GetProduct(productId);
 
             if (item != null)
             {
                 item.Quantity += quantity;
+                item.Price = product.Price;
             }
             else
             {
-                var product = await _productRepo.GetProduct(productId);
+               
                 order.OrderItems.Add(new OrderItem
                 {
                     ProductId = productId,
-                    Quantity = quantity
+                    Quantity = quantity,
+                    Price = product.Price
                 });
             }
+            order.TotalAmount = order.OrderItems.Sum(i => i.Quantity * i.Price);
 
             await _unitOfWork.SaveChangsAsync();
         }
@@ -155,7 +161,7 @@ namespace AM_Supplement.Application.Services
             return orders.Select(o => new OrderDTO
             {
                 Id = o.Id,
-                UserEmail = o.User?.Email ?? "No Email Found",
+                UserEmail = o.User?.PhoneNumber ?? "No Email Found",
                 Total = o.TotalAmount,
                 Status = o.Status,
                 CreatedAt = o.OrderDate
@@ -183,7 +189,16 @@ namespace AM_Supplement.Application.Services
             };
         }
 
+        public async Task<bool> UpdateOrderStatus(Guid orderId, OrderStatus status)
+        {
+            // 1. تحديث الحالة في الـ Context (عبر الـ Repository)
+            await _orderRepo.UpdateStatusStateAsync(orderId, status);
 
+            // 2. استخدام ميثود SaveChangsAsync الخاصة بك من الـ UnitOfWork
+            // هذا هو الكود الذي يطبق التغييرات فعلياً في قاعدة البيانات
+            return await _unitOfWork.SaveChangsAsync();
+        }
 
+       
     }
 }

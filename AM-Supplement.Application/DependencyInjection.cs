@@ -12,7 +12,7 @@ namespace AM_Supplement.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            // تم حذف webRootPath من الباراميترز لأننا سنعتمد على التخزين الخارجي المشترك
+            
 
             services.AddRepositories(configuration);
 

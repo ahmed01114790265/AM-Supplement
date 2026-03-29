@@ -1,26 +1,71 @@
-﻿@model IEnumerable<ProductDTO>
-@{
-    ViewData["Title"] = "Home";
-}
-
-<h1>Home</h1>
-
-<div class="hero bg-primary text-white p-5 text-center rounded">
-    <h1>Welcome Home Page</h1>
-    <p>Best of products </p>
-    <a class="btn btn-light btn-lg" href="/Products">Buy Now </a>
-</div>
-
-<hr/>
-<div class="container mt-4">
-    <h2 class="mb-4">Featured Products</h2>
-    <div class="row">
-    
-        @foreach (var product in Model)
-        {
-            <div class="col-md-3 mb-4">
-                @await Html.PartialAsync("_ProductCard", product)
-            </div>
-        }
+﻿@using AM_Supplement.Presentation.Models
+@using AM_Supplement.Shared.Enums
+@model ProductsListViewModel
+<div class="catalog-header mb-5">
+    <h1 class="text-white fw-bold display-4 mb-0" style="font-family: 'Teko';">
+        <span class="text-warning">AM</span>  SUPPLEMENT
+    </h1>
+    <div class="d-flex align-items-center gap-2 opacity-50 text-uppercase small tracking-widest">
+        <i class="bi bi-geo-alt"></i> Premium Quality Guaranteed
     </div>
 </div>
+
+<div class="filter-card p-4 mb-5 border border-white border-opacity-10 rounded-4" style="background: rgba(255,255,255,0.02); backdrop-filter: blur(10px);">
+    <form asp-action="GetProductsList" method="get" class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="small text-secondary fw-bold text-uppercase mb-2 d-block">Category</label>
+            <select name="productTypeFilter" class="form-select bg-dark border-secondary text-white shadow-none">
+                <option value="">All Supplements</option>
+                @foreach (var type in Enum.GetValues(typeof(ProductType)))
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="small text-secondary fw-bold text-uppercase mb-2 d-block">Sort By</label>
+            <select name="sorting" class="form-select bg-dark border-secondary text-white shadow-none">
+                <option value="">Newest Gear</option>
+                <option value="PriceDesc">Price: High to Low</option>
+                <option value="PriceAsc">Price: Low to High</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-warning w-100 fw-bold py-2">APPLY FILTERS</button>
+            <a asp-action="GetProductsList" class="btn btn-outline-secondary px-3"><i class="bi bi-arrow-counterclockwise"></i></a>
+        </div>
+    </form>
+</div>
+
+<div class="row g-4">
+    @foreach (var p in Model.Products)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 bg-transparent border-0 product-hover">
+                <div class="position-relative overflow-hidden rounded-4 mb-3 shadow-lg" style="height: 400px;">
+                    <img src="/assets/products/@p.ImageUrl" class="w-100 h-100 object-fit-cover transition-all" alt="@p.Name">
+                    <div class="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark">
+                        <a asp-action="GetProduct" asp-route-id="@p.Id" class="btn btn-warning w-100 rounded-pill fw-bold">VIEW DETAILS</a>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <small class="text-warning fw-bold">@p.Type</small>
+                    <h5 class="text-white fw-bold">@p.Name.ToUpper()</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fs-4 fw-bold text-white">$@p.Price</span>
+                        <span class="text-secondary small">/ @p.Weight g</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<style>
+    .catalog-page-bg {
+        background: linear-gradient(rgba(10, 11, 12, 0.8), rgba(10, 11, 12, 0.95)), url('/images/products/38840335-c9a3-4c97-8a5e-e33300db12b6.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+</style>

@@ -1,104 +1,38 @@
-﻿@model List<AM_Supplement.Contracts.DTO.ProductDTO>
-
-@{
-    ViewData["Title"] = "Product Management";
-}
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-primary fw-bold">📦 Product Inventory</h2>
-    <a asp-action="CreateProduct" class="btn btn-success shadow-sm px-4">
-        <i class="bi bi-plus-circle"></i> Add New Product
-    </a>
+﻿@model List<ProductDTO>
+<div class="admin-header d-flex justify-content-between align-items-end mb-5 border-bottom border-white border-opacity-10 pb-4">
+    <div>
+        <h2 class="text-white fw-bold display-6 mb-0" style="font-family: 'Teko';">COMMAND CENTER</h2>
+        <span class="text-secondary text-uppercase small tracking-widest">Inventory Management System</span>
+    </div>
+    <a asp-action="CreateProduct" class="btn btn-warning px-4 py-2 fw-bold"><i class="bi bi-plus-lg me-2"></i>NEW PRODUCT</a>
 </div>
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-<div class="row">
-    @if (Model != null && Model.Any())
+<div class="row g-4">
+    @foreach (var p in Model)
     {
-        foreach (var product in Model)
-        {
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card h-100 shadow-sm border-0 hover-shadow transition">
-                    <div class="position-relative bg-white text-center">
-                        @* التعديل الجوهري: استخدام المسار /assets/products/ ليتطابق مع الـ Middleware *@
-                        <img src="/assets/products/@(string.IsNullOrEmpty(product.ImageUrl) ? "default-product.png" : product.ImageUrl)"
-                             class="card-img-top"
-                             style="height:200px; object-fit: contain; padding: 15px;"
-                             alt="@product.Name"
-                             onerror="this.onerror=null;this.src='/assets/products/default-product.png';" />
-
-                        @if (product.DiscountPercentage > 0)
-                        {
-                            <span class="badge bg-danger position-absolute top-0 end-0 m-2 shadow-sm">
-                                -@product.DiscountPercentage%
-                            </span>
-                        }
+        <div class="col-xl-4 col-md-6">
+            <div class="card bg-black border border-white border-opacity-10 rounded-4 overflow-hidden h-100 shadow-sm">
+                <div class="row g-0">
+                    <div class="col-4 bg-dark d-flex align-items-center justify-content-center p-2">
+                        <img src="/assets/products/@p.ImageUrl" class="img-fluid rounded" style="max-height: 120px;">
                     </div>
-
-                    <div class="card-body d-flex flex-column border-top bg-light-subtle">
-                        <h6 class="card-subtitle mb-1 text-muted small text-uppercase">@product.Type</h6>
-                        <h5 class="card-title fw-bold text-dark mb-3">@product.Name</h5>
-
-                        <div class="mt-auto">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-white text-dark border fw-normal">@product.Weight g</span>
-                                <span class="fw-bold text-primary fs-5">$@product.Price</span>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge @(p.Stock < 5 ? "bg-danger" : "bg-dark border border-secondary") text-uppercase">@p.Stock units</span>
+                                <span class="text-warning fw-bold">$@p.Price</span>
                             </div>
-
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
-                                <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-outline-primary btn-sm flex-fill">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-
-                                <form asp-action="DeleteProduct" asp-route-id="@product.Id" method="post"
-                                      onsubmit="return confirm('Are you sure you want to delete @product.Name?');"
-                                      class="flex-fill">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
+                            <h6 class="text-white text-truncate mb-3">@p.Name</h6>
+                            <div class="d-flex gap-2">
+                                <a asp-action="EditProduct" asp-route-id="@p.Id" class="btn btn-sm btn-outline-warning w-100">EDIT</a>
+                                <form asp-action="DeleteProduct" asp-route-id="@p.Id" method="post" class="w-100">
+                                    <button class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Delete item?')">DEL</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        }
-    }
-    else
-    {
-        <div class="col-12 text-center py-5">
-            <div class="bg-light d-inline-block p-4 rounded-circle mb-3">
-                <i class="bi bi-box-seam display-1 text-muted"></i>
-            </div>
-            <p class="mt-3 fs-4 text-muted">Your inventory is empty.</p>
-            <a asp-action="CreateProduct" class="btn btn-primary">Add Your First Product</a>
         </div>
     }
 </div>
-
-<style>
-    .hover-shadow:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important;
-    }
-
-    .transition {
-        transition: all 0.3s ease-in-out;
-    }
-
-    .card-img-top {
-        background-color: #fff;
-    }
-
-    .text-uppercase {
-        letter-spacing: 0.5px;
-    }
-</style>

@@ -1,30 +1,107 @@
 ﻿@model OrderDetailsDTO
+@{
+    ViewData["Title"] = "Order Summary";
+}
 
-<h2>Order Details</h2>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-secondary pb-3">
+        <div>
+            <h2 class="text-warning fw-bold mb-0" style="font-family: 'Teko'; font-size: 3rem; letter-spacing: 1px;">
+                ORDER RECEIPT
+            </h2>
+            <p class="text-secondary mb-0">Date: @Model.OrderDate.ToString("MMMM dd, yyyy")</p>
+        </div>
+        <div class="text-end">
+            <span class="badge @(Model.Status == AM_Supplement.Shared.Enums.OrderStatus.Paid ? "bg-success" : "bg-warning text-dark") px-3 py-2 fs-6">
+                @Model.Status.ToString();
+            </span>
+        </div>
+    </div>
 
-<p><strong>Status:</strong> @Model.Status</p>
-<p><strong>Date:</strong> @Model.OrderDate</p>
+    <div class="card bg-dark-matte border-0 shadow-lg overflow-hidden" style="background-color: rgba(20, 22, 24, 0.9); border: 1px solid #2d3135 !important; border-radius: 15px;">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0 align-middle">
+                <thead class="bg-black">
+                    <tr class="text-secondary">
+                        <th class="ps-4 py-3 border-0">PRODUCT NAME</th>
+                        <th class="py-3 border-0">UNIT PRICE</th>
+                        <th class="py-3 border-0 text-center">QTY</th>
+                        <th class="py-3 border-0 text-end pe-4">SUBTOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr style="border-bottom: 1px solid #2d3135;">
+                            <td class="ps-4 py-4 text-white fw-bold">@item.ProductName</td>
+                            <td class="text-light">@item.Price.ToString("C")</td>
+                            <td class="text-center">
+                                <span class="text-secondary">x</span> @item.Quantity
+                            </td>
+                            <td class="text-end pe-4 text-warning fw-bold">
+                                @((item.Price * item.Quantity).ToString("C"))
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>@item.ProductName</td>
-                <td>@item.Price.ToString("C")</td>
-                <td>@item.Quantity</td>
-                <td>@(item.Price* item.Quantity).ToString("C")</td>
-            </tr>
+        <div class="card-footer bg-black p-4 border-0">
+            <div class="row justify-content-end">
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-secondary">Subtotal:</span>
+                        <span class="text-white">@Model.TotalAmount.ToString("C")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-secondary">Shipping:</span>
+                        <span class="text-success small">FREE</span>
+                    </div>
+                    <hr class="bg-secondary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-white fw-bold fs-5">TOTAL PAID:</span>
+                        <span class="text-warning fw-bold fs-3">@Model.TotalAmount.ToString("C")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between align-items-center">
+        <a asp-action="Index" asp-controller="Product" class="btn btn-outline-secondary px-4">
+            <i class="bi bi-arrow-left me-2"></i>Back to Shop
+        </a>
+        <button onclick="window.print();" class="btn btn-dark border-secondary px-4">
+            <i class="bi bi-printer me-2"></i>Print Invoice
+        </button>
+    </div>
+</div>
+
+<style>
+    /* تحسين شكل الجدول وتفاعل الماوس */
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 204, 0, 0.02) !important;
+    }
+
+    /* إخفاء الأزرار عند الطباعة */
+    @@media print {
+        .btn, aside, header, footer {
+            display: none !important;
         }
-    </tbody>
-</table>
 
-<h4 class="text-end">Total: @Model.TotalAmount.ToString("C")</h4>
+        body {
+            background: white !important;
+            color: black !important;
+        }
+
+        .card {
+            border: 1px solid #ccc !important;
+            background: white !important;
+        }
+
+        .text-white, .text-warning, .text-secondary {
+            color: black !important;
+        }
+    }
+</style>

@@ -1,37 +1,214 @@
-﻿@using AM_Supplement.Contracts.DTO
+﻿@using AM_Supplement.Shared.Enums
 @model List<AM_Supplement.Contracts.DTO.AdminDasboard.OrderDTO>
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Operations Control";
 }
 
-<h2>🧾 Orders</h2>
+<div class="ops-control-panel p-4" style="background-color: #000; min-height: 100vh;">
+    <div class="container-fluid">
 
-<table class="table table-striped bg-white shadow-sm">
-    <thead class="table-dark">
-        <tr>
-            <th>Order ID</th>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var o in Model)
+        <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom border-secondary">
+            <div>
+                <h2 style="font-family: 'Arial Black', sans-serif; font-size: 2.2rem; color: #ffcc00; text-transform: uppercase; margin: 0;">
+                    <i class="bi bi-terminal-fill me-2"></i> ORDERS <span style="color: #fff;">FLEET</span>
+                </h2>
+                <p style="color: #00ff88; font-weight: 900; letter-spacing: 1px; margin-top: 5px;">
+                    LIVE MONITORING: SYSTEM ACTIVE
+                </p>
+            </div>
+
+            <div class="total-orders-box">
+                <span style="font-size: 0.75rem; font-weight: 900; color: #888; display: block;">LIVE ORDERS</span>
+                <span style="font-size: 2.5rem; font-family: 'Arial Black', sans-serif; color: #ffcc00; line-height: 1;">@Model.Count</span>
+            </div>
+        </div>
+        <div class="solid-table-wrapper">
+            <table class="table table-dark align-middle mb-0">
+                <thead>
+                    <tr style="background-color: #1a1a1a; border-bottom: 3px solid #333;">
+                        <th class="ps-4 py-4" style="color: #ffcc00; font-weight: 900;">SEQ</th>
+                        <th style="color: #ffcc00; font-weight: 900;">CLIENT PHONE / EMAIL</th>
+                        <th style="color: #ffcc00; font-weight: 900;">TIMESTAMP</th>
+                        <th style="color: #ffcc00; font-weight: 900;">NET REVENUE</th>
+                        <th style="color: #ffcc00; font-weight: 900;">OPERATIONAL STATUS</th>
+                        <th class="text-end pe-4" style="color: #ffcc00; font-weight: 900;">INTELLIGENCE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var order = Model[i];
+                        <tr style="border-bottom: 1px solid #222; background-color: #0c0c0c;">
+                            <td class="ps-4">
+                                <span style="font-size: 1.2rem; font-weight: 900; color: #555;">#@(i + 1)</span>
+                            </td>
+
+                            <td>
+                                <div class="client-info">
+                                    <i class="bi bi-shield-lock-fill text-warning me-2"></i>
+                                    <span class="email-text">@order.UserEmail.ToLower()</span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div style="line-height: 1.2;">
+                                    <div style="color: #fff; font-weight: 800; font-size: 1rem;">@order.CreatedAt.ToString("MMM dd, yyyy")</div>
+                                    <div style="color: #ffcc00; font-weight: 900; font-size: 0.8rem;">@order.CreatedAt.ToString("HH:mm:ss")</div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span style="color: #00ff88; font-size: 1.4rem; font-weight: 900; font-family: 'Arial', sans-serif;">
+                                    $@order.Total.ToString("N2")
+                                </span>
+                            </td>
+
+                            <td>
+                                <form asp-action="UpdateOrderStatus" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderId" value="@order.Id" />
+                                    <select name="status" onchange="this.form.submit()"
+                                            class="status-dropdown-solid @GetStatusClass(order.Status)">
+                                        @foreach (var s in Enum.GetValues(typeof(OrderStatus)))
+                                        {
+                                            <option value="@s" selected="@(order.Status == (OrderStatus)s)">@s</option>
+                                        }
+                                    </select>
+                                </form>
+                            </td>
+
+                            <td class="text-end pe-4">
+                                <a asp-action="OrderDetails" asp-route-id="@order.Id" class="btn-details-solid">
+                                    <i class="bi bi-eye-fill me-1"></i> DETAILS
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusClass(OrderStatus status)
+    {
+        return status switch
         {
-            <tr>
-                <td>@o.Id</td>
-                <td>@o.CreatedAt.ToShortDateString()</td>
-                <td>$@o.TotalAmount</td>
-                <td>
-                    <span class="badge @(o.Status == AM_Supplement.Shared.Enums.OrderStatus.Paid ? "bg-success" : "bg-warning")">@o.Status</span>
-                </td>
-                <td>
-                    <a asp-action="OrderDetails" asp-route-id="@o.Id" class="btn btn-sm btn-outline-primary">
-                        Details
-                    </a>
-                </td>
-            </tr>
+            OrderStatus.Paid => "bg-paid",
+            OrderStatus.Pending => "bg-pending",
+            OrderStatus.Cancelled => "bg-cancelled",
+            _ => "bg-default"
+        };
+    }
+}
+
+<style>
+    /* تنسيقات تضمن عدم اختفاء الكلمات والأرقام */
+    .solid-table-wrapper {
+        border: 2px solid #333;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .total-orders-box {
+        background: #111;
+        border: 2px solid #333;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    /* الـ Select المخصص بألوان نيون صلبة */
+    .status-dropdown-solid {
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-weight: 900;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: 140px;
+    }
+
+    /* ألوان الحالات - واضحة جداً */
+    .bg-paid {
+        background-color: #00ff88 !important;
+        color: #000 !important;
+    }
+
+    .bg-pending {
+        background-color: #ffcc00 !important;
+        color: #000 !important;
+    }
+
+    .bg-cancelled {
+        background-color: #ff4d4d !important;
+        color: #fff !important;
+    }
+
+    .bg-default {
+        background-color: #333 !important;
+        color: #fff !important;
+    }
+
+    /* زر التفاصيل */
+    .btn-details-solid {
+        background-color: #fff;
+        color: #000;
+        padding: 8px 20px;
+        border-radius: 5px;
+        font-weight: 900;
+        font-size: 0.75rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: 0.2s;
+    }
+
+        .btn-details-solid:hover {
+            background-color: #ffcc00;
+            color: #000;
         }
-    </tbody>
-</table>
+
+    .client-info {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: 1px border-secondary;
+        width: fit-content;
+    }
+
+    .email-text {
+        color: #e0e0e0;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        /* يمنع النصوص الطويلة من كسر الجدول */
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .email-cell {
+        max-width: 200px; /* تحديد عرض أقصى للإيميل */
+        overflow: hidden;
+        text-overflow: ellipsis; /* وضع نقاط ... إذا كان الإيميل طويلاً */
+        white-space: nowrap;
+        color: #00ff88; /* لون تقني مميز */
+        font-family: 'Consolas', monospace; /* خط يشبه كود البرمجة */
+    }
+
+    @@media (max-width: 768px) {
+        .email-text {
+            max-width: 150px;
+        }
+
+        .table {
+            min-width: 1000px; /* يضمن بقاء الأعمدة مرئية */
+        }
+    }
+</style>

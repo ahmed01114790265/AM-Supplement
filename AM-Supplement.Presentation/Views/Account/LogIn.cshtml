@@ -4,23 +4,108 @@
     ViewData["Title"] = "Login";
 }
 
-<h2 class="mb-4">Login</h2>
+<div class="min-vh-100 d-flex align-items-center bg-dark-matte py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="card shadow-lg border-0 p-4"
+                     style="background-color: rgba(20, 22, 24, 0.8); backdrop-filter: blur(10px); border: 1px solid #2d3135 !important; border-radius: 20px;">
 
-<form asp-action="LogIn" method="post">
-    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <h2 class="text-warning fw-bold mb-1" style="font-family: 'Teko'; font-size: 2.8rem; letter-spacing: 1px;">WELCOME BACK</h2>
+                            <p class="text-secondary small text-uppercase tracking-widest">Login to fuel your progress</p>
+                        </div>
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+                        <form asp-action="LogIn" method="post">
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert bg-danger bg-opacity-10 border-danger text-danger x-small mb-4" role="alert">
+                                    <div asp-validation-summary="All"></div>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label text-secondary x-small fw-bold">PHONE NUMBER</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-secondary">
+                                        <i class="bi bi-telephone"></i>
+                                    </span>
+                                    <input asp-for="Email" class="form-control bg-dark border-secondary text-white shadow-none py-2"
+                                           placeholder="01XXXXXXXXX" type="tel" required />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger x-small"></span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label asp-for="Password" class="form-label text-secondary x-small fw-bold">PASSWORD</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-secondary">
+                                        <i class="bi bi-shield-lock"></i>
+                                    </span>
+                                    <input asp-for="Password" type="password" class="form-control bg-dark border-secondary text-white shadow-none py-2"
+                                           placeholder="••••••••" required />
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger x-small"></span>
+                            </div>
+
+                            <div class="mb-4 d-flex justify-content-between">
+                                <div class="form-check">
+                                    <input class="form-check-input bg-dark border-secondary shadow-none" type="checkbox" id="remember">
+                                    <label class="form-check-label text-secondary small" for="remember">Remember me</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-warning w-100 fw-bold py-3 shadow-glow transition-all text-uppercase mb-4">
+                                SIGN IN <i class="bi bi-box-arrow-in-right ms-2"></i>
+                            </button>
+
+                            <div class="text-center">
+                                <span class="text-secondary small">Don't have an account?</span>
+                                <a asp-action="Register" class="text-warning text-decoration-none small fw-bold ms-1 hover-gold">CREATE ACCOUNT</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+<style>
+    .bg-dark-matte {
+        background-color: #0b0d0e;
+    }
 
-    <button type="submit" class="btn btn-success">Login</button>
-    <a asp-action="Register" class="btn btn-link">Create new account</a>
-</form>
+    .x-small {
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+    }
+
+    .tracking-widest {
+        letter-spacing: 2px;
+    }
+
+    .shadow-glow {
+        box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2);
+        transition: 0.3s;
+    }
+
+        .shadow-glow:hover {
+            box-shadow: 0 6px 25px rgba(255, 204, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+    .input-group-text {
+        border-right: none;
+    }
+
+    input.form-control {
+        border-left: none;
+    }
+
+    .hover-gold:hover {
+        text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+        color: #fff !important;
+    }
+</style>

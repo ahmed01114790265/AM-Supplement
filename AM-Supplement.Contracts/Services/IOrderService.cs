@@ -1,5 +1,6 @@
 ﻿using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.DTO.AdminDasboard;
+using AM_Supplement.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace AM_Supplement.Contracts.Services
         Task<OrderDetailsDTO?> GetOrderDetails(Guid orderId, Guid userId);
         Task<List<OrderDTO>> GetAllOrdersForAdmin();
         Task<OrderDetailsDTO?> GetOrderDetailsForAdmin(Guid orderId);
+        Task<bool> UpdateOrderStatus(Guid orderId, OrderStatus status);
 
     }
 

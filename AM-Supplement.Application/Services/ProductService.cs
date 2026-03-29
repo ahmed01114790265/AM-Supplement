@@ -1,4 +1,5 @@
 ﻿using AM_Sopplement.DataAccess.Repositories.Interfaces;
+using AM_Sopplement.DataAccess.UnitOfWork.Implementation;
 using AM_Sopplement.DataAccess.UnitOfWork.Interfaces;
 using AM_Supplement.Contracts.DTO;
 using AM_Supplement.Contracts.Factory;
@@ -6,6 +7,7 @@ using AM_Supplement.Contracts.ResultModel;
 using AM_Supplement.Contracts.Services;
 using AM_Supplement.Shared.Enums;
 using AM_Supplement.Shared.Localization;
+using AMSupplement.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +22,7 @@ namespace AM_Supplement.Application.Services
         readonly IProductFactory ProductFactory;
         readonly IUnitOfWork UnitOfWork;
         readonly IStringLocalizer<SharedResource> Localizer;
-        readonly IImageService _imageService; // Corrected naming convention
+        readonly IImageService _imageService;
 
         public ProductService(IProductRepository productRepository,
                               IProductFactory productFactory,
@@ -37,15 +39,13 @@ namespace AM_Supplement.Application.Services
 
         public async Task<ResultModel<Guid>> AddProduct(ProductDTO productDTO)
         {
-            // 1. Process Image if it exists
-            // في AddProduct
             if (productDTO.ImageFile != null)
             {
                 productDTO.ImageUrl = await _imageService.UploadImageAsync(productDTO.ImageFile, "products");
             }
             else
             {
-                productDTO.ImageUrl = "default-product.png"; // تأكد من وجود صورة بهذا الاسم في مجلد products
+                productDTO.ImageUrl = "default-product.png";
             }
             var product = ProductFactory.CreateProduct(productDTO);
             ProductRepository.CreateProduct(product);
@@ -66,22 +66,21 @@ namespace AM_Supplement.Application.Services
             if (product == null)
                 return new ResultModel<Guid> { IsValid = false, ErrorMessage = $"Product with Id {productDTO.Id} does not exist" };
 
-            // المنطق المحدث لمعالجة الصورة
+
             if (productDTO.ImageFile != null)
             {
-                // 1. حذف الصورة القديمة من المجلد الفيزيائي (نرسل اسم الملف والمجلد)
+
                 _imageService.DeleteImage(product.ImageUrl, "products");
 
-                // 2. رفع الصورة الجديدة وحفظ اسم الملف الجديد في الـ DTO
                 productDTO.ImageUrl = await _imageService.UploadImageAsync(productDTO.ImageFile, "products");
             }
             else
             {
-                // 3. الاحتفاظ باسم الصورة القديمة إذا لم يتم رفع ملف جديد
+
                 productDTO.ImageUrl = product.ImageUrl;
             }
 
-            // تحديث البيانات باستخدام الفاكتوري
+
             ProductFactory.UpdateProduct(product, productDTO);
 
             await UnitOfWork.SaveChangsAsync();
@@ -95,11 +94,10 @@ namespace AM_Supplement.Application.Services
             if (product == null)
                 return new ResultModel<bool> { IsValid = false, ErrorMessage = $"Product with Id {productId} not found" };
 
-            // تنظيف ملف الصورة من السيرفر قبل حذف السجل من قاعدة البيانات
-            if (!string.IsNullOrEmpty(product.ImageUrl))
-            {
-                _imageService.DeleteImage(product.ImageUrl, "products");
-            }
+            //if (!string.IsNullOrEmpty(product.ImageUrl))
+            //{
+            //    _imageService.DeleteImage(product.ImageUrl, "products");
+            //}
 
             product.IsDeleted = true;
             await UnitOfWork.SaveChangsAsync();
@@ -155,8 +153,57 @@ namespace AM_Supplement.Application.Services
             {
                 IsValid = true,
                 ModelList = modelList,
+               
                 TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize.Value)
             };
         }
+
+
+
+        public async Task<ResultList<ProductDTO>> GetArchivedProducts()
+        {
+
+            var productlist = await ProductRepository.GetDeletedProductsAsync();
+            if (productlist == null || !productlist.Any())
+            {
+                return new ResultList<ProductDTO>
+                {
+                    IsValid = false,
+                    ErrorMessage = Localizer["EmptyList"]
+                };
+            }
+            var modelList = productlist
+                .Select(ProductFactory.CreateProductDTO)
+                .ToList();
+
+
+            return new ResultList<ProductDTO>
+            {
+                IsValid = true,
+                ModelList = modelList,
+            };
+
+
+        }
+
+        public async Task<bool> RestoreProductAsync(Guid id)
+        {
+            var product = await ProductRepository.GetProductForRestoreAsync(id);
+            if (product == null)
+                return false;
+
+            ProductRepository.Restore(product);
+            return await UnitOfWork.SaveChangsAsync();
+        }
+
+        public async Task<ResultModel<int>> GetTotalCountProduct()
+        {
+            var totalCount = await ProductRepository.TotalCountProduct();
+            return new ResultModel<int>
+            {
+                IsValid = true,
+                Model = totalCount
+            };
+        }
     }
-    }
+}

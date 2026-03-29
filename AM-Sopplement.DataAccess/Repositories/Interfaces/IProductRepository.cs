@@ -14,5 +14,9 @@ namespace AM_Sopplement.DataAccess.Repositories.Interfaces
       int pageSize,
       ProductType? productTypeFilter,
       TypeSorting? sorting);
+        void Restore(Product entity);
+        Task<List<Product>> GetDeletedProductsAsync();
+        Task<Product> GetProductForRestoreAsync(Guid id);
+       public Task<int> TotalCountProduct();
     }
 }

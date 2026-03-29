@@ -31,12 +31,14 @@ namespace AM_Supplement.Dashboard.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var products = await _productService.GetProductsList(1, 5);
+            var products = await _productService.GetProductsList(1,10000);
             var orders = await _orderService.GetAllOrdersForAdmin();
 
-            ViewBag.TotalProducts = products.ModelList?.Count ?? 0;
+            ViewBag.TotalProducts = products.ModelList?.Count() ?? 0;
             ViewBag.TotalOrders = orders.Count;
-            ViewBag.TotalRevenue = orders.Where(o => o.Status == OrderStatus.Paid).Sum(o => o.TotalAmount);
+            ViewBag.TotalRevenue = orders
+            .Where(o => o.Status == OrderStatus.Paid)
+            .Sum(o => o.Total );
 
             return View("Dashboard");
         }
@@ -178,6 +180,47 @@ namespace AM_Supplement.Dashboard.Controllers
             var order = await _orderService.GetOrderDetailsForAdmin(id);
             if (order == null) return NotFound();
             return View("OrderDetails", order);
+        }
+
+        [HttpPost("Orders/UpdateStatus")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateOrderStatus(Guid orderId, OrderStatus status)
+        {
+            if (orderId == Guid.Empty) return BadRequest();
+
+          
+            var success = await _orderService.UpdateOrderStatus(orderId, status);
+
+            if (success)
+            {
+                TempData["Message"] = $"Order status successfully changed to {status}.";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to update order status.";
+            }
+
+            return RedirectToAction(nameof(Orders));
+        }
+        
+
+        [HttpGet("Products/Archive")]
+        public async Task<IActionResult> Archive()
+        {
+            var deletedProducts = await _productService.GetArchivedProducts();
+            return View(deletedProducts.ModelList);
+        }
+
+        
+        [HttpPost("Products/Restore/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Restore(Guid id)
+        {
+            var success = await _productService.RestoreProductAsync(id);
+            if (success)
+                TempData["Message"] = "Item restored to active list! ✅";
+
+            return RedirectToAction(nameof(Archive));
         }
     }
 

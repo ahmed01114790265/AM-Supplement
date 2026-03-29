@@ -2,138 +2,119 @@
 
 @{
     ViewData["Title"] = Model.Name;
-    // حساب السعر النهائي بعد الخصم للعرض
     decimal discountedPrice = Model.Price - (Model.Price * Model.DiscountPercentage / 100);
 }
 
-<div class="container mt-5">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb small">
-            <li class="breadcrumb-item"><a asp-action="GetProductsList" class="text-decoration-none">Products</a></li>
-            <li class="breadcrumb-item active">@Model.Type</li>
-            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
-        </ol>
-    </nav>
+<div class="container-fluid py-5 bg-dark-matte min-vh-100">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="GetProductsList" class="text-warning text-decoration-none">Catalog</a></li>
+                <li class="breadcrumb-item active text-secondary" aria-current="page">@Model.Name</li>
+            </ol>
+        </nav>
 
-    <div class="row g-5">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm p-3 sticky-top" style="top: 20px; z-index: 10;">
-                @* التعديل الأساسي: 
-                   1. تغيير المسار إلى /assets/products/ ليتوافق مع الإعدادات الجديدة.
-                   2. تحديث اسم الصورة الافتراضية إلى default-product.png.
-                *@
-                <img src="/assets/products/@(string.IsNullOrEmpty(Model.ImageUrl) ? "default-product.png" : Model.ImageUrl)"
-                     class="img-fluid rounded"
-                     style="max-height: 500px; width: 100%; object-fit: contain;"
-                     alt="@Model.Name"
-                     onerror="this.onerror=null;this.src='/assets/products/default-product.png';" />
+        <div class="row g-5">
+            <div class="col-md-6">
+                <div class="product-gallery-card sticky-top" style="top: 100px;">
+                    <div class="image-bg-glow">
+                        @if (Model.DiscountPercentage > 0)
+                        {
+                            <span class="badge-promo">-@Model.DiscountPercentage%</span>
+                        }
+                        <img src="/assets/products/@(string.IsNullOrEmpty(Model.ImageUrl) ? "default-product.png" : Model.ImageUrl)"
+                             class="img-fluid main-product-img"
+                             alt="@Model.Name"
+                             onerror="this.src='/assets/products/default-product.png';" />
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="ps-lg-4">
-                <span class="badge bg-primary mb-2 opacity-75">@Model.Type</span>
-                <h1 class="display-5 fw-bold mb-3 text-dark">@Model.Name</h1>
+            <div class="col-md-6">
+                <div class="ps-lg-4">
+                    <h6 class="text-warning text-uppercase fw-bold tracking-widest mb-2">@Model.Type</h6>
+                    <h1 class="display-4 text-white fw-bold mb-3" style="font-family: 'Teko';">@Model.Name.ToUpper()</h1>
 
-                <div class="d-flex align-items-center mb-4">
-                    @if (Model.DiscountPercentage > 0)
+                    <div class="d-flex align-items-center mb-4">
+                        @if (Model.DiscountPercentage > 0)
+                        {
+                            <h2 class="text-warning fw-bold mb-0 fs-1">@discountedPrice.ToString("C")</h2>
+                            <span class="text-secondary text-decoration-line-through ms-3 fs-4">@Model.Price.ToString("C")</span>
+                        }
+                        else
+                        {
+                            <h2 class="text-white fw-bold mb-0 fs-1">@Model.Price.ToString("C")</h2>
+                        }
+                    </div>
+
+                    <p class="text-secondary fs-5 mb-5" style="line-height: 1.8;">@Model.Description</p>
+
+                    <div class="row g-3 mb-5">
+                        <div class="col-4">
+                            <div class="spec-item">
+                                <span class="d-block text-secondary x-small">FLAVOR</span>
+                                <span class="text-white fw-bold">@Model.Taste</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="spec-item">
+                                <span class="d-block text-secondary x-small">WEIGHT</span>
+                                <span class="text-white fw-bold">@Model.Weight g</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="spec-item">
+                                <span class="d-block text-secondary x-small">STATUS</span>
+                                <span class="@(Model.Stock > 0 ? "text-success" : "text-danger") fw-bold">
+                                    @(Model.Stock > 0 ? "IN STOCK" : "OUT OF STOCK")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.Stock > 0)
                     {
-                        <h2 class="text-success fw-bold mb-0">@discountedPrice.ToString("C")</h2>
-                        <span class="text-muted text-decoration-line-through ms-3 fs-5">@Model.Price.ToString("C")</span>
-                        <span class="badge bg-danger ms-3 shadow-sm">SAVE @Model.DiscountPercentage%</span>
+                        <form asp-controller="Cart" asp-action="Add" method="post" class="add-to-cart-box p-4 rounded-4 bg-black border border-secondary">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@Model.Id" />
+
+                            <div class="row g-3">
+                                <div class="col-3">
+                                    <label class="text-secondary small mb-2 d-block">QUANTITY</label>
+                                    <input type="number" name="quantity" value="1" min="1" max="@Model.Stock"
+                                           class="form-control bg-dark border-secondary text-white text-center fw-bold py-3" />
+                                </div>
+                                <div class="col-9 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-warning btn-lg w-100 fw-bold py-3 shadow-glow transition-all">
+                                        <i class="bi bi-cart-plus-fill me-2"></i> ADD TO SHOPPING BAG
+                                    </button>
+                                </div>
+                            </div>
+
+                            @if (Model.Stock < 10)
+                            {
+                                <div class="mt-3">
+                                    <small class="text-danger fw-bold"><i class="bi bi-fire me-1"></i> HURRY! ONLY @Model.Stock LEFT IN STOCK</small>
+                                </div>
+                            }
+                        </form>
                     }
                     else
                     {
-                        <h2 class="text-dark fw-bold mb-0">@Model.Price.ToString("C")</h2>
+                        <div class="alert bg-dark border-secondary text-white text-center py-4 rounded-4">
+                            <i class="bi bi-envelope me-2 text-warning"></i> This product is currently unavailable.
+                            <a href="#" class="text-warning fw-bold text-decoration-none ms-1">Notify Me</a>
+                        </div>
                     }
-                </div>
 
-                <p class="lead text-muted mb-4" style="line-height: 1.6;">@Model.Description</p>
-
-                <div class="card bg-light border-0 mb-4 shadow-sm">
-                    <div class="card-body">
-                        <div class="row text-center g-2">
-                            <div class="col-4 border-end">
-                                <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Flavor</small>
-                                <strong class="text-dark">@Model.Taste</strong>
-                            </div>
-                            <div class="col-4 border-end">
-                                <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Weight</small>
-                                <strong class="text-dark">@Model.Weight g</strong>
-                            </div>
-                            <div class="col-4">
-                                <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Status</small>
-                                @if (Model.Stock > 0)
-                                {
-                                    <span class="text-success fw-bold"><i class="bi bi-check2-circle"></i> In Stock</span>
-                                }
-                                else
-                                {
-                                    <span class="text-danger fw-bold"><i class="bi bi-x-circle"></i> Sold Out</span>
-                                }
-                            </div>
+                    <div class="mt-5 d-flex gap-4 border-top border-secondary pt-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-shield-check text-warning fs-3 me-2"></i>
+                            <span class="text-secondary small">100% GENUINE</span>
                         </div>
-                    </div>
-                </div>
-
-                @if (Model.Stock > 0 && Model.Stock < 20)
-                {
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small class="text-danger fw-bold">🔥 Low Stock: Only @Model.Stock left!</small>
-                        </div>
-                        <div class="progress" style="height: 8px; border-radius: 10px; background-color: #e9ecef;">
-                            <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
-                                 role="progressbar"
-                                 style="width: @(Model.Stock * 5)%;"></div>
-                        </div>
-                    </div>
-                }
-
-                @if (Model.Stock > 0)
-                {
-                    <form asp-controller="Cart" asp-action="Add" method="post" class="mt-4">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="productId" value="@Model.Id" />
-
-                        <div class="row g-2">
-                            <div class="col-3">
-                                <label class="small text-muted mb-1 d-block">Qty</label>
-                                <input type="number" name="quantity" value="1" min="1" max="@Model.Stock"
-                                       class="form-control form-control-lg text-center fw-bold border-2" />
-                            </div>
-                            <div class="col-9 d-flex align-items-end">
-                                <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm fw-bold py-3 transition-btn">
-                                    <i class="bi bi-cart-plus me-2"></i> ADD TO CART
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                }
-                else
-                {
-                    <div class="alert alert-secondary text-center mt-4 fw-bold border-0 shadow-sm">
-                        <i class="bi bi-bell me-2"></i> Notify me when back in stock
-                    </div>
-                }
-
-                <div class="mt-5 pt-4 border-top">
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 p-2 rounded me-3">
-                                    <i class="bi bi-truck fs-4 text-primary"></i>
-                                </div>
-                                <span class="small text-muted fw-medium">Free shipping over $50</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 p-2 rounded me-3">
-                                    <i class="bi bi-shield-check fs-4 text-primary"></i>
-                                </div>
-                                <span class="small text-muted fw-medium">100% Authentic Product</span>
-                            </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-truck text-warning fs-3 me-2"></i>
+                            <span class="text-secondary small">FAST DELIVERY</span>
                         </div>
                     </div>
                 </div>
@@ -143,20 +124,58 @@
 </div>
 
 <style>
-    .transition-btn {
-        transition: all 0.2s ease;
+    .bg-dark-matte {
+        background-color: #0f1113;
     }
 
-        .transition-btn:hover {
-            transform: scale(1.02);
-            filter: brightness(1.1);
-        }
-    /* تحسين شكل الـ Sticky Card */
-    .sticky-top {
-        transition: box-shadow 0.3s ease;
+    .product-gallery-card {
+        background: radial-gradient(circle, #1a1d21 0%, #000 100%);
+        border-radius: 30px;
+        padding: 40px;
+        border: 1px solid #2d3135;
     }
 
-        .sticky-top:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
-        }
+    .main-product-img {
+        filter: drop-shadow(0 10px 30px rgba(0,0,0,0.8));
+        transition: transform 0.5s ease;
+    }
+
+    .product-gallery-card:hover .main-product-img {
+        transform: scale(1.05);
+    }
+
+    .badge-promo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #ffcc00;
+        color: #000;
+        font-weight: 900;
+        padding: 10px 15px;
+        border-radius: 12px;
+        z-index: 5;
+        box-shadow: 0 4px 15px rgba(255,204,0,0.3);
+    }
+
+    .spec-item {
+        background: #1a1d21;
+        padding: 15px;
+        border-radius: 15px;
+        border: 1px solid #2d3135;
+        text-align: center;
+    }
+
+    .shadow-glow:hover {
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+        transform: translateY(-3px);
+    }
+
+    .tracking-widest {
+        letter-spacing: 3px;
+    }
+
+    .x-small {
+        font-size: 0.65rem;
+        font-weight: 800;
+    }
 </style>

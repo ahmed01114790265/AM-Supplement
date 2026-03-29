@@ -1,8 +1,177 @@
-﻿<footer class="bg-dark text-light mt-5">
-    <div class="container py-3 text-center">
-        <small>
-            © @DateTime.Now.Year AM Supplement —
-            Built with Ahmed mohamed:01114790265
-        </small>
+﻿<footer class="footer-modern">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start">
+                <p class="footer-label mb-2">EXPERT CONSULTATION</p>
+                <a href="https://wa.me/201029067976" class="contact-pill-link">
+                    <span class="pill-content">
+                        <i class="bi bi-whatsapp me-2 fs-5"></i>
+                        <span>CHAT WITH OUR SPECIALIST</span>
+                    </span>
+                </a>
+            </div>
+
+            <div class="col-lg-6 text-center text-lg-end mt-3 mt-lg-0">
+                <div class="footer-brand mb-2">
+                    <h5 class="brand-text mb-0">
+                        <span class="text-warning">AM</span> SUPPLEMENTS
+                    </h5>
+                    <p class="brand-subtext">FUELING ELITE ATHLETES SINCE 2024</p>
+                </div>
+
+                <div class="powered-by-box-modern">
+                    <p class="tech-partner-label mb-1">STRATEGIC TECHNOLOGY PARTNER</p>
+                    <h6 class="tech-company-name mb-1">DAKRORY BUSINESS TECH SOLUTIONS +20 111 479 0265</h6>
+                        <i class="bi bi-telephone-outbound me-2"></i>+20 111 479 0265
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="footer-divider">
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="copyright-text mb-0">
+                    &copy; @DateTime.Now.Year <span class="text-white">AM SUPPLEMENTS</span>. DESIGNED FOR PERFORMANCE.
+                </p>
+            </div>
+        </div>
     </div>
+    <style>
+        .footer-modern {
+            /* 1. إزالة أي لون تماماً لجعل الزجاج شفاف 100% */
+            background: transparent !important;
+            /* 2. تقليل الـ Blur لدرجة منخفضة جداً (3px) لكي تظهر تفاصيل الصورة */
+            backdrop-filter: blur(3px) brightness(1.1);
+            -webkit-backdrop-filter: blur(3px) brightness(1.1);
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1050;
+            padding: 15px 0 !important;
+            /* 3. خط علوي رفيع جداً لتحديد الفوتر دون حجب الصورة */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ضمان وضوح النصوص فوق الصورة المكشوفة */
+        .brand-text {
+            color: #ffffff !important;
+            font-family: 'Teko';
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+            /* ظل قوي جداً لأن الصورة أصبحت واضحة خلف النص */
+            text-shadow: 2px 2px 15px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .footer-label, .brand-subtext, .tech-partner-label {
+            color: #ffffff !important;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 8px rgba(0,0,0,1);
+        }
+
+        /* الأزرار: جعلناها شفافة أيضاً لكي لا تغطي الصورة */
+        .pill-content {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4); /* خلفية سوداء خفيفة جداً لبروز الكلام فقط */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: #fff !important;
+            font-weight: 800;
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+        }
+
+        .contact-pill-link:hover .pill-content {
+            background: #25d366;
+            border-color: #25d366;
+            transform: translateY(-3px);
+        }
+
+        .powered-by-box-modern {
+            display: inline-block;
+            padding: 12px 20px;
+            /* 1. خلفية زجاجية داكنة مع لمسة لمعان */
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(20, 20, 20, 0.4) 100%);
+            border-radius: 15px;
+            /* 2. إطار ذهبي رفيع ومميز */
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-left: 4px solid #ffcc00; /* خط ذهبي جانبي صريح لإعطاء قوة للتصميم */
+            /* 3. تأثير توهج (Glow) حول الصندوق لجعله يطفو */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 204, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            text-align: left;
+        }
+
+            .powered-by-box-modern:hover {
+                /* تأثير عند مرور الماوس: زيادة الإضاءة الذهبية */
+                border-color: #ffcc00;
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 8px 25px rgba(255, 204, 0, 0.2);
+                background: rgba(0, 0, 0, 0.7);
+            }
+
+        .tech-partner-label {
+            color: #ffcc00 !important; /* تحويل النص الصغير للذهبي */
+            font-size: 0.6rem !important;
+            font-weight: 900 !important;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+            display: block;
+            text-shadow: none; /* إزالة الظل ليكون حاداً وواضحاً */
+        }
+
+        .tech-company-name {
+            color: #ffffff !important;
+            font-size: 0.85rem !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .tech-link {
+            color: #ffffff !important;
+            background: rgba(255, 204, 0, 0.2); /* خلفية خفيفة للرقم داخل الصندوق */
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.8rem !important;
+            font-weight: 900;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 204, 0, 0.3);
+        }
+
+            .tech-link:hover {
+                background: #ffcc00;
+                color: #000 !important;
+            }
+
+      
+
+        .footer-divider {
+            margin: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.3;
+        }
+
+        .copyright-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.65rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,1);
+        }
+
+        body {
+            padding-bottom: 150px !important;
+        }
+    </style>
 </footer>

@@ -1,39 +1,125 @@
 ﻿@using AM_Supplement.Presentation.ViewsModel.AccountViewModel
 @model RegisterDTO
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success text-center">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create Account";
 }
 
-<h2 class="mb-4">Create Account</h2>
+<div class="min-vh-100 d-flex align-items-center bg-dark-matte py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="auth-card p-4 rounded-4 bg-black border border-secondary shadow-lg">
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <h2 class="text-warning fw-bold mb-1" style="font-family: 'Teko'; font-size: 2.8rem; letter-spacing: 1px;">JOIN THE ELITE</h2>
+                            <p class="text-secondary small text-uppercase tracking-widest">Start your fitness journey today</p>
+                        </div>
 
-<form asp-action="Register" method="post">
-    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                        <form asp-action="Register" method="post">
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert bg-danger bg-opacity-10 border-danger text-danger x-small mb-4" role="alert">
+                                    <div asp-validation-summary="All"></div>
+                                </div>
+                            }
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label text-secondary x-small fw-bold text-uppercase">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-secondary">
+                                        <i class="bi bi-telephone-fill"></i>
+                                    </span>
+                                    <input asp-for="Email" class="form-control bg-dark border-secondary text-white shadow-none py-2"
+                                           placeholder="01XXXXXXXXX" type="tel" required />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger x-small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Password" class="form-label text-secondary x-small fw-bold text-uppercase">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-secondary">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input asp-for="Password" type="password" class="form-control bg-dark border-secondary text-white shadow-none py-2"
+                                           placeholder="••••••••" required />
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger x-small"></span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label asp-for="ConfirmPassword" class="form-label text-secondary x-small fw-bold text-uppercase">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-secondary">
+                                        <i class="bi bi-shield-check"></i>
+                                    </span>
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control bg-dark border-secondary text-white shadow-none py-2"
+                                           placeholder="••••••••" required />
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger x-small"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-warning w-100 fw-bold py-3 shadow-glow transition-all text-uppercase mb-4">
+                                Create Account <i class="bi bi-person-plus-fill ms-2"></i>
+                            </button>
+
+                            <div class="text-center">
+                                <span class="text-secondary small">Already have an account?</span>
+                                <a asp-action="LogIn" class="text-warning text-decoration-none small fw-bold ms-1 hover-gold">LOG IN</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <p class="text-center text-secondary x-small mt-4 opacity-50">
+                    <i class="bi bi-shield-lock me-1"></i> Your data is encrypted and secure
+                </p>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+<style>
+    .bg-dark-matte {
+        background-color: #0b0d0e;
+    }
 
-    <div class="mb-3">
-        <label asp-for="ConfirmPassword" class="form-label"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
+    .auth-card {
+        border: 1px solid #2d3135 !important;
+        transition: transform 0.3s ease;
+    }
 
-    <button type="submit" class="btn btn-primary">Register</button>
-    <a asp-action="LogIn" class="btn btn-link">Already have an account?</a>
-</form>
+        .auth-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .shadow-glow {
+        box-shadow: 0 4px 20px rgba(255, 204, 0, 0.2);
+    }
+
+        .shadow-glow:hover {
+            box-shadow: 0 6px 25px rgba(255, 204, 0, 0.4);
+        }
+
+    .x-small {
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+    }
+
+    .tracking-widest {
+        letter-spacing: 2.5px;
+    }
+
+    .hover-gold:hover {
+        color: #fff !important;
+        text-shadow: 0 0 5px #ffcc00;
+    }
+
+    .input-group-text {
+        border-right: none;
+    }
+
+    input.form-control {
+        border-left: none;
+    }
+</style>
