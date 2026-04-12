@@ -18,5 +18,7 @@
     <ProjectReference Include="..\AM-Supplement.Contracts\AM-Supplement.Contracts.csproj" />
     <ProjectReference Include="..\AM-Supplement.Shared\AM-Supplement.Shared.csproj" />
   </ItemGroup>
-
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 </Project>

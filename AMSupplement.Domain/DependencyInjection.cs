@@ -12,7 +12,7 @@ namespace AMSupplement.Domain
     {
         public static IServiceCollection AddSuplementDbContext(this IServiceCollection service, IConfiguration configuration)
         {
-            service.AddDbContext<AMSublementDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("cs"), b => b.MigrationsAssembly("AMSupplement.Domain")));
+            service.AddDbContext<AMSublementDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("AMSupplement.Domain")));
             service.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 // إيقاف شرط البريد الإلكتروني

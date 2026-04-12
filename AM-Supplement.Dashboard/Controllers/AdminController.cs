@@ -187,8 +187,6 @@ namespace AM_Supplement.Dashboard.Controllers
         public async Task<IActionResult> UpdateOrderStatus(Guid orderId, OrderStatus status)
         {
             if (orderId == Guid.Empty) return BadRequest();
-
-          
             var success = await _orderService.UpdateOrderStatus(orderId, status);
 
             if (success)

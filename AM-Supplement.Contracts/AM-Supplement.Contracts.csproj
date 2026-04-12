@@ -5,6 +5,7 @@
     <RootNamespace>AM_Supplement.Contracts</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <NoWarn>CS8618;CS8625;CS8629</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

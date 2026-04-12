@@ -129,4 +129,160 @@
   <data name="EmptyList" xml:space="preserve">
     <value>list is empty</value>
   </data>
+  <data name="HeroBadge" xml:space="preserve">
+    <value>Clinically dosed · Athlete trusted</value>
+  </data>
+  <data name="HeroTitle" xml:space="preserve">
+    <value>Supplement — elevate every rep.</value>
+  </data>
+  <data name="HeroSubtitle" xml:space="preserve">
+    <value>Premium stacks, transparent labels, and fast shipping. Build your cart with filters tailored to your goal.</value>
+  </data>
+  <data name="GoToCart" xml:space="preserve">
+    <value>Go to Cart</value>
+  </data>
+  <data name="BrowseAll" xml:space="preserve">
+    <value>Browse All</value>
+  </data>
+  <data name="ExpressDelivery" xml:space="preserve">
+    <value>48h Express Delivery</value>
+  </data>
+  <data name="MoneyBack" xml:space="preserve">
+    <value>Money-back Guarantee</value>
+  </data>
+  <data name="InformedSport" xml:space="preserve">
+    <value>Informed Sport Ready</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="AllSupplements" xml:space="preserve">
+    <value>All Supplements</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort By</value>
+  </data>
+  <data name="NewestGear" xml:space="preserve">
+    <value>Newest Gear</value>
+  </data>
+  <data name="PriceHigh" xml:space="preserve">
+    <value>Price: High to Low</value>
+  </data>
+  <data name="PriceLow" xml:space="preserve">
+    <value>Price: Low to High</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Creatine" xml:space="preserve">
+    <value>Creatine</value>
+  </data>
+  <data name="PreWorkout" xml:space="preserve">
+    <value>Pre-Workout</value>
+  </data>
+  <data name="WheyIsolate" xml:space="preserve">
+    <value>Whey Isolate</value>
+  </data>
+  <data name="Vegan" xml:space="preserve">
+    <value>Vegan</value>
+  </data>
+  <data name="Bundles" xml:space="preserve">
+    <value>Bundles</value>
+  </data>
+  <data name="Fuel" xml:space="preserve">
+    <value>Fuel for performance</value>
+  </data>
+  <data name="AddToCart" xml:space="preserve">
+    <value>Add to cart</value>
+  </data>
+  <data name="QuickView" xml:space="preserve">
+    <value>Quick View</value>
+  </data>
+  <data name="NavShop" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="NavCart" xml:space="preserve">
+    <value>Cart</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Hello,</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="JoinNow" xml:space="preserve">
+    <value>Join Now</value>
+  </data>
+  <data name="Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
+  <data name="SystemPerformance" xml:space="preserve">
+    <value>System Performance</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="TotalProducts" xml:space="preserve">
+    <value>Total Products</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="CatalogStrength" xml:space="preserve">
+    <value>Catalog strength</value>
+  </data>
+  <data name="Stable" xml:space="preserve">
+    <value>Stable</value>
+  </data>
+  <data name="TotalOrders" xml:space="preserve">
+    <value>Total Orders</value>
+  </data>
+  <data name="Ops" xml:space="preserve">
+    <value>Ops</value>
+  </data>
+  <data name="FulfillmentRate" xml:space="preserve">
+    <value>Fulfillment rate</value>
+  </data>
+  <data name="OnTrack" xml:space="preserve">
+    <value>On track</value>
+  </data>
+  <data name="TotalRevenue" xml:space="preserve">
+    <value>Total Revenue</value>
+  </data>
+  <data name="MrrPulse" xml:space="preserve">
+    <value>MRR Pulse</value>
+  </data>
+  <data name="SalesTrajectory" xml:space="preserve">
+    <value>Sales Trajectory</value>
+  </data>
+  <data name="Last4Weeks" xml:space="preserve">
+    <value>Last 4 weeks</value>
+  </data>
+  <data name="AtGlance" xml:space="preserve">
+    <value>At a glance</value>
+  </data>
+  <data name="Conversion" xml:space="preserve">
+    <value>Conversion</value>
+  </data>
+  <data name="AvgFulfillment" xml:space="preserve">
+    <value>Avg. fulfillment</value>
+  </data>
+  <data name="RepeatBuyers" xml:space="preserve">
+    <value>Repeat buyers</value>
+  </data>
+  <data name="AOV" xml:space="preserve">
+    <value>AOV</value>
+  </data>
 </root>

@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>AM_Supplement.Presentation</RootNamespace>
+    <NoWarn>CS8602;CS8604;ASP0014</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

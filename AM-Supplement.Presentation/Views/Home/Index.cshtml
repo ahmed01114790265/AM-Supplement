@@ -1,71 +1,161 @@
 ﻿@using AM_Supplement.Presentation.Models
 @using AM_Supplement.Shared.Enums
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @model ProductsListViewModel
-<div class="catalog-header mb-5">
-    <h1 class="text-white fw-bold display-4 mb-0" style="font-family: 'Teko';">
-        <span class="text-warning">AM</span>  SUPPLEMENT
-    </h1>
-    <div class="d-flex align-items-center gap-2 opacity-50 text-uppercase small tracking-widest">
-        <i class="bi bi-geo-alt"></i> Premium Quality Guaranteed
+<div class="hero row align-items-center g-4 mb-5">
+    <div class="col-lg-6">
+        <p class="badge text-uppercase fw-bold px-3 py-2 mb-3" style="background: rgba(255, 204, 0, 0.12); color: #ffcc00; letter-spacing: 1px;">
+            @Localizer["HeroBadge"]
+        </p>
+        <h1 class="display-4 fw-bold text-white mb-3" style="font-family: 'Space Grotesk', sans-serif; line-height: 1.05;">
+            <span class="text-warning">AM</span> @Localizer["HeroTitle"]
+        </h1>
+        <p class="lead text-secondary mb-4">@Localizer["HeroSubtitle"]</p>
+        <div class="d-flex flex-wrap gap-3">
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-warning fw-bold px-4 py-2 rounded-pill text-dark">@Localizer["GoToCart"]</a>
+            <a asp-action="GetProductsList" class="btn btn-outline-light fw-semibold px-4 py-2 rounded-pill">@Localizer["BrowseAll"]</a>
+        </div>
+        <div class="d-flex gap-4 mt-4 text-secondary small">
+            <div><i class="bi bi-truck text-warning me-2"></i>@Localizer["ExpressDelivery"]</div>
+            <div><i class="bi bi-shield-check text-warning me-2"></i>@Localizer["MoneyBack"]</div>
+            <div><i class="bi bi-award text-warning me-2"></i>@Localizer["InformedSport"]</div>
+        </div>
     </div>
-</div>
-
-<div class="filter-card p-4 mb-5 border border-white border-opacity-10 rounded-4" style="background: rgba(255,255,255,0.02); backdrop-filter: blur(10px);">
-    <form asp-action="GetProductsList" method="get" class="row g-3 align-items-end">
-        <div class="col-md-4">
-            <label class="small text-secondary fw-bold text-uppercase mb-2 d-block">Category</label>
-            <select name="productTypeFilter" class="form-select bg-dark border-secondary text-white shadow-none">
-                <option value="">All Supplements</option>
-                @foreach (var type in Enum.GetValues(typeof(ProductType)))
-                {
-                    <option value="@type">@type</option>
-                }
-            </select>
+    <div class="col-lg-6">
+        <div class="glass-panel p-4 rounded-4 h-100 shadow-lg">
+            <form asp-action="GetProductsList" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label text-uppercase small fw-bold text-secondary">@Localizer["Category"]</label>
+                    <select name="productTypeFilter" class="form-select filter-input">
+                        <option value="">@Localizer["AllSupplements"]</option>
+                        @foreach (var type in Enum.GetValues(typeof(ProductType)))
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-uppercase small fw-bold text-secondary">@Localizer["SortBy"]</label>
+                    <select name="sorting" class="form-select filter-input">
+                        <option value="">@Localizer["NewestGear"]</option>
+                        <option value="PriceDesc">@Localizer["PriceHigh"]</option>
+                        <option value="PriceAsc">@Localizer["PriceLow"]</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-warning w-100 fw-bold py-2 rounded-3 text-dark">@Localizer["Apply"]</button>
+                    <a asp-action="GetProductsList" class="btn btn-outline-light px-3 rounded-3" title="@Localizer["Reset"]"><i class="bi bi-arrow-clockwise"></i></a>
+                </div>
+            </form>
+            <div class="d-flex gap-3 flex-wrap mt-3">
+                <span class="pill">@Localizer["Creatine"]</span>
+                <span class="pill">@Localizer["PreWorkout"]</span>
+                <span class="pill">@Localizer["WheyIsolate"]</span>
+                <span class="pill">@Localizer["Vegan"]</span>
+                <span class="pill">@Localizer["Bundles"]</span>
+            </div>
         </div>
-        <div class="col-md-4">
-            <label class="small text-secondary fw-bold text-uppercase mb-2 d-block">Sort By</label>
-            <select name="sorting" class="form-select bg-dark border-secondary text-white shadow-none">
-                <option value="">Newest Gear</option>
-                <option value="PriceDesc">Price: High to Low</option>
-                <option value="PriceAsc">Price: Low to High</option>
-            </select>
-        </div>
-        <div class="col-md-4 d-flex gap-2">
-            <button type="submit" class="btn btn-warning w-100 fw-bold py-2">APPLY FILTERS</button>
-            <a asp-action="GetProductsList" class="btn btn-outline-secondary px-3"><i class="bi bi-arrow-counterclockwise"></i></a>
-        </div>
-    </form>
+    </div>
 </div>
 
 <div class="row g-4">
     @foreach (var p in Model.Products)
     {
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 bg-transparent border-0 product-hover">
-                <div class="position-relative overflow-hidden rounded-4 mb-3 shadow-lg" style="height: 400px;">
-                    <img src="/assets/products/@p.ImageUrl" class="w-100 h-100 object-fit-cover transition-all" alt="@p.Name">
-                    <div class="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark">
-                        <a asp-action="GetProduct" asp-route-id="@p.Id" class="btn btn-warning w-100 rounded-pill fw-bold">VIEW DETAILS</a>
+            <div class="product-card h-100">
+                <div class="product-media">
+                    <img src="/assets/products/@p.ImageUrl" alt="@p.Name" loading="lazy">
+                    <div class="product-overlay">
+                        <a asp-action="GetProduct" asp-route-id="@p.Id" class="btn btn-warning w-100 fw-bold rounded-pill">View Details</a>
                     </div>
+                    <span class="badge-tag">@p.Type</span>
                 </div>
-                <div class="px-2">
-                    <small class="text-warning fw-bold">@p.Type</small>
-                    <h5 class="text-white fw-bold">@p.Name.ToUpper()</h5>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="fs-4 fw-bold text-white">$@p.Price</span>
-                        <span class="text-secondary small">/ @p.Weight g</span>
+                <div class="product-body">
+                    <h5 class="fw-bold text-white mb-1" style="letter-spacing: 0.3px;">@p.Name</h5>
+                    <p class="text-secondary small mb-3">@Localizer["Fuel"] · @p.Weight g</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="fs-4 fw-bold text-white">$@p.Price</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@p.Id" class="btn btn-outline-light btn-sm rounded-pill" title="@Localizer["AddToCart"]"><i class="bi bi-bag-plus"></i></a>
+                            <a asp-action="GetProduct" asp-route-id="@p.Id" class="btn btn-warning btn-sm rounded-pill text-dark">@Localizer["QuickView"]</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     }
-
 </div>
+
 <style>
-    .catalog-page-bg {
-        background: linear-gradient(rgba(10, 11, 12, 0.8), rgba(10, 11, 12, 0.95)), url('/images/products/38840335-c9a3-4c97-8a5e-e33300db12b6.jpeg');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+    }
+    .filter-input {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #f6f7fb;
+    }
+    .filter-input:focus { box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.2); border-color: var(--primary); }
+    .pill {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #dfe2ec;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        letter-spacing: 0.2px;
+    }
+    .product-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 18px;
+        overflow: hidden;
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+        height: 100%;
+    }
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    }
+    .product-media {
+        position: relative;
+        height: 360px;
+        overflow: hidden;
+    }
+    .product-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .product-card:hover img { transform: scale(1.05); }
+    .product-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.7));
+        display: flex;
+        align-items: flex-end;
+        padding: 16px;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+    }
+    .product-card:hover .product-overlay { opacity: 1; }
+    .product-body { padding: 18px; }
+    .badge-tag {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(255, 204, 0, 0.15);
+        color: #ffcc00;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.3px;
     }
 </style>

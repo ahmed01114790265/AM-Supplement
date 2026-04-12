@@ -35,7 +35,9 @@ namespace AM_Supplement.Dashboard
                 // x.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
             });
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+                            .AddViewLocalization()
+                            .AddDataAnnotationsLocalization();
 
             ///localization
             //register localization services 

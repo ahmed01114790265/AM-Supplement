@@ -7,15 +7,15 @@
     public class CreateProductViewModel
     {
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         public decimal Price { get; set; }
 
-        public string Taste { get; set; }
+        public string Taste { get; set; } = string.Empty;
 
         public decimal Weight { get; set; }
 
@@ -28,7 +28,7 @@
 
         [Display(Name = "Product Image")]
        
-        public IFormFile Image { get; set; }
+        public IFormFile Image { get; set; } = null!;
     }
 
 }

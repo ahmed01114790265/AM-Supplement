@@ -8,124 +8,163 @@
     var totalRevenue = ViewBag.TotalRevenue ?? 0;
 }
 
-<div class="mb-5">
-    <h2 style="font-family: 'Arial Black', sans-serif; font-size: 2.2rem; color: #ffcc00; text-transform: uppercase;">
-        <i class="bi bi-graph-up-arrow me-2"></i> SYSTEM STATS
-    </h2>
-</div>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
-<div class="row g-4 mb-5">
-    <div class="col-md-4">
-        <div class="stat-card-solid">
-            <p class="stat-label">TOTAL PRODUCTS</p>
-            <h3 class="stat-number text-white">@totalProducts.ToString("N0")</h3>
-            <div class="stat-icon-bg"><i class="bi bi-box-seam"></i></div>
-        </div>
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <p class="text-uppercase fw-bold text-muted small mb-1 tracking">@Localizer["Analytics"]</p>
+        <h2 class="fw-bold text-white mb-0"><i class="bi bi-graph-up-arrow me-2 text-warning"></i>@Localizer["SystemPerformance"]</h2>
     </div>
-
-    <div class="col-md-4">
-        <div class="stat-card-solid">
-            <p class="stat-label">TOTAL ORDERS</p>
-            <h3 class="stat-number text-white">@totalOrders.ToString("N0")</h3>
-            <div class="stat-icon-bg"><i class="bi bi-cart-check"></i></div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="stat-card-solid highlight-green">
-            <p class="stat-label text-success">TOTAL REVENUE</p>
-            <h3 class="stat-number text-success">$@totalRevenue.ToString("N2")</h3>
-            <div class="stat-icon-bg"><i class="bi bi-currency-dollar"></i></div>
-        </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-light btn-sm rounded-pill px-3"><i class="bi bi-cloud-download me-1"></i>@Localizer["Export"]</button>
+        <button class="btn btn-warning btn-sm rounded-pill px-3 text-dark"><i class="bi bi-arrow-repeat me-1"></i>@Localizer["Refresh"]</button>
     </div>
 </div>
 
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-meta">
+                <p class="stat-label">@Localizer["TotalProducts"]</p>
+                <span class="pill-up">@Localizer["Live"]</span>
+            </div>
+            <h3 class="stat-number">@totalProducts.ToString("N0")</h3>
+            <div class="stat-foot">
+                <span><i class="bi bi-box-seam me-1 text-warning"></i>@Localizer["CatalogStrength"]</span>
+                <span class="text-success"><i class="bi bi-arrow-up-right"></i> @Localizer["Stable"]</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-meta">
+                <p class="stat-label">@Localizer["TotalOrders"]</p>
+                <span class="pill-up bg-gradient-blue">@Localizer["Ops"]</span>
+            </div>
+            <h3 class="stat-number">@totalOrders.ToString("N0")</h3>
+            <div class="stat-foot">
+                <span><i class="bi bi-cart-check me-1 text-info"></i>@Localizer["FulfillmentRate"]</span>
+                <span class="text-info"><i class="bi bi-lightning-charge"></i> @Localizer["OnTrack"]</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card highlight">
+            <div class="stat-meta">
+                <p class="stat-label text-warning">@Localizer["TotalRevenue"]</p>
+                <span class="pill-up bg-gradient-gold"><i class="bi bi-cash"></i></span>
+            </div>
+            <h3 class="stat-number text-warning">$@totalRevenue.ToString("N2")</h3>
+            <div class="stat-foot">
+                <span><i class="bi bi-graph-up text-warning me-1"></i>MRR Pulse</span>
+                <span class="text-warning">Healthy</span>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="panel p-4 rounded-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 text-white">@Localizer["SalesTrajectory"]</h5>
+                <div class="badge bg-dark border text-secondary">@Localizer["Last4Weeks"]</div>
+            </div>
+            <canvas id="salesChart" height="120"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel p-4 rounded-4 h-100">
+            <h6 class="text-white mb-3">@Localizer["AtGlance"]</h6>
+            <ul class="list-unstyled mb-0 small text-secondary">
+                <li class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-25">
+                    <span><i class="bi bi-check2-circle text-success me-2"></i>@Localizer["Conversion"]</span>
+                    <strong class="text-white">2.4%</strong>
+                </li>
+                <li class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-25">
+                    <span><i class="bi bi-truck text-warning me-2"></i>@Localizer["AvgFulfillment"]</span>
+                    <strong class="text-white">1.8d</strong>
+                </li>
+                <li class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-25">
+                    <span><i class="bi bi-people text-info me-2"></i>@Localizer["RepeatBuyers"]</span>
+                    <strong class="text-white">38%</strong>
+                </li>
+                <li class="d-flex justify-content-between py-2">
+                    <span><i class="bi bi-currency-dollar text-success me-2"></i>@Localizer["AOV"]</span>
+                    <strong class="text-white">$@((totalOrders == 0 ? 0 : totalRevenue / totalOrders).ToString("N2"))</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <style>
-    body {
-        background-color: #000;
-        color: #fff;
+    body { background: #0b0d12; color: #f3f4f6; }
+    .tracking { letter-spacing: 1.6px; }
+    .panel {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.35);
     }
-
-    .stat-card-solid {
-        background-color: #111;
-        border: 2px solid #333;
-        padding: 30px;
-        border-radius: 20px;
-        position: relative;
-        overflow: hidden;
+    .stat-card {
+        background: radial-gradient(circle at 20% 20%, rgba(255,204,0,0.08), rgba(255,255,255,0.02));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 20px;
         min-height: 160px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
-
-    .highlight-green {
-        border-color: #00ff88;
+    .stat-card.highlight {
+        border-color: rgba(255,204,0,0.4);
+        box-shadow: 0 14px 40px rgba(255,204,0,0.1);
     }
-
-    .stat-label {
-        font-size: 0.9rem;
-        font-weight: 900;
-        letter-spacing: 2px;
-        margin-bottom: 5px;
-        color: #888;
-        position: relative;
-        z-index: 2;
+    .stat-meta { display: flex; justify-content: space-between; align-items: center; }
+    .stat-label { text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; color: #9aa0b5; margin: 0; }
+    .stat-number { font-size: 2.8rem; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
+    .stat-foot { display: flex; justify-content: space-between; align-items: center; color: #9aa0b5; font-size: 0.9rem; }
+    .pill-up {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #dfe2ec;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        letter-spacing: 0.3px;
     }
-
-    .stat-number {
-        font-family: 'Arial Black', sans-serif;
-        font-size: 3.2rem; /* تكبير الرقم ليكون واضحاً جداً */
-        font-weight: 900;
-        margin: 0;
-        position: relative;
-        z-index: 2;
-        letter-spacing: -1px;
-    }
-
-    /* أيقونة باهتة في الخلفية لتعطي شكلاً احترافياً دون إخفاء الرقم */
-    .stat-icon-bg {
-        position: absolute;
-        right: 10px;
-        bottom: -10px;
-        font-size: 6rem;
-        color: rgba(255, 255, 255, 0.03);
-        z-index: 1;
-    }
-
-    .text-success {
-        color: #00ff88 !important;
-    }
+    .bg-gradient-blue { background: linear-gradient(120deg, rgba(87,138,255,0.25), rgba(60,110,255,0.15)); color: #c8d7ff; border-color: rgba(60,110,255,0.25); }
+    .bg-gradient-gold { background: linear-gradient(120deg, rgba(255,204,0,0.25), rgba(255,204,0,0.12)); color: #ffcc00; border-color: rgba(255,204,0,0.3); }
 </style>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // كود الرسم البياني مع الأرقام الصحيحة
         const ctx = document.getElementById('salesChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                labels: @Html.Raw(ViewBag.SalesLabels ?? "[]"),
                 datasets: [{
-                    label: 'Actual Revenue',
-                    data: [5000, 15000, 8000, @totalRevenue],
-                    borderColor: '#00ff88',
-                    borderWidth: 4,
+                    label: 'Revenue',
+                    data: @Html.Raw(ViewBag.SalesSeries ?? "[]"),
+                    borderColor: '#ffcc00',
+                    borderWidth: 3,
                     pointRadius: 6,
-                    pointBackgroundColor: '#00ff88',
-                    tension: 0.3,
-                    fill: false
+                    pointBackgroundColor: '#ffcc00',
+                    tension: 0.35,
+                    fill: true,
+                    backgroundColor: 'rgba(255,204,0,0.12)'
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { labels: { color: '#fff' } } },
+                plugins: { legend: { labels: { color: '#dfe2ec' } } },
                 scales: {
-                    x: { ticks: { color: '#fff' }, grid: { color: '#222' } },
-                    y: { ticks: { color: '#fff' }, grid: { color: '#222' } }
+                    x: { ticks: { color: '#9aa0b5' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#9aa0b5' }, grid: { color: 'rgba(255,255,255,0.05)' } }
                 }
             }
         });

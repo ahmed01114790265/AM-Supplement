@@ -129,4 +129,160 @@
   <data name="EmptyList" xml:space="preserve">
     <value>القائمه فارغه</value>
   </data>
+  <data name="HeroBadge" xml:space="preserve">
+    <value>جرعات مدروسة · موثوق للرياضيين</value>
+  </data>
+  <data name="HeroTitle" xml:space="preserve">
+    <value>سبليمنت — ارفع مستوى كل تكرار</value>
+  </data>
+  <data name="HeroSubtitle" xml:space="preserve">
+    <value>تركيبات مميزة وشفافية كاملة وشحن سريع. كوّن سلتك بمرشحات تناسب هدفك.</value>
+  </data>
+  <data name="GoToCart" xml:space="preserve">
+    <value>اذهب للسلة</value>
+  </data>
+  <data name="BrowseAll" xml:space="preserve">
+    <value>تصفح الكل</value>
+  </data>
+  <data name="ExpressDelivery" xml:space="preserve">
+    <value>توصيل سريع خلال 48 ساعة</value>
+  </data>
+  <data name="MoneyBack" xml:space="preserve">
+    <value>ضمان استرجاع</value>
+  </data>
+  <data name="InformedSport" xml:space="preserve">
+    <value>معتمد للرياضيين</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>الفئة</value>
+  </data>
+  <data name="AllSupplements" xml:space="preserve">
+    <value>كل المكملات</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>ترتيب حسب</value>
+  </data>
+  <data name="NewestGear" xml:space="preserve">
+    <value>الأحدث</value>
+  </data>
+  <data name="PriceHigh" xml:space="preserve">
+    <value>السعر: من الأعلى للأدنى</value>
+  </data>
+  <data name="PriceLow" xml:space="preserve">
+    <value>السعر: من الأدنى للأعلى</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>إعادة ضبط</value>
+  </data>
+  <data name="Creatine" xml:space="preserve">
+    <value>كرياتين</value>
+  </data>
+  <data name="PreWorkout" xml:space="preserve">
+    <value>قبل التمرين</value>
+  </data>
+  <data name="WheyIsolate" xml:space="preserve">
+    <value>واي آيسوليت</value>
+  </data>
+  <data name="Vegan" xml:space="preserve">
+    <value>نباتي</value>
+  </data>
+  <data name="Bundles" xml:space="preserve">
+    <value>باندلز</value>
+  </data>
+  <data name="Fuel" xml:space="preserve">
+    <value>طاقة للأداء</value>
+  </data>
+  <data name="AddToCart" xml:space="preserve">
+    <value>أضف للسلة</value>
+  </data>
+  <data name="QuickView" xml:space="preserve">
+    <value>عرض سريع</value>
+  </data>
+  <data name="NavShop" xml:space="preserve">
+    <value>المتجر</value>
+  </data>
+  <data name="NavCart" xml:space="preserve">
+    <value>السلة</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>دعم</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>مرحباً،</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>تسجيل خروج</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>تسجيل دخول</value>
+  </data>
+  <data name="JoinNow" xml:space="preserve">
+    <value>انضم الآن</value>
+  </data>
+  <data name="Analytics" xml:space="preserve">
+    <value>التحليلات</value>
+  </data>
+  <data name="SystemPerformance" xml:space="preserve">
+    <value>أداء النظام</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>تصدير</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="TotalProducts" xml:space="preserve">
+    <value>إجمالي المنتجات</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>مباشر</value>
+  </data>
+  <data name="CatalogStrength" xml:space="preserve">
+    <value>قوة الكتالوج</value>
+  </data>
+  <data name="Stable" xml:space="preserve">
+    <value>مستقر</value>
+  </data>
+  <data name="TotalOrders" xml:space="preserve">
+    <value>إجمالي الطلبات</value>
+  </data>
+  <data name="Ops" xml:space="preserve">
+    <value>العمليات</value>
+  </data>
+  <data name="FulfillmentRate" xml:space="preserve">
+    <value>معدل التنفيذ</value>
+  </data>
+  <data name="OnTrack" xml:space="preserve">
+    <value>على المسار</value>
+  </data>
+  <data name="TotalRevenue" xml:space="preserve">
+    <value>إجمالي الإيرادات</value>
+  </data>
+  <data name="MrrPulse" xml:space="preserve">
+    <value>نبض الإيراد الشهري</value>
+  </data>
+  <data name="SalesTrajectory" xml:space="preserve">
+    <value>مسار المبيعات</value>
+  </data>
+  <data name="Last4Weeks" xml:space="preserve">
+    <value>آخر 4 أسابيع</value>
+  </data>
+  <data name="AtGlance" xml:space="preserve">
+    <value>نظرة سريعة</value>
+  </data>
+  <data name="Conversion" xml:space="preserve">
+    <value>التحويل</value>
+  </data>
+  <data name="AvgFulfillment" xml:space="preserve">
+    <value>متوسط التنفيذ</value>
+  </data>
+  <data name="RepeatBuyers" xml:space="preserve">
+    <value>العملاء المتكررون</value>
+  </data>
+  <data name="AOV" xml:space="preserve">
+    <value>متوسط قيمة الطلب</value>
+  </data>
 </root>
