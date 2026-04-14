@@ -66,36 +66,11 @@ namespace AM_Supplement.Presentation
 
 
             var app = builder.Build();
-            var storagePath = app.Configuration["StorageSettings:StaticFolder"];
 
-            // التحقق من المسار قبل إعداد StaticFiles
-            if (!string.IsNullOrEmpty(storagePath))
-            {
-                // التأكد من وجود المجلد فعلياً على الهارد ديسك
-                if (!Directory.Exists(storagePath))
-                {
-                    Directory.CreateDirectory(storagePath);
-                }
-                // test service
-
-                using (var scope = app.Services.CreateScope())
-            {
-                var service = scope.ServiceProvider.GetRequiredService(typeof(IProductService));
-            }
-
-            app.UseStaticFiles();
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(storagePath),
-                    RequestPath = "/assets"
-                });
-            }
-            else
-            {
-                // في حالة لم يجد المسار في appsettings، استخدم مجلد افتراضي داخل المشروع لتجنب الانهيار
-                var fallbackPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "assets");
-                if (!Directory.Exists(fallbackPath)) Directory.CreateDirectory(fallbackPath);
-            }
+            
+            // 5. إعداد الملفات الثابتة (Static Files)
+            app.UseStaticFiles(); // الافتراضي لـ wwwroot
+            
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
@@ -107,7 +82,7 @@ namespace AM_Supplement.Presentation
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Product}/{action=Index}"
+                    pattern: "{controller=Product}/{action=Index}/{id?}"
                    );
             });
             app.MapControllers();

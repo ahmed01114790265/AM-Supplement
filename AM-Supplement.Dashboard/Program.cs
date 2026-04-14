@@ -1,9 +1,11 @@
 ﻿using AM_Supplement.Application;
 using AM_Supplement.Contracts.Services;
 using AM_Supplement.Dashboard.Controllers;
+using AM_Supplement.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
@@ -25,6 +27,8 @@ namespace AM_Supplement.Dashboard
             {
                 x.LogoutPath = "/account/logout";
                 x.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                x.Cookie.SameSite = SameSiteMode.Lax; // أو None لو HTTPS شغال تمام
+                x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             builder.Services.AddAuthorization(x =>
@@ -42,15 +46,15 @@ namespace AM_Supplement.Dashboard
             ///localization
             //register localization services 
             // use the below line for registering localization services if the 
-            //builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             //use this in case localized resources files in different project
             builder.Services.AddLocalization();
             builder.Services.AddSingleton(static serviceProvider =>
             {
                 var factory = serviceProvider.GetRequiredService<IStringLocalizerFactory>();
-                var type = typeof(AM_Supplement.Shared.Localization.SharedResource);
-                return factory.Create(type);
+               var type = typeof(AM_Supplement.Shared.Localization.SharedResource);
+               return factory.Create(type);
             });
 
             var supportedCultures = new[] { "en", "ar", "fr" };
@@ -67,39 +71,38 @@ namespace AM_Supplement.Dashboard
 
 
             var app = builder.Build();
-            var storagePath = builder.Configuration["StorageSettings:StaticFolder"];
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try
                 {
+                    var context = services.GetRequiredService<AMSublementDbContext>();
+
+                    // الخطوة دي هتحل مشكلة Invalid column name 'ActivatedAsAMember'
+                    await context.Database.MigrateAsync();
+
+                    // استدعاء ميثود الـ Seed اللي إنت بعتها
+                    // تأكد من اسم الكلاس اللي جواه الميثود (هفترض اسمه DbSeeder)
                     await DataSeeder.SeedRolesAndAdmin(services);
+
+                    Console.WriteLine("Database Migrated & Seeded Successfully!");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An error occurred seeding the DB: {ex.Message}");
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
                 }
             }
 
-            // test service
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var service = scope.ServiceProvider.GetRequiredService(typeof(IProductService));
-            }
-
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(storagePath),
-                RequestPath = "/assets" // الصور ستظهر برابط مثل: /assets/products/image.jpg
-            });
+            // 5. إعداد الملفات الثابتة (Static Files)
+            app.UseStaticFiles(); // الافتراضي لـ wwwroot
+           
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-            // appy localization setting to every http request
-            var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+            // Apply localization setting to every HTTP request
+           var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
             app.UseEndpoints(endpoints =>
             {
@@ -108,6 +111,21 @@ namespace AM_Supplement.Dashboard
                     pattern: "{controller=Home}/{action=Index}"
                    );
             });
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    // استدعاء الميثود اللي انت كتبتها لتجهيز الـ Roles والـ Admin
+                    await DataSeeder.SeedRolesAndAdmin(services);
+                    Console.WriteLine("Data Seeding completed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred during database seeding.");
+                }
+            }
             app.MapControllers();
             app.Run();
         }

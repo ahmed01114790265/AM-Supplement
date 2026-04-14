@@ -16,67 +16,86 @@ namespace AM_Supplement.Application.Services
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting;
+    using Azure.Storage.Blobs;
 
     public class ImageService : IImageService
     {
-        private readonly string _storagePath;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly string _containerName = "products-images"; // تأكد إن ده نفس الاسم في Azure
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
 
-        public ImageService(IConfiguration config, IWebHostEnvironment webHostEnvironment)
+        public ImageService(IConfiguration config)
         {
-            _webHostEnvironment = webHostEnvironment;
+            // بيقرأ الـ Connection String من الملف اللي إنت لسه مجهزه
+            var connectionString = config["AzureBlobStorage"]?.Trim();
 
-            // نقرأ القيمة من الإعدادات
-            var configPath = config["StorageSettings:StaticFolder"];
-
-            // إذا كانت القيمة مسار كامل (يحتوي على :) أو فارغة، نستخدم مسار الـ wwwroot الافتراضي في Azure
-            if (string.IsNullOrEmpty(configPath) || configPath.Contains(":"))
+            if (string.IsNullOrEmpty(connectionString))
             {
-                // هذا هو المسار الآمن في Azure: D:\home\site\wwwroot\images
-                _storagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                throw new ArgumentNullException("AzureBlobStorage connection string is missing!");
             }
-            else
+
+            try
             {
-                // إذا كانت القيمة مجرد اسم مجلد مثل "images"، ندمجها مع مسار الويب
-                _storagePath = Path.Combine(_webHostEnvironment.WebRootPath, configPath);
+                _blobServiceClient = new BlobServiceClient(connectionString);
+            }
+            catch (FormatException ex)
+            {
+                // ده هيخلينا نعرف لو المشكلة لسه في النص نفسه
+                throw new FormatException("The Azure Storage connection string has an invalid format. Please check Azure Portal.", ex);
             }
         }
 
         public async Task<string> UploadImageAsync(IFormFile file, string folderName)
         {
-            if (file == null || file.Length == 0) return "default-product.png";
+            // في حالة مفيش صورة، رجع رابط لصورة افتراضية (يفضل ترفع واحدة مسبقاً)
+            if (file == null || file.Length == 0)
+                return "https://imagesforalldb.blob.core.windows.net/products-images/default-product.png";
 
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!_permittedExtensions.Contains(extension))
                 throw new InvalidOperationException("Invalid file type.");
 
-            // تأمين إنشاء المجلدات داخل wwwroot
-            string targetFolder = Path.Combine(_storagePath, folderName);
+            // الوصول للـ Container
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
 
-            if (!Directory.Exists(targetFolder))
-                Directory.CreateDirectory(targetFolder);
+            // التأكد إن الـ Container موجود
+            await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 
-            string fileName = $"{Guid.NewGuid()}{extension}";
-            string physicalPath = Path.Combine(targetFolder, fileName);
+            // إنشاء اسم فريد للملف مع الحفاظ على الفولدر (folderName)
+            // في Blob Storage الفولدرات بتبقى مجرد جزء من اسم الملف
+            string fileName = $"{folderName}/{Guid.NewGuid()}{extension}";
+            var blobClient = containerClient.GetBlobClient(fileName);
 
-            using (var stream = new FileStream(physicalPath, FileMode.Create))
+            // الرفع للسحابة
+            using (var stream = file.OpenReadStream())
             {
-                await file.CopyToAsync(stream);
+                await blobClient.UploadAsync(stream, new Azure.Storage.Blobs.Models.BlobHttpHeaders { ContentType = file.ContentType });
             }
 
-            return fileName;
+            // أهم جزء: بنرجع الرابط الكامل اللي هيتخزن في الداتابيز
+            return blobClient.Uri.ToString();
         }
 
-        public void DeleteImage(string fileName, string folderName)
+        public async Task DeleteImage(string fileUri, string folderName)
         {
-            if (string.IsNullOrEmpty(fileName) || fileName == "default-product.png") return;
+            // لو الرابط فاضي أو صورة افتراضية مش هنمسح حاجة
+            if (string.IsNullOrEmpty(fileUri) || fileUri.Contains("default-product.png")) return;
 
-            string fullPath = Path.Combine(_storagePath, folderName, fileName);
-
-            if (File.Exists(fullPath))
+            try
             {
-                File.Delete(fullPath);
+                // استخراج اسم الـ Blob من الـ URI
+                var uri = new Uri(fileUri);
+                // السطر ده بيجيب كل حاجة بعد اسم الـ Container (بما فيها الفولدر واسم الملف)
+                string blobName = string.Join("", uri.Segments.Skip(2));
+
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+                var blobClient = containerClient.GetBlobClient(Uri.UnescapeDataString(blobName));
+
+                await blobClient.DeleteIfExistsAsync();
+            }
+            catch
+            {
+                // فشل المسح مش لازم يوقف الأبلكيشن، بس ممكن تعمل Log هنا
             }
         }
     }

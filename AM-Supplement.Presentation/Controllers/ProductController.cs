@@ -1,4 +1,5 @@
 ﻿using AM_Supplement.Contracts.DTO;
+using AM_Supplement.Contracts.DTO.AdminDasboard;
 using AM_Supplement.Contracts.Services;
 using AM_Supplement.Presentation.Models;
 using AM_Supplement.Shared.Enums;
@@ -29,7 +30,7 @@ namespace AM_Supplement.Presentation.Controllers
             if (!result.IsValid || result.ModelList == null)
             {
                 TempData["ErrorMessage"] = result.ErrorMessage;
-                return RedirectToAction("ProductsList");
+                return View("ProductsList", new ProductsListViewModel { Products = new List<Contracts.DTO.ProductDTO>() });
             }
 
             var model = new ProductsListViewModel
@@ -54,7 +55,7 @@ namespace AM_Supplement.Presentation.Controllers
             if (!result.IsValid || result.ModelList == null)
             {
                 TempData["ErrorMessage"] = result.ErrorMessage;
-                return RedirectToAction("Index");
+                return View("ProductsList", new ProductsListViewModel { Products = new List<Contracts.DTO.ProductDTO>() });
             }
 
             var model = new ProductsListViewModel

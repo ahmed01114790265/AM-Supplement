@@ -19,6 +19,7 @@ namespace AM_Supplement.Dashboard.Controllers
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
+                    
                     // This will now work because we fixed the ApplicationRole constructor
                     await roleManager.CreateAsync(new ApplicationRole(roleName));
                     Console.WriteLine($"Role {roleName} created.");
