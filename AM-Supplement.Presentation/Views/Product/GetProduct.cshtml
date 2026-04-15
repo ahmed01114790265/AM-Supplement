@@ -22,8 +22,11 @@
                         {
                             <span class="badge-promo">-@Model.DiscountPercentage%</span>
                         }
-                        <img src="/assets/products/@(string.IsNullOrEmpty(Model.ImageUrl) ? "default-product.png" : Model.ImageUrl)"
-                             class="img-fluid main-product-img"
+                        <img src="@(string.IsNullOrEmpty(Model.ImageUrl)
+                                          ? "/assets/products/default-product.png"
+                                          : (Model.ImageUrl.StartsWith("http") ? Model.ImageUrl : $"/assets/products/{Model.ImageUrl}"))"
+                             class="img-fluid rounded-4"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=Image+Not+Found';">                             class="img-fluid main-product-img"
                              alt="@Model.Name"
                              onerror="this.src='/assets/products/default-product.png';" />
                     </div>

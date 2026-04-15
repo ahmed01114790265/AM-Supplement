@@ -93,8 +93,9 @@
                 <div class="form-card-solid p-4 mb-4 text-center">
                     <label class="solid-label mb-3 d-block">PRODUCT VISUAL ASSET</label>
                     <div class="image-preview-box">
-                        <img id="preview" src="/assets/products/default-product.png"
-                             onerror="this.src='/images/no-image.png'" />
+                        <img id="preview"
+                             src="/assets/products/default-product.png"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=No+Image+Found';" />
                     </div>
 
                     <input asp-for="Image" type="file" class="d-none" id="fileInput"

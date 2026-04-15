@@ -44,8 +44,12 @@
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card h-100 bg-transparent border-0 product-hover">
                 <div class="position-relative overflow-hidden rounded-4 mb-3 shadow-lg" style="height: 400px;">
-                    <img src="/assets/products/@p.ImageUrl" class="w-100 h-100 object-fit-cover transition-all" alt="@p.Name">
-                    <div class="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark">
+<img src="@(string.IsNullOrEmpty(p.ImageUrl) 
+             ? "/assets/products/default-product.png" 
+             : (p.ImageUrl.StartsWith("http") ? p.ImageUrl : $"/assets/products/{p.ImageUrl}"))" 
+     class="w-100 h-100 object-fit-cover transition-all" 
+     alt="@p.Name"
+     onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=No+Image+Found';">                    <div class="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark">
                         <a asp-action="GetProduct" asp-route-id="@p.Id" class="btn btn-warning w-100 rounded-pill fw-bold">VIEW DETAILS</a>
                     </div>
                 </div>

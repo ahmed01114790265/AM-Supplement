@@ -14,8 +14,13 @@
             <div class="card bg-black border border-white border-opacity-10 rounded-4 overflow-hidden h-100 shadow-sm">
                 <div class="row g-0">
                     <div class="col-4 bg-dark d-flex align-items-center justify-content-center p-2">
-                        <img src="/assets/products/@p.ImageUrl" class="img-fluid rounded" style="max-height: 120px;">
-                    </div>
+                        <img src="@(string.IsNullOrEmpty(p.ImageUrl)
+                                          ? "/assets/products/default-product.png"
+                                          : (p.ImageUrl.StartsWith("http") ? p.ImageUrl : $"/assets/products/{p.ImageUrl}"))"
+                         class="img-fluid rounded"
+                         style="max-height: 120px; width: auto; object-fit: cover;"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=No+Image';">
+                </div>
                     <div class="col-8">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
