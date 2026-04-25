@@ -14,8 +14,6 @@ namespace AM_Supplement.Application.Services
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Hosting;
     using Azure.Storage.Blobs;
 
     public class ImageService : IImageService

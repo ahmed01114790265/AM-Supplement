@@ -70,7 +70,7 @@ namespace AM_Supplement.Application.Services
             if (productDTO.ImageFile != null)
             {
 
-                _imageService.DeleteImage(product.ImageUrl, "products");
+                await _imageService.DeleteImage(product.ImageUrl, "products");
 
                 productDTO.ImageUrl = await _imageService.UploadImageAsync(productDTO.ImageFile, "products");
             }
